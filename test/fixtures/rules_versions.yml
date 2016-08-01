@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  parent_id: 1
+  is_current: false
+  edited_by_person_id: 1
+
+two:
+  parent_id: 1
+  is_current: false
+  edited_by_person_id: 1
