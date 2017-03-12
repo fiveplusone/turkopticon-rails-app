@@ -27,6 +27,13 @@ class RegController < ApplicationController
       RegMailer::deliver_confirm(@person, confirmation_hash(@person.email))
       session[:person_id] = @person.id
       flash[:notice] = "Thanks for signing up. We've sent an email to #{@person.email}. Please click the link in the email to verify your address."
+
+      # create account on turkopticon.info
+      apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
+      user = "{" + @person.to_json.split("{")[2].split("}")[0] + "}".gsub("'","\'")
+      result = `echo '#{user}' | curl -d @- 'https://api.turkopticon.info/accounts?key=#{apikey}' --header 'Content-Type: application/json'`
+      File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT CREATION API WITH: #{user}\nRESULT: #{result}\n\n") }
+
       redirect_to :controller => "main", :action => "index"
     end
   end
@@ -156,6 +163,13 @@ class RegController < ApplicationController
           session[:person_id] = person.id
         end
         flash[:notice] = "Thank you for confirming your email address."
+
+        # activate on turkopticon.info
+        email = person.email
+        apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
+        result = `curl 'https://api.turkopticon.info/accounts/activate?email=#{email}&key=#{apikey}'`
+        File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT ACTIVATION API ENDPOINT WITH: #{email}\nRESULT: #{result}\n\n") }
+
         redirect_to :controller => "main", :action => "index" and return
       end
     end
