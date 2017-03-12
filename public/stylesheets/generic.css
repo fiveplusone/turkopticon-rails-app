@@ -12,7 +12,7 @@ body {
   width: 800px;
   margin: 0;
   padding: 10px;
-  background: url(http://turkopticon.differenceengines.com/images/bg_tile.png) repeat-y;
+  background: url(https://turkopticon.ucsd.edu/images/bg_tile.png) repeat-y;
 }
 
 a {
@@ -36,7 +36,7 @@ a:hover {
 #header {
   height: 98px;
   width: 593px;
-  background: url(http://turkopticon.differenceengines.com/images/title.png) no-repeat;
+  background: url(https://turkopticon.ucsd.edu/images/title.png) no-repeat;
 }
 
 #header:hover {
