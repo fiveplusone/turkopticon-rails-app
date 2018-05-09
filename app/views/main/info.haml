@@ -14,21 +14,31 @@
 
 = stylesheet_link_tag 'tinybox'
 = javascript_include_tag 'tinybox'
-/
-  :javascript
-    window.onload = function() {
-      TINY.box.show('box.html', 1, 0, 0, 1);
-    };
+:javascript
+  window.onload = function() {
+    TINY.box.show('box.html', 1, 0, 0, 1);
+  };
+
+%p#advisory.big{:style => "padding: 15px;"}
+  %strong May 9 2018
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  We are no longer supporting the Firefox and Chrome extensions. Please rely on Greasemonkey and Tampermonkey. See below for instructions.
+
+%p#advisory.big{:style => "padding: 15px;"}
+  %strong 22 Mar 2017
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  Turkopticon 2 Beta is now available at <a href="https://turkopticon.info">turkopticon.info</a>. The new userscript is available <a href="https://turkopticon.info/install">on the new site</a> or <a href="https://greasyfork.org/en/scripts/27512-turkoptiscript">on Greasy Fork</a>. More information is available <a href="https://turkopticon.ucsd.edu/box.html">here</a>.
 
 %p#advisory.big{:style => "padding: 15px;"}
   %strong 6 Oct 2016
   &nbsp;&nbsp;&nbsp;&nbsp;
   The <a href="http://greasyfork.org/en/scripts/4391-turkopticon">Turkopticon user script</a> should work on the new <a href="https://worker.mturk.com">MTurk worker interface</a>.
 
-%p#advisory.big{:style => "padding: 15px;"}
-  %strong 6 July 2016
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  The <a href="https://turkopticon.ucsd.edu/2016survey/">Turkopticon community survey results</a> are online.
+/
+  %p#advisory.big{:style => "padding: 15px;"}
+    %strong 6 July 2016
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    The <a href="https://turkopticon.ucsd.edu/2016survey/">Turkopticon community survey results</a> are online.
 
 /
   %p#advisory.big{:style => "padding: 15px;"}
@@ -49,18 +59,6 @@
     &nbsp;&nbsp;&nbsp;&nbsp;
     %strong Turkopticon will be down for up to 30 minutes starting 11 AM Pacific Time Monday December 22.
     (That's 2 PM Eastern Time and 12:30 AM Tuesday December 23 Indian Standard Time.) We are moving the site to a new server. After the move, the site should be faster and more reliable. We will also release a new version of the script that makes it so you don't have to "click the shield" any more. For more information, please see <a href="https://groups.google.com/forum/#!topic/turkopticon-discuss/LaRl4HlWc_I">turkopticon-discuss</a>.
-
-/
-  %p#advisory{:style => "padding: 15px;"}
-    %strong Aug 20 2014
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    %strong At some point in the last few days, Amazon changed the HIT listing on AMT very slightly. This broke Turkopticon. <a href="turkopticon-2014.08.20.1512.user.js">Here is a new version of the user script that should fix it</a>.
-    %br/
-    %br/
-    If you use Chrome, you can install the script manually or use the <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo">Tampermonkey extension</a>.
-    %br/
-    %br/
-    If you use Firefox, you can use <a href="https://addons.mozilla.org/en-us/firefox/addon/greasemonkey">Greasemonkey</a> to install the script and the <a href="https://addons.mozilla.org/en-us/firefox/addon/toggle-mixed-active-content/">Toggle Mixed Active Content extension</a> to disable Firefox's mixed content blocking.
 
 /
   %p#advisory.big{:style => "padding: 15px;"}
@@ -90,31 +88,7 @@
   #side-a
     <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/turkopticon" data-widget-id="365016898619981825">Tweets by @turkopticon</a>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-   
   #side-b
-    .box{:id => "installinfo"}
-      %strong.big Installing Turkopticon for Chrome
-      %br/
-      %br/
-      1. Install the <a href="https://chrome.google.com/webstore/detail/turkopticon/dgefbojfgdddnignhmfmnencgiloojpe?hl=en">Chrome extension from the Chrome Web Store</a>. <strong>For now (Oct 6 2016), if you want to use Turkopticon on the new MTurk worker interface, you need to use the "Tampermonkey approach" (below).</strong>
-      %br/
-      %br/
-      <strong>OR</strong>
-      %br/
-      %br/
-      1. Install the <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en">Tampermonkey extension</a>.<br/>
-      2. Go to <a href="https://greasyfork.org/en/scripts/4391-turkopticon">this page</a> and click the green "Install this script" button.<br/>
-      3. Click "Install".<br/><br/><br/>
-      %strong.big Installing Turkopticon for Firefox<br/><br/>
-      1. Install the <a href="https://addons.mozilla.org/en-US/firefox/addon/turkopticon/">Firefox extension from the Firefox Add-Ons Directory</a>. <strong>For now (Oct 6 2016), if you want to use Turkopticon on the new MTurk worker interface, you need to use the "Greasemonkey approach" (below).</strong>
-      %br/
-      %br/
-      <strong>OR</strong>
-      %br/
-      %br/
-      1. Install the <a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">Greasemonkey extension</a>.<br/>
-      2. Go to <a href="https://greasyfork.org/en/scripts/4391-turkopticon">this page</a> and click the green "Install this script" button.<br/>
-      3. Click "Install".
     .box
       %p.big Turkopticon helps the people in the 'crowd' of crowdsourcing watch out for each other&mdash;because nobody else seems to be.
       %p.big
@@ -122,16 +96,7 @@
         %strong Turkopticon lets you REPORT and AVOID shady employers.
       %p.big
         snoogiebug from <a href="http://turkernation.com">turkernation</a> says, "if you do not have this please get it!!!! it does work and is worth it !!" 
-    /
-      .bigtextbutton
-        %a{:href => "https://addons.mozilla.org/en-US/firefox/addon/turkopticon/", :iconURL => "/images/bg_tile.png"}
-          Turkopticon Firefox
-      .bigtextbutton
-        %a{:href => "https://chrome.google.com/webstore/detail/dgefbojfgdddnignhmfmnencgiloojpe", :iconURL => "/images/bg_tile.png"}
-          Turkopticon Chrome
-      .downloadtext
-        &nbsp;
-    .box{:style => "padding-top: 1px; margin-top: 45px;"}
+    .box{:style => "padding-top: 1px;"}
       %p.big
         %strong How Turkopticon works:
       %img{:src => "http://turkopticon.ucsd.edu/to_screenshot.png", :alt => "Turkopticon in action", :align => "right", :style => "margin-left: 6px; border: 1px solid #cccccc"}
