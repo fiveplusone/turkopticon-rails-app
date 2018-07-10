@@ -167,6 +167,13 @@ class Person < ActiveRecord::Base
       self.hashed_password = Person.encrypted_password(self.password, self.salt)
     end
   end
+
+  def self.review_commenting_requests
+    find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).each{|p|
+      p.update_attributes(:can_comment => true, :commenting_enabled_at => Time.now, :commenting_enabled_by => 0)
+      AdminMailer::deliver_enabled(p)
+    }
+  end
 	
 	private
 

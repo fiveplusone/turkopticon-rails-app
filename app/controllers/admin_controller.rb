@@ -162,6 +162,17 @@ class AdminController < ApplicationController
   end
 
   def review_commenting_requests
+    enable = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil)
+    out = "Enabled commenting for:\n"
+    enable.each{|person|
+      person.update_attributes(:can_comment => true, :commenting_enabled_at => Time.now, :commenting_enabled_by => 0)
+      AdminMailer::deliver_enabled(person)
+      out += "#{person.id.to_s}\n"
+    }
+    render :text => out
+  end
+
+  def old_review_commenting_requests  # 2018 Jul 9
     likely = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).select{|p| p.reports.count >= 5}
     out = "Enabled commenting for:\n"
     likely.each{|person|
