@@ -7,8 +7,10 @@
   = person.email
   - if person.is_moderator
     (verified - moderator)
-  - elsif person.email_verified and !person.can_comment
+  - elsif person.email_verified and !person.can_comment and !person.commenting_requested and !person.commenting_requested_at
     (verified)
+  - elsif person.email_verified and !person.can_comment and person.commenting_requested
+    (verified - commenting requested)
   - elsif person.email_verified and person.can_comment
     (verified - commenting enabled)
   - else

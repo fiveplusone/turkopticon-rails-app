@@ -14,7 +14,7 @@ class MainController < ApplicationController
 
   def request_commenting
     Person.find(session[:person_id]).update_attributes(:commenting_requested => true, :commenting_requested_at => Time.now)
-    flash[:notice] = "You've requested commenting."
+    flash[:notice] = "You've requested commenting. Commenting should be enabled within 24 hours if your account is in good standing. If you don't get an email indicating you have received commenting, check back tomorrow anyway."
     redirect_to :action => "index"
   end
 
