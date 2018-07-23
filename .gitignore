@@ -15,7 +15,6 @@ index/
 log/
 php_api/dbconn.php
 php_api/mysqli-dbconn.php
-public/
 !public/images/
 !public/javascripts/
 !public/stylesheets/
@@ -23,5 +22,6 @@ public/
 !public/turkopticon-2014.01.28.1207.user.js
 !public/api/multi-attrs.php
 !public/api/reviews.php
+public/
 tmp/
 php_api/access-tokens.php
