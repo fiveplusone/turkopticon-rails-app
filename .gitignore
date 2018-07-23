@@ -15,13 +15,13 @@ index/
 log/
 php_api/dbconn.php
 php_api/mysqli-dbconn.php
-public/*
+public/
 !public/images/
 !public/javascripts/
 !public/stylesheets/
 !public/turkopticon_installpage/
 !public/turkopticon-2014.01.28.1207.user.js
 !public/api/multi-attrs.php
-!pblic/api/reviews.php
+!public/api/reviews.php
 tmp/
 php_api/access-tokens.php
