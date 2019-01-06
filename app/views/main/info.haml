@@ -13,27 +13,40 @@
   }
 
 = stylesheet_link_tag 'tinybox'
+= javascript_include_tag 'tinybox'
+:javascript
+  window.onload = function() {
+    TINY.box.show('box.html', 1, 0, 0, 1);
+  };
+
+%p#advisory
+  %strong 28 Dec 2018
+  &nbsp;&nbsp;&nbsp;&nbsp
+  Turkopticon will continue accepting new reviews in January 2019. Discussion <a href="https://turkopticon.ucsd.edu/forum/show_post/1772" target="_blank">here</a>.
+
 /
-  = javascript_include_tag 'tinybox'
-  :javascript
-    window.onload = function() {
-      TINY.box.show('box.html', 1, 0, 0, 1);
-    };
+  %p#advisory
+    %strong 23 Dec 2018
+    &nbsp;&nbsp;&nbsp;&nbsp
+    In preparation for the change to "read only mode" in 2019, we have posted a draft of a policy to govern use of the Turkopticon review database to <a href='https://turkopticon.ucsd.edu/forum/show_post/1759' target='_blank'>the forum</a>. Feedback is welcome.
 
-%p#advisory.big{:style => "padding: 15px;"}
-  %strong May 9 2018
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  We are no longer supporting the Firefox and Chrome extensions. Please rely on Greasemonkey and Tampermonkey. See below for instructions.
+/
+  %p#advisory.big{:style => "padding: 15px;"}
+    %strong May 9 2018
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    We are no longer supporting the Firefox and Chrome extensions. Please rely on Greasemonkey and Tampermonkey. See below for instructions.
 
-%p#advisory.big{:style => "padding: 15px;"}
-  %strong 22 Mar 2017
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  Turkopticon 2 Beta is now available at <a href="https://turkopticon.info">turkopticon.info</a>. The new userscript is available <a href="https://turkopticon.info/install">on the new site</a> or <a href="https://greasyfork.org/en/scripts/27512-turkoptiscript">on Greasy Fork</a>. More information is available <a href="https://turkopticon.ucsd.edu/box.html">here</a>.
+/
+  %p#advisory.big{:style => "padding: 15px;"}
+    %strong 22 Mar 2017
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    Turkopticon 2 Beta is now available at <a href="https://turkopticon.info">turkopticon.info</a>. The new userscript is available <a href="https://turkopticon.info/install">on the new site</a> or <a href="https://greasyfork.org/en/scripts/27512-turkoptiscript">on Greasy Fork</a>. More information is available <a href="https://turkopticon.ucsd.edu/box.html">here</a>.
 
-%p#advisory.big{:style => "padding: 15px;"}
-  %strong 6 Oct 2016
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  The <a href="http://greasyfork.org/en/scripts/4391-turkopticon">Turkopticon user script</a> should work on the new <a href="https://worker.mturk.com">MTurk worker interface</a>.
+/
+  %p#advisory.big{:style => "padding: 15px;"}
+    %strong 6 Oct 2016
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    The <a href="http://greasyfork.org/en/scripts/4391-turkopticon">Turkopticon user script</a> should work on the new <a href="https://worker.mturk.com">MTurk worker interface</a>.
 
 /
   %p#advisory.big{:style => "padding: 15px;"}
