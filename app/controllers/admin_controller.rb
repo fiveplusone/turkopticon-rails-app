@@ -15,6 +15,45 @@ class AdminController < ApplicationController
   def index
   end
 
+#  def send_facilitator_info_mails
+    # precondition: run:
+    # ~/src/turkopticon/log$ tail -n 500000 ip.log > ip500k.log
+#    emails = []
+#    File.open("log/ip500k.log").each{|line| emails << line.split("]")[1].split(" ")[0] if line[0, 1] == "[" and !line.split("]")[1].nil?}
+#    emails.uniq!
+#    emails.each{|e| AdminMailer::deliver_facilitator(Person.find_by_email(e).id.to_s, e)}
+#    render :text => "Sent #{emails.count.to_s} emails."
+#  end
+
+  def send_facilitator_followup_emails
+    # precondition:
+    # emails, one per line, in ~/src/turkopticon/log/facilitator_emails.txt
+    ## out = ""
+    emails = []
+    File.open("log/facilitator_emails.txt").each{|e|
+      AdminMailer::deliver_facilitator_followup(e)
+      emails << e
+      ## out += e + "<br/>"
+    }
+    count = emails.length
+    render :text => "Sent " + count.to_s + " emails."
+  end
+
+  def send_workshopinfo_emails
+    emails = []
+    File.open("log/facilitator_emails.txt").each{|e|
+      AdminMailer::deliver_workshopinfo(e)
+      emails << e
+    }
+    count = emails.length
+    render :text => "Sent " + count.to_s + " emails."
+  end
+
+  def pwd
+    out = `pwd`
+    render :text => out
+  end
+
   def dashboard
     @user_count = Person.count
     @new_user_count = Person.all(:conditions => ["created_at > ?", Time.now - 1.month]).count

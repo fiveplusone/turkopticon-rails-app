@@ -3,5 +3,7 @@
 
 Logged in as
 %strong= dn
-&nbsp;|&nbsp;
+&nbsp;(ID: 
+= @person.id.to_s
+)&nbsp;|&nbsp;
 = link_to "Logout", "http://turkopticon.ucsd.edu/logout"

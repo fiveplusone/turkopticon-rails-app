@@ -4,7 +4,7 @@
   = link_to "register", :controller => "reg", :action => "register"
 - else
   - person = Person.find(session[:person_id])
-  = person.email
+  = person.email + ' (id: ' + session[:person_id].to_s + ')'
   - if person.is_moderator
     (verified - moderator)
   - elsif person.email_verified and !person.can_comment and !person.commenting_requested and !person.commenting_requested_at
@@ -13,6 +13,8 @@
     (verified - commenting requested)
   - elsif person.email_verified and person.can_comment
     (verified - commenting enabled)
+  - elsif person.email_verified
+    (verified)
   - else
     %strong= link_to "(PLEASE VERIFY YOUR EMAIL ADDRESS)", :controller => "reg", :action => "send_verification_email"
   &nbsp;&nbsp;

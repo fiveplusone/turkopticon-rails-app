@@ -2,6 +2,13 @@ class RegController < ApplicationController
 
   @@email_log = '/home/ssilberman/src/turkopticon/log/email_changes.txt'
 
+  def close
+    Person.find(session[:person_id]).close
+    session[:person_id] = nil
+    flash[:notice] = "Your account was closed."
+    redirect_to :controller => "main", :action => "index"
+  end
+
   def change_email
     @person = Person.find(session[:person_id])
     if request.post?
@@ -194,6 +201,18 @@ class RegController < ApplicationController
   def fancy_links_on
     Person.find(session[:person_id]).update_attributes(:show_fancy_links => true)
     flash[:notice] = "Extra links turned on."
+    redirect_to :action => "settings"
+  end
+
+  def hide_long_reviews_off
+    Person.find(session[:person_id]).update_attributes(:hide_long_reviews => nil)
+    flash[:notice] = "Hide long reviews turned off."
+    redirect_to :action => "settings"
+  end
+
+  def hide_long_reviews_on
+    Person.find(session[:person_id]).update_attributes(:hide_long_reviews => true)
+    flash[:notice] = "Hide long reviews turned on."
     redirect_to :action => "settings"
   end
 

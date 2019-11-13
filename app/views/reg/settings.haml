@@ -69,3 +69,26 @@
       - else
         Extra links are <strong>off</strong>.&nbsp;
         = link_to "Turn extra links on", :controller => "reg", :action => "fancy_links_on"
+
+%hr/
+
+.box{:style => "max-width: 500px"}
+  %p
+    %strong Hide long reviews
+    %p "Hide long reviews" cuts off reviews after 800 characters and replaces the "left over" characters with the link to a page where you can see the whole review on its own.
+    %p
+      - if Person.find(session[:person_id]).hide_long_reviews
+        Hide long reviews is <strong>on</strong>.&nbsp;
+        = link_to "Turn hide long reviews off", :controller => "reg", :action => "hide_long_reviews_off"
+      - else
+        Hide long reviews is <strong>off</strong>.&nbsp;
+        = link_to "Turn hide long reviews on", :controller => "reg", :action => "hide_long_reviews_on"
+
+%hr/
+
+.box{:style => "max-width: 500px"}
+  %p
+    %strong Close account
+    %p If you want to close your account, you can do that here:
+    %p= link_to "Close my Turkopticon account", :controller => "reg", :action => "close"
+    %p You will be logged out automatically and you won't be able to log back in with this account!
