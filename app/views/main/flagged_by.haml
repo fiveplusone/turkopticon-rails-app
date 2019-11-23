@@ -20,4 +20,4 @@
         %th AMT Requester
         %th.rating Rating <span style="font-weight: normal;">[<a href="/main/help#attr">info</a>]</span>
         %th Description
-      = render :partial => 'main/report', :collection => @reports
+      = render :partial => 'main/report', :collection => @reports, :locals => { :notruncate => nil }
