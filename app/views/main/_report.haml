@@ -57,13 +57,17 @@
         - if report.dont_censor
           - if Person.find(session[:person_id]).hide_long_reviews and notruncate.nil?
             - out = h(report.description.to_s)
-            = truncate(out, 800).gsub("\r\n","<br/>") + "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/" + report.id.to_s + "'>Read the full review &rarr;</a><br/><br/>"
+            = truncate(out, 800).gsub("\r\n","<br/>")
+            - if out.length > 800
+              = "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/" + report.id.to_s + "'>Read the full review &rarr;</a><br/><br/>"
           - else
             = h(report.description.to_s).gsub("\r\n","<br/>")
         - else
           - if Person.find(session[:person_id]).hide_long_reviews and notruncate.nil?
             - out = h(report.description.to_s.censor)
-            = truncate(out, 800).gsub("\r\n","<br/>") + "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/" + report.id.to_s + "'>Read the full review &rarr;</a><br/><br/>"
+            = truncate(out, 800).gsub("\r\n","<br/>")
+            - if out.length > 800
+              = "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/" + report.id.to_s + "'>Read the full review &rarr;</a><br/><br/>"
           - else
             = h(report.description.to_s.censor).gsub("\r\n","<br/>")
       - if report.displayed_notes
