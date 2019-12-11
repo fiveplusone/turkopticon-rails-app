@@ -19,6 +19,22 @@ class Flag < ActiveRecord::Base
 
   validates_presence_of :comment
 
+  def convert_to_comment_by(person)
+    person_name = person.public_email
+    pid = person.id
+    note = "\n\nThis comment used to be a flag. "
+    note += "It was converted by <strong>" + person_name + "</strong> at "
+    note += Time.now.strftime("%l:%M %p %b %d %Y %Z") + "."
+    rid = self.report_id
+    Comment.new(:report_id => self.report_id,
+                :person_id => pid,
+                :body => self.comment,
+                :displayed_notes => note,
+                :created_at => self.created_at).save
+    self.destroy
+    Report.find(rid).update_flag_data
+  end
+
   def convert_to_comment
     note = "\n\n<span class='edit_note'>This comment used to be a flag. "
     note += "It was converted by the author at "

@@ -123,6 +123,9 @@
           &nbsp;
           - if Person.find(session[:person_id]).is_moderator
             = link_to f.person.mod_display_name.censor, :controller => "main", :action => "reports_by", :id => f.person_id
+            - if session[:person_id] != f.person_id and Person.find(f.person).is_moderator and session[:person_id] == 1
+              &nbsp;|&nbsp;
+              = link_to "convert", {:controller => "mod", :action => "convert_other_mods_flag", :id => f.id}, :confirm => "Are you sure? This will convert the flag to a comment. This can't be undone."
           - else
             = link_to f.person.public_email.censor, :controller => "main", :action => "reports_by", :id => f.person_id
           - if Person.find(session[:person_id]).show_fancy_links
@@ -137,10 +140,7 @@
         - for c in report.comments
           .flag_comment
             %img(src='/images/bubble.png' alt='bubble' border='0')
-            - if c.person.is_admin
-              = "<span style='color: #f00'>" + h(c.body).gsub(/\n/, '<br/>') + "</span>"
-            - else
-              = h(c.body).gsub(/\n/, '<br/>').censor
+            = h(c.body).gsub(/\n/, '<br/>').censor
             - if c.displayed_notes
               %p.notes= c.displayed_notes
             .posted_by
