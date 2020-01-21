@@ -1,7 +1,8 @@
+%p#advisory
+  Please see our information about <a href="#howto">How to Review</a> if you are new!
 .box
   = error_messages_for :report
   = error_messages_for :requester
-  = render :partial => 'main/how_to_review'
   %p
     <a name="mainbox"></a>
   %p#advisory_reverse
@@ -78,3 +79,4 @@
     %p
       %div{:style => "text-align: right; width: 26em;"}= submit_tag 'Report'
     %br/
+  = render :partial => 'main/how_to_review'

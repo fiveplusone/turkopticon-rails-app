@@ -19,8 +19,8 @@ class Flag < ActiveRecord::Base
 
   validates_presence_of :comment
 
-  def convert_to_comment_by(person)
-    person_name = person.public_email
+  def convert_to_comment_by(person, converted_by)
+    person_name = converted_by.public_email
     pid = person.id
     note = "\n\nThis comment used to be a flag. "
     note += "It was converted by <strong>" + person_name + "</strong> at "

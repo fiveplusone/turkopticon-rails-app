@@ -130,6 +130,15 @@ class ModController < ApplicationController
     render :text => "Enabled commenting for user #{params[:id]} / #{p.public_email}."
   end
 
+  def convert_other_persons_flag
+    @flag = Flag.find(params[:id])
+    @requester = @flag.report.requester
+    @report = @flag.report
+    @flag.convert_to_comment_by(@flag.person, @person)
+    @report.update_attributes(:flag_count => @report.flags.count, :comment_count => @report.comments.count)
+    redirect_to :controller => "main", :action => "report", :id => @report.id
+  end
+
   def convert_other_mods_flag
     @flag = Flag.find(params[:id])
     @requester = @flag.report.requester
