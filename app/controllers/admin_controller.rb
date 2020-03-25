@@ -48,34 +48,34 @@ class AdminController < ApplicationController
 #    render :text => "Sent #{emails.count.to_s} emails."
 #  end
 
-  def send_facilitator_followup_emails
+#  def send_facilitator_followup_emails
     # precondition:
     # emails, one per line, in ~/src/turkopticon/log/facilitator_emails.txt
     ## out = ""
-    emails = []
-    File.open("log/facilitator_emails.txt").each{|e|
-      AdminMailer::deliver_facilitator_followup(e)
-      emails << e
+#    emails = []
+#    File.open("log/facilitator_emails.txt").each{|e|
+#      AdminMailer::deliver_facilitator_followup(e)
+#      emails << e
       ## out += e + "<br/>"
-    }
-    count = emails.length
-    render :text => "Sent " + count.to_s + " emails."
-  end
+#    }
+#    count = emails.length
+#    render :text => "Sent " + count.to_s + " emails."
+#  end
 
-  def send_workshopinfo_emails
-    emails = []
-    File.open("log/facilitator_emails.txt").each{|e|
-      AdminMailer::deliver_workshopinfo(e)
-      emails << e
-    }
-    count = emails.length
-    render :text => "Sent " + count.to_s + " emails."
-  end
+#  def send_workshopinfo_emails
+#    emails = []
+#    File.open("log/facilitator_emails.txt").each{|e|
+#      AdminMailer::deliver_workshopinfo(e)
+#      emails << e
+#    }
+#    count = emails.length
+#    render :text => "Sent " + count.to_s + " emails."
+#  end
 
-  def pwd
-    out = `pwd`
-    render :text => out
-  end
+#  def pwd
+#    out = `pwd`
+#    render :text => out
+#  end
 
   def dashboard
     @user_count = Person.count
