@@ -25,3 +25,4 @@ php_api/mysqli-dbconn.php
 public/
 tmp/
 php_api/access-tokens.php
+etc/

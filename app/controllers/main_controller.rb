@@ -1,11 +1,14 @@
 class MainController < ApplicationController
 
-  before_filter :authorize, :except => [:requester_stats, :info, :help, :help_v2, :install_v2, :install_welcome, :requester_attrs, :requester_attrs_v2, :ditz, :blog, :post, :blogfeed, :requesters, :requester_attrs_2, :x, :ferret_index, :rules, :dedupe_reqs, :backup_db, :check_for_duplicate_requester_objects, :wth]
+  before_filter :authorize, :except => [:requester_stats, :info, :help, :help_v2, :install_v2, :install_welcome, :requester_attrs, :requester_attrs_v2, :ditz, :blog, :post, :blogfeed, :requesters, :requester_attrs_2, :x, :ferret_index, :rules, :dedupe_reqs, :backup_db, :check_for_duplicate_requester_objects, :wth, :data_use_policy]
   before_filter :check_for_existing_report, :only => :add_report
   before_filter :verify, :only => :add_report
   before_filter :authorize_as_commenter, :only => [:add_comment, :add_flag]
 
   def pri
+  end
+
+  def data_use_policy
   end
 
   def survey2016
@@ -23,7 +26,7 @@ class MainController < ApplicationController
       @requester = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
       unless @requester.nil?
         @report = Report.find_by_person_id_and_requester_id(session[:person_id], @requester.id)
-        unless @report.nil? or session[:person_id] == 1
+        unless @report.nil? #or session[:person_id] == 1
           flash[:notice] = "<div class=\"success\">You have a review for that requester already. You can update it if you would like.</div>"
           redirect_to :action => "edit_report", :id => @report.id
         end
@@ -244,6 +247,13 @@ class MainController < ApplicationController
       if params[:report][:description].blank?
         flash[:notice] = "<div class=\"error\">Please fill in the report description.</div>"
         render :action => "add_report" and return
+      end
+      if params[:report][:fair] == "1" and params[:report][:fast] == "1" and params[:report][:pay] == "1" and params[:report][:comm] == "1"
+        unless params[:onebomb] and params[:onebomb][:onebomb] == "1"
+          flash[:notice] = "<p class=\"box error\">It looks like you rated <strong>all</strong> the fields 1. Please only rate applicable attributes. Examples: Select \"N/A\" for communication if you have not tried to contact the requester. Also, if you just submitted the hit, please wait to rate the requester's speed. For any other questions please check <a href=\"#howto\" style=\"color: #000; text-decoration: underline\">our information on how to review</a>. If you have tried to contact the requester, to have received an approval or rejection, and you really meant to rate all 1s, you can check the appropriate box below. Thank you!</p>"
+          params[:onebombbox] = true
+          render :action => "add_report" and return
+        end
       end
       if @report.save
         @report.update_attributes(:amzn_requester_name => params[:requester][:amzn_name])

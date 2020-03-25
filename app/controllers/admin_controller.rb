@@ -15,6 +15,29 @@ class AdminController < ApplicationController
   def index
   end
 
+#  def all_emails
+#    @emails = Person.all.collect{|p| p.email}
+    # @emails = ["a@b.c", "b@c.net", "d@f.net"]
+#  end
+
+#  def emails_of_reviewers
+#    @emails = Report.all.collect{|r| r.person.email}
+#    render :action => "all_emails"
+#  end
+
+#  def emails_of_reviewers_by_req
+#    @emails = Requester.find_by_amzn_requester_id(params[:amzn_id]).reports.collect{|r| r.person.email}.uniq
+#    render :action => "all_emails"
+#  end
+
+#  def emails_of_commenters_with_no_reviews
+#    @emails = []
+#    Person.find_all_by_can_comment(true).each do |p|
+#      @emails << p.email if p.reports.empty?
+#    end
+#    render :action => "all_emails"
+#  end
+
 #  def send_facilitator_info_mails
     # precondition: run:
     # ~/src/turkopticon/log$ tail -n 500000 ip.log > ip500k.log

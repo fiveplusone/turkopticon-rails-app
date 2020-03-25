@@ -76,6 +76,10 @@
       - url = "https://www.mturk.com/mturk/findhits?match=false"
     - url = url.split("url")[url.split("url").length - 1]
     = hidden_field :url, :url, :value => url
+    - if params[:onebombbox]
+      = check_box :onebomb, :onebomb
+      &nbsp;
+      I am rating "all 1s". My HIT has been approved or rejected, and I tried to communicate with the requester.
     %p
       %div{:style => "text-align: right; width: 26em;"}= submit_tag 'Report'
     %br/

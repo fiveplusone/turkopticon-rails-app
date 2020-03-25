@@ -91,6 +91,9 @@
           = link_to "<img src='/images/page.png' title='Show all reviews from this person on one page (slow)' border='0' width='8' height='10' />", :controller => "main", :action => "reports_by_one_page", :id => report.person_id
           = link_to "<img src='/images/bubble.png' title='Show all comments by this person' border='0' width='10' height='10' />", :controller => "main", :action => "comments_by", :id => report.person_id
           = link_to "<img src='/images/warning.gif' title='Show all reviews flagged by this person' border='0' width='10' height='10' />", :controller => "main", :action => "flagged_by", :id => report.person_id
+          - if [1, 2, 74050, 54142, 26343].include? session[:person_id]
+            &nbsp;
+            = report.person.email
         - if report.ip
           - if Person.find(session[:person_id]).is_moderator
             &nbsp;|&nbsp;
@@ -98,6 +101,12 @@
         - if report.person_id == session[:person_id] or Person.find(session[:person_id]).is_admin or Person.find(session[:person_id]).is_moderator
           &nbsp;|&nbsp;
           = link_to "edit", :controller => "main", :action => "edit_report", :id => report.id
+          - if session[:person_id] == 1
+            &nbsp;|&nbsp;
+            - if !report.locked_until.nil? and report.locked_until > Time.now
+              locked
+            - else
+              = link_to "lock", :controller => "mod", :action => "lock_thread", :id => report.id
         - unless session[:person_id].nil?
           - flag = Flag.find_by_report_id_and_person_id(report.id, session[:person_id])
           &nbsp;|&nbsp;
@@ -107,8 +116,11 @@
             - if Person.find(session[:person_id]).can_comment
               = link_to_remote "flag", :url => {:controller => "main", :action => "flag", :id => report.id}
           - if Person.find(session[:person_id]).can_comment
-            &nbsp;|&nbsp;
-            = link_to "comment", :controller => "main", :action => "add_comment", :id => report.id
+            - if !report.locked_until.nil? and report.locked_until > Time.now
+              &nbsp;
+            - else
+              &nbsp;|&nbsp;
+              = link_to "comment", :controller => "main", :action => "add_comment", :id => report.id
       %br/
       - for f in report.flags
         .flag_comment

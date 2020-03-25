@@ -19,6 +19,14 @@ class ModController < ApplicationController
     end
   end
 
+  def lock_thread
+    @report = Report.find(params[:id])
+    locktime = Time.now + 48.hours
+    @report.update_attributes(:locked_by_person_id => session[:person_id], :locked_until => locktime)
+    flash[:notice] = "The thread will be locked until " + locktime.strftime("%a %b %d %Y %H:%M %Z")
+    redirect_to :controller => "main", :action => "report", :id => @report.id
+  end
+
   def edit_rules
     @rv = RulesVersion.new(params[:rules_version])
     if request.post?
@@ -54,7 +62,8 @@ class ModController < ApplicationController
   def ignored
     @title = "Reviews with ignored flags"
     @reports = Report.paginate(:page => params[:page],
-                               :order => "id DESC",
+#                               :order => "id DESC",
+                               :order => "updated_at DESC",
                                :conditions => "is_flagged = 1 and ignore_count > 0")
     render :action => "index"
   end
