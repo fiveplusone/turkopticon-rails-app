@@ -91,7 +91,7 @@
           = link_to "<img src='/images/page.png' title='Show all reviews from this person on one page (slow)' border='0' width='8' height='10' />", :controller => "main", :action => "reports_by_one_page", :id => report.person_id
           = link_to "<img src='/images/bubble.png' title='Show all comments by this person' border='0' width='10' height='10' />", :controller => "main", :action => "comments_by", :id => report.person_id
           = link_to "<img src='/images/warning.gif' title='Show all reviews flagged by this person' border='0' width='10' height='10' />", :controller => "main", :action => "flagged_by", :id => report.person_id
-          - if [1, 2, 74050, 54142, 26343].include? session[:person_id]
+          - if [1, 2, 74050, 54142, 26343, 63360].include? session[:person_id].to_i
             &nbsp;
             = report.person.email
         - if report.ip
