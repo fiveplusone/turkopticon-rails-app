@@ -1,0 +1,32 @@
+body {
+  font-family: Menlo, Monaco, "Courier New", Courier, monospace;
+  color: #444;
+  max-width: 700px;
+  padding: 30px;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5 {
+  color: #111;
+  font-weight: bold;
+}
+
+a {
+  text-decoration: none;
+  color: #06f;
+}
+
+a:hover {
+  background-color: #06f;
+  color: #fff;
+}
+
+img {
+  border: 1px solid #000;
+  float: right;
+  margin: 0 0 5px 5px;
+}
+
+p, ul, ol, blockquote {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
