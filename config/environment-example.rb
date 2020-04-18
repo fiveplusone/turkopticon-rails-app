@@ -11,9 +11,9 @@ Rails::Initializer.run do |config|
   # config.time_zone = 'UTC'
   config.gem "haml"
   config.gem 'mislav-will_paginate', :lib => 'will_paginate'
-  # config.action_mailer.delivery_method = :sendmail
-  config.action_mailer.delivery_method = :smtp  # smtp settings in
-                                                # config/initializers/smtp_gmail.rb
+  # config.action_mailer.delivery_method = :smtp  # smtp settings in
+                                                  # config/initializers/smtp_gmail.rb
+  config.action_mailer.delivery_method = :sendmail
   config.action_controller.session_store = :cookie_store
   config.action_controller.session = {
     :key => '_turkopticon_session',
@@ -21,4 +21,3 @@ Rails::Initializer.run do |config|
   }
 end
 ActionController::Base.session_options[:expire_after] = 1.year
-require 'acts_as_ferret'
