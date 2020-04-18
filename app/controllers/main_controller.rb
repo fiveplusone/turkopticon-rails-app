@@ -304,7 +304,7 @@ class MainController < ApplicationController
       if @flag.save and @report.update_flag_data
         @report.update_attributes(:flag_count => @report.flags.count)
         flash[:notice] = "<div class=\"success\">Report was flagged.</div>"
-        FlagMailer::deliver_notify(@report.id, @flag.comment)
+        #FlagMailer::deliver_notify(@report.id, @flag.comment)
         redirect_to :controller => "main", :action => "index", :id => @report.requester_amzn_id
       end
     end
