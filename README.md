@@ -48,10 +48,13 @@ The software we will be using requires version 5 of mysql. `brew install mysql@5
 ```bash
 # make sure mysql has been started 
 # command similar to mysql.server start or brew services start mysql@5.7
-$ mysql -u root
+# mysql -u root -p password (if you've set a password)
+$ mysql -u root 
 mysql> create database turkopticon_devel;
 mysql> create user 'turkopticon_dev'@'localhost' identified by 'PASSWORD';
 mysql> grant all privileges on turkopticon_devel.* to 'turkopticon_dev'@'localhost';
+# exit mysql with ctrl+d
+$ mysql -u root turkopticon_devel < ./db/turkopticon-empty-structure.sql
 ```
 
 The password that you set for the host must be the same values that you enter into the `database.yml` file so you should save it.
