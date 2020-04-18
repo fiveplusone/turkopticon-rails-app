@@ -22,6 +22,7 @@ php_api/mysqli-dbconn.php
 !public/turkopticon-2014.01.28.1207.user.js
 !public/api/multi-attrs.php
 !public/api/reviews.php
+!public/faq/
 public/
 tmp/
 php_api/access-tokens.php
