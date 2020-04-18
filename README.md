@@ -68,7 +68,6 @@ gem install rails -v 2.3.11
 gem install mysql -v 2.9.1
 gem install json -v 1.8.1
 gem install haml -v 3.1.2
-# gem install passenger -v 4.0.23
 gem install --local tmp/gem/mislav-will_paginate-2.3.11.gem --no-rdoc --no-ri # from turkoptica-rails-app dir
 ```
 
