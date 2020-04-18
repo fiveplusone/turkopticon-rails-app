@@ -15,6 +15,7 @@ index/
 log/
 php_api/dbconn.php
 php_api/mysqli-dbconn.php
+public/
 !public/images/
 !public/javascripts/
 !public/stylesheets/
@@ -23,7 +24,6 @@ php_api/mysqli-dbconn.php
 !public/api/multi-attrs.php
 !public/api/reviews.php
 !public/faq/
-public/
 tmp/
 php_api/access-tokens.php
 etc/
