@@ -1,8 +1,8 @@
 development:
   adapter: mysql
-  database: turkopticon_development
+  database: turkopticon_devel
   host: localhost
-  username: user
+  username: turkopticon_dev
   password: password
 
 production:
