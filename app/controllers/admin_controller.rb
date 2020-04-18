@@ -25,6 +25,24 @@ class AdminController < ApplicationController
 #    render :action => "all_emails"
 #  end
 
+#  def emails_of_reviewers_who_have_left_reviews_since_date
+#    reports = Report.find_by_sql('select id, person_id from reports where created_at > "2020-01-31"')
+#    @emails = reports.collect{|r| Person.find(r[:person_id]).email}.uniq
+#    render :action => "all_emails"
+#  end
+
+#  def emails_of_people_who_have_signed_up_since_date
+#    new_users = Person.find_by_sql('select id, email from people where created_at > "2020-01-31"')
+#    @emails = new_users.collect{|p| p[:email]}.uniq
+#    render :action => "all_emails"
+#  end
+
+#  def emails_of_people_who_have_signed_up_since_date_and_left_reviews
+#    reports = Report.find_by_sql('select id, person_id from reports where created_at > "2020-01-31"')
+#    @emails = reports.select{|r| Person.find(r[:person_id]).created_at > "2020-01-31".to_date}.collect{|r| Person.find(r[:person_id]).email}.uniq
+#    render :action => "all_emails"
+#  end
+
 #  def emails_of_reviewers_by_req
 #    @emails = Requester.find_by_amzn_requester_id(params[:amzn_id]).reports.collect{|r| r.person.email}.uniq
 #    render :action => "all_emails"
