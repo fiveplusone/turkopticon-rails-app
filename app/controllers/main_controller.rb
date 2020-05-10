@@ -250,7 +250,7 @@ class MainController < ApplicationController
       end
       if params[:report][:fair] == "1" and params[:report][:fast] == "1" and params[:report][:pay] == "1" and params[:report][:comm] == "1"
         unless params[:onebomb] and params[:onebomb][:onebomb] == "1"
-          flash[:notice] = "<p class=\"box error\">It looks like you rated <strong>all</strong> the fields 1. Please only rate applicable attributes. Examples: Select \"N/A\" for communication if you have not tried to contact the requester. Also, if you just submitted the hit, please wait to rate the requester's speed. For any other questions please check <a href=\"#howto\" style=\"color: #000; text-decoration: underline\">our information on how to review</a>. If you have tried to contact the requester, to have received an approval or rejection, and you really meant to rate all 1s, you can check the appropriate box below. Thank you!</p>"
+          flash[:notice] = "<p class=\"box error\">It looks like you rated <strong>all</strong> the fields 1. Please only rate applicable attributes. Examples: Select \"N/A\" for communication if you have not tried to contact the requester. Also, if you just submitted the hit, please wait to rate the requester's speed. For any other questions please check <a href=\"#howto\" style=\"color: #000; text-decoration: underline\">our information on how to review</a>. If you have tried to contact the requester, have received an approval or rejection, and you really meant to rate all 1s, you can check the appropriate box below. Thank you!</p>"
           params[:onebombbox] = true
           render :action => "add_report" and return
         end

@@ -11,4 +11,6 @@
     #nav= render :partial => 'nav'
     - if flash[:notice]
       #notice= flash[:notice]
+    - if flash[:error]
+      #error= flash[:error]
     #main= yield

@@ -1,0 +1,20 @@
+%strong Reassign a review to a different requester
+
+%p
+  Note: For now, it is only possible to assign a review to a requester that is already in the Turkopticon database.
+
+- form_tag(:action => "do_reassign_report_to_different_requester") do
+  %table
+    %tr
+      %td
+        .label Turkopticon review ID ("report ID")
+        = text_field :report, :id
+      %td
+        <img src="/images/report_id.png" width="250" height="83" />
+    %tr{:style => "border-top: 1px solid #666"}
+      %td
+        .label Enter the <strong>Turkopticon</strong> requester ID of the requester<br/>to which the review should be assigned:
+        = text_field :report, :new_req_id
+      %td
+        <img src="/images/to_requester_id.png" width="250" height="83" />
+  = submit_tag "Reassign"

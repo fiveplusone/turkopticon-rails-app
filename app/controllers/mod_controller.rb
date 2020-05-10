@@ -19,6 +19,55 @@ class ModController < ApplicationController
     end
   end
 
+  def utils
+  end
+
+  def reassign_report_to_different_requester
+  end
+
+  def do_reassign_report_to_different_requester
+    begin
+      report = Report.find(params[:report][:id].strip)
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "Sorry, there doesn't seem to be a review with that ID (#{params[:report][:id].strip}) in the Turkopticon database."
+      redirect_to :action => "reassign_report_to_different_requester" and return
+    end
+    begin
+      newreq = Requester.find(params[:report][:new_req_id].strip)
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "Sorry, there doesn't seem to be a requester with that ID (#{params[:report][:new_req_id].strip}) in the Turkopticon database."
+      redirect_to :action => "reassign_report_to_different_requester" and return
+    end
+    oldreq = report.requester
+    report.update_attributes(:requester_id => params[:report][:new_req_id].strip, :amzn_requester_name => newreq.amzn_requester_name, :amzn_requester_id => newreq.amzn_requester_id)
+    oldreq.cache_columns
+    newreq.cache_columns
+    # log:
+    t = Time.now.strftime("%H:%M %a %b %d %Y")
+    ip = request.remote_ip
+    person_id = session[:person_id]
+    ReviewReassignLogger.info "[#{t}] User #{person_id.to_s} (#{ip}) reassigned review #{report.id.to_s} from requester #{oldreq.id.to_s} to requester #{newreq.id.to_s}"
+    flash[:notice] = "Review #{report.id.to_s} assigned to new requester."
+    redirect_to :action => "reassign_report_to_different_requester"
+  end
+
+  def xxx_do_reassign_report_to_different_requester
+    @report = Report.find(params[:report_id])
+    newreqid = params[:new_req_id]
+    oldreq = @report.requester
+    newreq = Requester.find(newreqid)
+    if true
+    end
+    if params[:new_req_id] and params[:new_req_name]
+      # see if requester object with that amzn id and name exists; if yes, get TO req id; if not, create, then get TO req id
+      # update report attributes (requester_id, amzn req id, amzn req name)
+      # update old requester object cache columns
+      # update new requester object cache columns
+    else
+      # error (display in flash notice)
+    end
+  end
+
   def lock_thread
     @report = Report.find(params[:id])
     locktime = Time.now + 48.hours

@@ -137,3 +137,10 @@ th {
   color: #fff;
   padding: 8px;
 }
+
+#error {
+  background-color: #a00;
+  font-weight: bold;
+  color: #fff;
+  padding: 8px;
+}
