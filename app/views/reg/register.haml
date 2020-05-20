@@ -8,6 +8,28 @@
       return false;
     }
   }
+  console.log(document.getElementById('person_country'));
+  window.onload = () => {
+    console.log('window on load');
+    country_select = document.getElementById('person_country');
+    state_select = document.getElementById('person_state');
+    state_label = document.getElementById('state_label');
+    state_select.style.display = 'none';
+    state_label.style.display = 'none';
+    country_select.addEventListener('change', (event) => {
+      if (country_select.value == 'US') {
+        state_select.style.display = 'inline-block';
+        state_label.style.display = 'inline-block';
+      } else {
+        state_select.style.display = 'none';
+        state_label.style.display = 'none';
+        state_select.selectedIndex = 0;
+      }
+    })
+  }
+
+:css
+  .country_explanation { width: 60%; margin-left: 0; }
 
 = error_messages_for :person
 
@@ -23,6 +45,24 @@
   %p
     .label Confirm Password
     = f.password_field 'password_confirmation', :size => 20
+
+  %hr.country_explanation
+  .country_explanation Your location helps us connect you to resources for workers based on the state and country you in. This can also help us fundraise to keep Turkopticon free. Some funders target particular states and countries.
+
+  %p
+    .label Country
+    = f.select 'country', Person.country_list, :include_blank => 'Select a Country'
+
+  %p
+    .label{:id => 'state_label' } State 
+    = f.select 'state', Person.us_states_list, :include_blank => 'Select a State'
+
+  %hr.country_explanation
+  .country_explanation We rarely — but sometimes — need to call community members to help them troubleshoot or to ask for your input.
+
+  %p
+    .label Phone
+    = f.text_field 'phone', :size => 20
 
   %p
     .button= submit_tag 'Register'

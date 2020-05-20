@@ -1,3 +1,25 @@
+:javascript
+  window.onload = () => {
+    console.log('window on load');
+    country_select = document.getElementById('person_country');
+    state_select = document.getElementById('person_state');
+    state_label = document.getElementById('state_label');
+    if (country_select.value != 'US') {
+      state_select.style.display = 'none';
+      state_label.style.display = 'none';
+    }
+    country_select.addEventListener('change', (event) => {
+      if (country_select.value == 'US') {
+        state_select.style.display = 'inline-block';
+        state_label.style.display = 'inline-block';
+      } else {
+        state_select.style.display = 'none';
+        state_label.style.display = 'none';
+        state_select.selectedIndex = 0;
+      }
+    })
+  }
+
 %h2 Settings
 
 .box{:style => "max-width: 500px"}
@@ -42,6 +64,37 @@
         %span.error= flash[:errors][:password]
     %p
       = submit_tag "Change my password"
+
+%hr/
+
+.box{:style => "max-width: 500px"}
+  %p
+    %strong Location
+  %p Your location helps us connect you to resources for workers based on the state and country you in. This can also help us fundraise to keep Turkopticon free. Some funders target particular states and countries.
+
+  - form_for :person, :url => {:controller => "reg", :action => "change_location"} do |f|
+    %p
+      .label Country
+      = f.select 'country', Person.country_list, :selected => @person.country
+    %p
+      .label{:id => 'state_label'} State
+      = f.select 'state', Person.us_states_list, :include_blank => 'Select a State', :selected => @person.state
+    %p
+      = submit_tag "Save as my Location"
+
+%hr/
+
+.box{:style => "max-width: 500px"}
+  %p
+    %strong Phone Number
+  %p We rarely — but sometimes — need to call community members to help them troubleshoot or to ask for your input.
+
+  - form_for :person, :url => {:controller => "reg", :action => "change_phone"} do |f|
+    %p
+      .label Phone
+      = f.text_field 'phone', :size => 20
+    %p
+      = submit_tag "Save my Phone Number"
 
 - if session[:person_id] == 4343
   .box{:style => "max-width: 500px"}

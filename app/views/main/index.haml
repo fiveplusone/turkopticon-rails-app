@@ -83,6 +83,11 @@
 %p#advisory
   Reviews, comments, and flag content should follow the Turkopticon <a href="/main/rules">civility guidelines</a>. Please review them before posting. Content that does not follow the guidelines may be edited.
 
+- if @location == 'reports by' and Person.find(session[:person_id]).is_moderator
+  %h2 About #{@display_name}
+  %p Account created: #{@person.created_at}
+  %p #{Person.state_long_name(@person.state)} #{Person.country_long_name(@person.country)} | #{@person.phone}
+
 %br/
 .box
   = render :partial => 'main/tabs'

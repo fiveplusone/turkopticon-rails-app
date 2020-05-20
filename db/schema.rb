@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200121180603) do
+ActiveRecord::Schema.define(:version => 20200520174754) do
 
   create_table "Dolores_A2IR8TEVONNLZO", :id => false, :force => true do |t|
     t.integer  "id",            :default => 0, :null => false
@@ -157,6 +157,9 @@ ActiveRecord::Schema.define(:version => 20200121180603) do
     t.integer  "commenting_disabled_by"
     t.datetime "commenting_disabled_at"
     t.boolean  "hide_long_reviews"
+    t.string   "country"
+    t.string   "state"
+    t.string   "phone"
   end
 
   create_table "posts", :force => true do |t|
