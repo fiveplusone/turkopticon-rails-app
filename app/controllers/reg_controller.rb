@@ -36,10 +36,10 @@ class RegController < ApplicationController
       flash[:notice] = "Thanks for signing up. We've sent an email to #{@person.email}. Please click the link in the email to verify your address."
 
       # create account on turkopticon.info
-      # apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
-      # user = "{" + @person.to_json.split("{")[2].split("}")[0] + "}".gsub("'","\'")
-      # result = `echo '#{user}' | curl -d @- 'https://api.turkopticon.info/accounts?key=#{apikey}' --header 'Content-Type: application/json'`
-      # File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT CREATION API WITH: #{user}\nRESULT: #{result}\n\n") }
+      apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
+      user = "{" + @person.to_json.split("{")[2].split("}")[0] + "}".gsub("'","\'")
+      result = `echo '#{user}' | curl -d @- 'https://api.turkopticon.info/accounts?key=#{apikey}' --header 'Content-Type: application/json'`
+      File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT CREATION API WITH: #{user}\nRESULT: #{result}\n\n") }
 
       redirect_to :controller => "main", :action => "index"
     end
@@ -68,14 +68,12 @@ class RegController < ApplicationController
         session[:person_id] = person.id
         if person.id == 1
           cookies['person_id'] = "1" # {:value => person.id.to_s, :expires => Time.now + 3600 * 24 * 30}
-          # TODO: I commented this out because it was throwing an error. 
-          #       Probably need to figure out why the error happened 😬
-          # IPLogger.info "    cookies['person_id']: #{cookies['person_id']}"
+          IPLogger.info "    cookies['person_id']: #{cookies['person_id']}"
         end
 
         t = Time.now.strftime("%H:%M %a %b %d %Y")
         ip = request.remote_ip
-        # IPLogger.info "[#{t}] #{person.email} logged in from #{ip}"
+        IPLogger.info "[#{t}] #{person.email} logged in from #{ip}"
         # IPLogger.info "    cookies: #{cookies.inspect}"
         logger.info "[#{t}] #{person.email} logged in from #{ip}"
 
@@ -147,6 +145,20 @@ class RegController < ApplicationController
 
       if @person.save
         flash[:notice] = "Your phone number has been updated."
+      end
+    end
+    redirect_to :controller => "reg", :action => "settings"
+  end
+
+  def change_optin
+    @person = Person.find(session[:person_id])
+    if request.post?
+      @new_optin = params[:person][:optin]
+
+      @person.optin = @new_optin
+
+      if @person.save
+        flash[:notice] = "You have opted #{@new_optin == "1" ? "in to" : "out of"} our Newsletter"
       end
     end
     redirect_to :controller => "reg", :action => "settings"

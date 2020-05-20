@@ -63,6 +63,13 @@
   %p
     .label Phone
     = f.text_field 'phone', :size => 20
+  
+  %hr.country_explanation
+  .country_explanation Stay up to date with with whats going on at TO and subcribe to our monthly newsletter.
+
+  %p
+    .label Receive Updates
+    = f.check_box :optin, {:checked => true}
 
   %p
     .button= submit_tag 'Register'

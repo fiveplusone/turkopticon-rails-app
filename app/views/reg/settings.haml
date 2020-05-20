@@ -96,6 +96,21 @@
     %p
       = submit_tag "Save my Phone Number"
 
+%hr/
+
+.box{:style => "max-width: 500px"}
+  %p
+    %strong Newsletter Opt-in
+  %p Stay up to date with whats going on with Turkopticon and receive our monthly newsletter.
+
+  - form_for :person, :url => {:controller => "reg", :action => "change_optin"} do |f|
+    %p
+      .label Newsletter
+      = f.check_box 'optin'
+    %p
+      = submit_tag "Save my Opt in Status"
+
+
 - if session[:person_id] == 4343
   .box{:style => "max-width: 500px"}
     %p
