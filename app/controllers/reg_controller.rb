@@ -150,6 +150,26 @@ class RegController < ApplicationController
     redirect_to :controller => "reg", :action => "settings"
   end
 
+  def change_phone_and_location
+    puts "printing params to this"
+    puts params
+    @person = Person.find(params[:person][:id])
+    if request.post?
+      @new_phone = params[:person][:phone]
+      @new_country = params[:person][:country]
+      @new_state = params[:person][:state]
+
+      @person.country = @new_country
+      @person.state = @new_state
+      @person.phone = @new_phone
+
+      if @person.save
+        flash[:notice] = "This person's info has been updated."
+      end
+    end
+    redirect_to :controller => "main", :action => "reports_by", :id => @person.id
+  end
+
   def change_optin
     @person = Person.find(session[:person_id])
     if request.post?

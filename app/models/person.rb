@@ -189,13 +189,13 @@ class Person < ActiveRecord::Base
   def self.state_long_name(abbreviation)
     state = ''
     unless (abbreviation.nil? or abbreviation == '')
-      state = Person.us_states_list.select{|pair| pair[1] == abbreviation}.first.first + ', '
+      state = Person.us_states_list.select{|pair| pair[1] == abbreviation}.first.first
     end
     state
   end
 
   def self.country_long_name(abbreviation)
-    country = 'No Country Specified'
+    country = ''
     unless (abbreviation.nil?)
       country = Person.country_list.select{|pair| pair[1] == abbreviation}.first.first
     end

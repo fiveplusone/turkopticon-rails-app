@@ -1,6 +1,5 @@
 :javascript
   window.onload = () => {
-    console.log('window on load');
     country_select = document.getElementById('person_country');
     state_select = document.getElementById('person_state');
     state_label = document.getElementById('state_label');
@@ -75,7 +74,7 @@
   - form_for :person, :url => {:controller => "reg", :action => "change_location"} do |f|
     %p
       .label Country
-      = f.select 'country', Person.country_list, :selected => @person.country
+      = f.select 'country', Person.country_list, :include_blank => 'Select a Country', :selected => @person.country
     %p
       .label{:id => 'state_label'} State
       = f.select 'state', Person.us_states_list, :include_blank => 'Select a State', :selected => @person.state

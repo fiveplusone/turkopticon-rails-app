@@ -5,6 +5,47 @@
     document.getElementById("box_" + id.toString()).value = text;
   }
 
+- if @location == 'reports by' and Person.find(session[:person_id]).is_moderator
+  :javascript
+    window.onload = () => {
+      country_select = document.getElementById('person_country');
+      state_select = document.getElementById('person_state');
+      state_label = document.getElementById('state_label');
+      if (country_select.value != 'US') {
+        state_select.style.display = 'none';
+        state_label.style.display = 'none';
+      }
+      country_select.addEventListener('change', (event) => {
+        if (country_select.value == 'US') {
+          state_select.style.display = 'inline-block';
+          state_label.style.display = 'inline-block';
+        } else {
+          state_select.style.display = 'none';
+          state_label.style.display = 'none';
+          state_select.selectedIndex = 0;
+        }
+      })
+
+      user_info = document.getElementById('user_info');
+      form = document.getElementById('form_for_user');
+      form_edit = document.getElementById('form_for_user_edit');
+      form_cancel = document.getElementById('form_for_user_cancel');
+
+      form_edit.addEventListener('click', (event) => {
+        event.preventDefault();
+        form.style.display = 'block';
+        form_edit.style.display = 'none';
+        user_info.style.display = 'none';
+      })
+
+      form_cancel.addEventListener('click', (event) => {
+        event.preventDefault();
+        form.style.display = 'none';
+        form_edit.style.display = 'inline-block';
+        user_info.style.display = 'contents';
+      })
+    }
+
 /
   %p#advisory
     %strong 31 Jul 2019
@@ -86,7 +127,24 @@
 - if @location == 'reports by' and Person.find(session[:person_id]).is_moderator
   %h2 About #{@display_name}
   %p Account created: #{@person.created_at}
-  %p #{Person.state_long_name(@person.state)} #{Person.country_long_name(@person.country)} | #{@person.phone}
+  %p{:id => "user_info", :style => "display:contents"} #{@person.state != nil && @person.state != "" ? Person.state_long_name(@person.state) + "," : ""} #{@person.country != nil && @person.country != "" ? Person.country_long_name(@person.country) : "No Country Specified"} | #{@person.phone != nil && @person.phone != "" ? @person.phone : "No Phone Specified"}
+  %button{:id => "form_for_user_edit"} Edit
+  - form_for :person, :url => {:controller => "reg", :action => "change_phone_and_location"}, :html => {:id => "form_for_user", :style => "display:none"} do |f|
+    %p
+      .label Country
+      = f.select 'country', Person.country_list, :include_blank => 'Select a Country', :selected => @person.country
+    %p
+      .label{:id => 'state_label'} State
+      = f.select 'state', Person.us_states_list, :include_blank => 'Select a State', :selected => @person.state
+    %p
+      .label Phone
+      = f.text_field 'phone', :size => 20
+    %p
+      = f.text_field 'id', :size => 20, :style => "display:none"
+    %p
+      = submit_tag "Save"
+      %button{:id => "form_for_user_cancel"} Cancel
+  %br
 
 %br/
 .box

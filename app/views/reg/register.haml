@@ -29,7 +29,7 @@
   }
 
 :css
-  .country_explanation { width: 60%; margin-left: 0; }
+  .constrain_width { width: 60%; margin-left: 0; }
 
 = error_messages_for :person
 
@@ -46,26 +46,28 @@
     .label Confirm Password
     = f.password_field 'password_confirmation', :size => 20
 
-  %hr.country_explanation
-  .country_explanation Your location helps us connect you to resources for workers based on the state and country you in. This can also help us fundraise to keep Turkopticon free. Some funders target particular states and countries.
+  %hr.constrain_width
+  .constrain_width Your location helps us connect you to resources for workers based on the state and country you in. This can also help us fundraise to keep Turkopticon free. Some funders target particular states and countries.
 
   %p
     .label Country
     = f.select 'country', Person.country_list, :include_blank => 'Select a Country'
+    %p{:style => "display:contents"} (optional)
 
   %p
     .label{:id => 'state_label' } State 
     = f.select 'state', Person.us_states_list, :include_blank => 'Select a State'
 
-  %hr.country_explanation
-  .country_explanation We rarely — but sometimes — need to call community members to help them troubleshoot or to ask for your input.
+  %hr.constrain_width
+  .constrain_width We rarely — but sometimes — need to call community members to help them troubleshoot or to ask for your input.
 
   %p
     .label Phone
     = f.text_field 'phone', :size => 20
+    %p{:style => "display:contents"} (optional)
   
-  %hr.country_explanation
-  .country_explanation Stay up to date with with whats going on at TO and subcribe to our monthly newsletter.
+  %hr.constrain_width
+  .constrain_width Stay up to date with with whats going on at TO and subcribe to our monthly newsletter.
 
   %p
     .label Receive Updates
