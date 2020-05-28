@@ -1,3 +1,0 @@
-#logfile = File.open('//home/ssilberman/src/turkopticon/log/ip.log', 'a')
-#logfile.sync = true
-#IPLogger = Logger.new(logfile)
