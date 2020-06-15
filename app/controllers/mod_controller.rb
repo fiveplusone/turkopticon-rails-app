@@ -22,6 +22,24 @@ class ModController < ApplicationController
   def utils
   end
 
+  def close_account
+    
+  end
+
+  def do_close_account
+    person = Person.find(params[:person][:id].to_i)
+    if person.nil?
+      flash[:error] = "Sorry, couldn't find an account with person ID " + params[:person][:id] + "."
+      redirect_to :action => "close_account"
+    elsif person.close
+      flash[:notice] = "Account with person ID " + params[:person][:id] + " closed."
+      redirect_to :action => "close_account"
+    else
+      flash[:error] = "An unexpected error occurred. The user account was found but for some reason could not be closed."
+      redirect_to :action => "close_account"
+    end
+  end
+
   def reassign_report_to_different_requester
   end
 

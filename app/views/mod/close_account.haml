@@ -1,0 +1,16 @@
+%strong Close an account
+
+%p
+  Note: The Turkopticon "person ID" or "user ID" is the number at the end of the URL when you click on their username; for example:
+
+%blockquote https://turkopticon.ucsd.edu/by/1234567
+
+%p
+  In the URL above, 1234567 is the "Turkopticon person ID" or "user ID". It is completely separate and independent from the MTurk worker or requester ID.
+
+- form_tag(:action => "do_close_account") do
+  .label Turkopticon person/user ID
+  = text_field :person, :id, :value => ""
+  %p
+    Please double check that the ID is correct before clicking the button below. The account will be closed immediately and the user will not be able to log in or post new reviews.
+  = submit_tag "Close account"
