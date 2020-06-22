@@ -282,4 +282,30 @@ class AdminController < ApplicationController
     redirect_to :controller => "main", :action => "index"
   end
 
+  def condition_date(params)
+    year = params[:"filter(1i)"] != "" ? params[:"filter(1i)"].to_f : 2008
+    month = params[:"filter(2i)"] != "" ? params[:"filter(2i)"].to_f : 1
+    date = params[:"filter(3i)"] != "" ? params[:"filter(3i)"].to_f : 1
+    Date.new(year, month, date)
+  end
+
+  def fetch_contacts_csv
+    require 'csv'
+    conditions = "created_at > ? and is_moderator = true"
+    created_since = condition_date(params[:created_since])
+    if params[:opted_in][:filter] == "1"
+      conditions = conditions + " and optin = true"
+    end
+    puts "conditions are now"
+    puts conditions
+    puts created_since
+
+    @contacts = Person.find(:all, :conditions => [conditions, created_since])
+    csv = CSV.generate_line(%w(email, updated_at))
+    csv << "\n"
+    @contacts.each { |news| csv << CSV.generate_line([news.email, news.updated_at]) and csv << "\n"}
+
+    send_data(csv, :type => 'text/csv', :disposition => 'attachment', :filename => "contacts-#{Date.today}.csv")
+  end
+
 end
