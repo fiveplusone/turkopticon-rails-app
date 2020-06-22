@@ -291,21 +291,35 @@ class AdminController < ApplicationController
 
   def fetch_contacts_csv
     require 'csv'
-    conditions = "created_at > ? and is_moderator = true"
-    created_since = condition_date(params[:created_since])
+    title = ""
+    conditions = "true"
+    args = []
+
+    if params[:created_since][:"filter(1i)"] != ""
+      created_since = condition_date(params[:created_since])
+      conditions = conditions + " and created_at > ?"
+      args = args + [created_since]
+      title = title + "created_#{created_since.strftime}-"
+    end
     if params[:opted_in][:filter] == "1"
       conditions = conditions + " and optin = true"
+      title = title + "opted_in-"
     end
-    puts "conditions are now"
-    puts conditions
-    puts created_since
+    if params[:country][:filter] != ""
+      conditions = conditions + " and country = '" + params[:country][:filter] + "'"
+      title = title + "from_" + params[:country][:filter] + "-"
+    end
+    if params[:state][:filter] != ""
+      conditions = conditions + " and state = '" + params[:state][:filter] + "'"
+      title = title + "from_" + params[:state][:filter] + "-"
+    end
 
-    @contacts = Person.find(:all, :conditions => [conditions, created_since])
-    csv = CSV.generate_line(%w(email, updated_at))
+    @contacts = Person.find(:all, :conditions => [conditions] + args)
+    csv = CSV.generate_line(%w(email, phone, created_at))
     csv << "\n"
-    @contacts.each { |news| csv << CSV.generate_line([news.email, news.updated_at]) and csv << "\n"}
+    @contacts.each { |contact| csv << CSV.generate_line([contact.email, contact.phone, contact.created_at]) and csv << "\n"}
 
-    send_data(csv, :type => 'text/csv', :disposition => 'attachment', :filename => "contacts-#{Date.today}.csv")
+    send_data(csv, :type => 'text/csv', :disposition => 'attachment', :filename => title + "contacts-#{Date.today}.csv")
   end
 
 end
