@@ -66,6 +66,7 @@ class RegController < ApplicationController
       if person and !person.is_closed
         # Continue normal login process
         session[:person_id] = person.id
+        person.update_attributes(:latest_login_at => DateTime.now)
         if person.id == 1
           cookies['person_id'] = "1" # {:value => person.id.to_s, :expires => Time.now + 3600 * 24 * 30}
           IPLogger.info "    cookies['person_id']: #{cookies['person_id']}"
@@ -151,8 +152,6 @@ class RegController < ApplicationController
   end
 
   def change_phone_and_location
-    puts "printing params to this"
-    puts params
     @person = Person.find(params[:person][:id])
     if request.post?
       @new_phone = params[:person][:phone]

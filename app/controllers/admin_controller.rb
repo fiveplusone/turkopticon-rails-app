@@ -282,4 +282,56 @@ class AdminController < ApplicationController
     redirect_to :controller => "main", :action => "index"
   end
 
+  def condition_date(params)
+    year = params[:"filter(1i)"] != "" ? params[:"filter(1i)"].to_f : 2008
+    month = params[:"filter(2i)"] != "" ? params[:"filter(2i)"].to_f : 1
+    date = params[:"filter(3i)"] != "" ? params[:"filter(3i)"].to_f : 1
+    Date.new(year, month, date)
+  end
+
+  def fetch_contacts_csv
+    require 'csv'
+    title = ""
+    conditions = "true"
+    args = []
+
+    if params[:created_since][:"filter(1i)"] != ""
+      created_since = condition_date(params[:created_since])
+      conditions = conditions + " and created_at > ?"
+      args = args + [created_since]
+      title = title + "registered_since_#{created_since.strftime}-"
+    end
+    if params[:logged_since][:"filter(1i)"] != ""
+      logged_since = condition_date(params[:logged_since])
+      conditions = conditions + " and latest_login_at > ?"
+      args = args + [logged_since]
+      title = title + "logged_since_#{logged_since.strftime}-"
+    end
+    if params[:reviewed_since][:"filter(1i)"] != ""
+      reviewed_since = condition_date(params[:reviewed_since])
+      conditions = conditions + " and latest_review_at > ?"
+      args = args + [reviewed_since]
+      title = title + "reviewed_since_#{reviewed_since.strftime}-"
+    end
+    if params[:opted_in][:filter] == "1"
+      conditions = conditions + " and optin = true"
+      title = title + "opted_in-"
+    end
+    if params[:country][:filter] != ""
+      conditions = conditions + " and country = '" + params[:country][:filter] + "'"
+      title = title + "from_" + params[:country][:filter] + "-"
+    end
+    if params[:state][:filter] != ""
+      conditions = conditions + " and state = '" + params[:state][:filter] + "'"
+      title = title + "from_" + params[:state][:filter] + "-"
+    end
+
+    @contacts = Person.find(:all, :conditions => [conditions] + args)
+    csv = CSV.generate_line(%w(email, phone, last_login, created_at))
+    csv << "\n"
+    @contacts.each { |contact| csv << CSV.generate_line([contact.email, contact.phone, contact.latest_login_at, contact.created_at]) and csv << "\n"}
+
+    send_data(csv, :type => 'text/csv', :disposition => 'attachment', :filename => title + "contacts-#{Date.today}.csv")
+  end
+
 end

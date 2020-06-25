@@ -1,7 +1,51 @@
-%h2 Turkopticon Administration
+:javascript
+  window.onload = () => {
+    country_select = document.getElementById('country_filter');
+    state_select = document.getElementById('state_filter');
+    state_select.style.display = 'none';
+    country_select.addEventListener('change', (event) => {
+      if (country_select.value == 'US') {
+        state_select.style.display = 'inline-block';
+      } else {
+        state_select.style.display = 'none';
+        state_select.selectedIndex = 0;
+      }
+    })
+  }
 
-%h3 Read
+%h1 Turkopticon Administration
+%a{ :href => '/', :title => "return home"} Return to Turkopticon>>
+
+%h2 Read
 
 %p
   = link_to "Dashboard", :controller => "admin", :action => "dashboard"
   (User counts, recent flags, frequent flaggers)
+
+%h2 Get Contacts List
+
+- form_tag(:action => 'fetch_contacts_csv') do
+
+  %p Leave blank, and it will not be used to filter.
+
+  %label Members Registered Since
+  = date_select "created_since", "filter", :start_year => 2008, :end_year => Date.current.year, :include_blank => true
+
+  %p
+  %label Members Logged in Since
+  = date_select "logged_since", "filter", :start_year => 2008, :end_year => Date.current.year, :include_blank => true
+
+  %p
+  %label Members Reviewed Since
+  = date_select "reviewed_since", "filter", :start_year => 2008, :end_year => Date.current.year, :include_blank => true
+
+  %p 
+  %label Members Located in
+  = select "country", "filter", Person.country_list, :include_blank => "Choose a Country"
+  = select "state", "filter", Person.us_states_list, :include_blank => "Choose a State"
+
+  %p
+  %label Members subscribed to mailing list
+  = check_box "opted_in", "filter"
+
+  %p= submit_tag "Get CSV"
