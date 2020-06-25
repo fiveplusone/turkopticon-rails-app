@@ -29,15 +29,15 @@
   %p Leave blank, and it will not be used to filter.
 
   %label Members Registered Since
-  = date_select "created_since", "filter", :start_year => 2010, :end_year => Date.current.year, :include_blank => true
+  = date_select "created_since", "filter", :start_year => 2008, :end_year => Date.current.year, :include_blank => true
 
-  -#%p
-  -#%label Members Logged in Since
-  -#= date_select "logged_since", "filter", :start_year => 2010, :end_year => Date.current.year, :include_blank => true
+  %p
+  %label Members Logged in Since
+  = date_select "logged_since", "filter", :start_year => 2008, :end_year => Date.current.year, :include_blank => true
 
-  -#%p
-  -#%label Members Reviewed Since
-  -#= date_select "reviewed_since", "filter", :start_year => 2010, :end_year => Date.current.year, :include_blank => true
+  %p
+  %label Members Reviewed Since
+  = date_select "reviewed_since", "filter", :start_year => 2008, :end_year => Date.current.year, :include_blank => true
 
   %p 
   %label Members Located in

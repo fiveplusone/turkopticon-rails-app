@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200520184905) do
+ActiveRecord::Schema.define(:version => 20200624055850) do
 
   create_table "Dolores_A2IR8TEVONNLZO", :id => false, :force => true do |t|
     t.integer  "id",            :default => 0, :null => false
@@ -161,6 +161,8 @@ ActiveRecord::Schema.define(:version => 20200520184905) do
     t.string   "state"
     t.string   "phone"
     t.boolean  "optin"
+    t.datetime "latest_review_at"
+    t.datetime "latest_login_at"
   end
 
   create_table "posts", :force => true do |t|
