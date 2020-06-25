@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(:version => 20200520184905) do
     t.string   "country"
     t.string   "state"
     t.string   "phone"
-    t.boolean  "optin"
+    t.boolean  "optin",                           :default => false
   end
 
   create_table "posts", :force => true do |t|
