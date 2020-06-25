@@ -256,6 +256,7 @@ class MainController < ApplicationController
         end
       end
       if @report.save
+        Person.find(session[:person_id]).update_attributes(:latest_review_at => @report.created_at)
         @report.update_attributes(:amzn_requester_name => params[:requester][:amzn_name])
         r = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
         if !r.nil? and r.amzn_requester_name == "null"
