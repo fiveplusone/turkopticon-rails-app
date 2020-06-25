@@ -1,9 +1,13 @@
 class MainController < ApplicationController
 
-  before_filter :authorize, :except => [:requester_stats, :info, :help, :help_v2, :install_v2, :install_welcome, :requester_attrs, :requester_attrs_v2, :ditz, :blog, :post, :blogfeed, :requesters, :requester_attrs_2, :x, :ferret_index, :rules, :dedupe_reqs, :backup_db, :check_for_duplicate_requester_objects, :wth, :data_use_policy]
+  before_filter :authorize, :except => [:requester_stats, :info, :help, :help_v2, :install_v2, :install_welcome, :requester_attrs, :requester_attrs_v2, :ditz, :blog, :post, :blogfeed, :requesters, :requester_attrs_2, :x, :ferret_index, :rules, :dedupe_reqs, :backup_db, :check_for_duplicate_requester_objects, :wth, :data_use_policy, :commentingreqs]
   before_filter :check_for_existing_report, :only => :add_report
   before_filter :verify, :only => :add_report
   before_filter :authorize_as_commenter, :only => [:add_comment, :add_flag]
+
+  def commentingreqs
+    render :text => Person.review_commenting_requests_count
+  end
 
   def pri
   end
