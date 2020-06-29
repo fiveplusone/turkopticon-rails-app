@@ -3,6 +3,10 @@
     %tr
       %td.hidden_notice{:colspan => "3"}
         The review below has been flagged as inappropriate. It does not affect the requester's rating.
+  - elsif report.person.is_closed
+    %tr
+      %td.hidden_notice{:colspan => "3"}
+        The review below was posted from an account which has been closed. The ratings are still included in the requester's rating.
   %tr
     %td{:valign => "top"}
       - rid = report.requester_amzn_id.nil? ? report.requester_id.to_s : report.requester_amzn_id
