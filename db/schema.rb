@@ -161,6 +161,8 @@ ActiveRecord::Schema.define(:version => 20200624055850) do
     t.string   "state"
     t.string   "phone"
     t.boolean  "optin",                           :default => false
+    t.datetime "latest_review_at"
+    t.datetime "latest_login_at"
   end
 
   create_table "posts", :force => true do |t|
@@ -217,6 +219,7 @@ ActiveRecord::Schema.define(:version => 20200624055850) do
   end
 
   add_index "reports", ["amzn_requester_name"], :name => "reports_requester_name_index"
+  add_index "reports", ["requester_id"], :name => "requester_id_index"
 
   create_table "reports_purgatory", :id => false, :force => true do |t|
     t.integer  "id",            :default => 0, :null => false
@@ -273,6 +276,8 @@ ActiveRecord::Schema.define(:version => 20200624055850) do
     t.integer  "all_approved_or_pending"
     t.integer  "all_pending_or_didnt_do_hits"
   end
+
+  add_index "requesters", ["amzn_requester_id"], :name => "amzn_requester_id_index"
 
   create_table "rules_versions", :force => true do |t|
     t.integer  "parent_id"
