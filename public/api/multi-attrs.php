@@ -78,7 +78,7 @@
             $to_cache = "\"\"";
 	    echo $to_cache;
 
-            apc_add($id, $to_cache, 1200);    // third parameter is time to live
+            apc_add($id, $to_cache, 2400);    // third parameter is time to live
             file_put_contents($logfile, "    " . $id . ": from DB: no reports\n", FILE_APPEND);
 
           } else { /* assume mysqli_num_rows($result) not empty */
