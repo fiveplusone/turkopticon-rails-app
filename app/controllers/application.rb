@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_ip
-    render :text => "Sorry, something went wrong." if ["74.96.142.81"].include? current_ip_address
+    render :text => "Sorry, something went wrong." if ["74.96.142.81", "51.91.67.153", "178.159.37.139"].include? current_ip_address
   end
 
   def current_ip_address
