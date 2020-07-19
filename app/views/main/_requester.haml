@@ -15,6 +15,21 @@
       - else
         = sprintf("%0.02f", v) + " / 5"
       %br/
+    %br/
+    %b
+      .smlabel= "Pay/hr:"
+    - if requester.bucket_counts.empty?
+      .smlabel no&nbsp;data
+    - else 
+      %br/
+      - requester.bucket_counts.each do |a,v|
+        .smlabel= a + ": "
+        = Requester.pay_vis(a,requester.bucket_counts) + "&nbsp;"
+        - if v == 0
+          no data
+        - else
+          .smlabel= v
+        %br/
   %td{:align => "center", :valign => "top"}= requester.reports.length
   %td{:valign => "top"}
     - if session[:person_id] and Person.find(session[:person_id])

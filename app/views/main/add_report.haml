@@ -1,3 +1,22 @@
+:javascript
+  window.onload = () => {
+    console.log('window on load');
+    buckets_info_button = document.getElementById('buckets_info_button');
+    buckets_info_text = document.getElementById('buckets_info_text');
+    buckets_info_hide = document.getElementById('buckets_info_text');
+    buckets_info_button.addEventListener('click', (event) => {
+      if (buckets_info_text.style.display == 'none') {
+        buckets_info_text.style.display = 'inline-block';
+      } else {
+        buckets_info_text.style.display = 'none';
+      }
+    })
+    buckets_info_hide.addEventListener('click', (event) => {
+        buckets_info_text.style.display = 'none';
+    })
+  }
+
+
 %p#advisory
   Please see our information about <a href="#howto">How to Review</a> if you are new!
 .box
@@ -48,6 +67,19 @@
       %br/
       = radio_button :report, :rejected, "n/a"
       N/A, all still pending or I didn't do any HITs for this requester
+    %p
+      %hr
+        %p{:id => "buckets_info_text", :style => "display: none"} 
+          We have switched to a more objective model that leaves less ambiguity about the pay offered by a HIT. We hope you find this more helpful to narrow down on which HITs to accept.
+          %a{:id => "buckets_info_hide", :style => "color: red; cursor: pointer;"} [hide]
+        %strong Estimated rate per hour for a hit
+        %a{:id => "buckets_info_button", :style => "color: red; cursor: pointer;"} [What's this?]
+        - for p in Report.pay_buckets
+          =radio_button :report, "pay_bucket", p
+          =label_tag p
+        =radio_button :report, "pay_bucket", "n/a"
+        %label_tag N/A
+      %hr
     %p
       %strong Rate this requester on the following qualities, with 1 being worst among requesters you've had experience with and 5 being best among requesters you've had experience with:
     %table{:cellspacing => "0", :cellpadding => "2"}

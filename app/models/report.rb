@@ -77,7 +77,8 @@ class Report < ActiveRecord::Base
   end
 
   def self.requester_attrs
-    ["fair", "fast", "pay", "comm"]
+    # ["fair", "fast", "pay", "comm"]
+    ["fair", "fast", "comm"]
   end
 
   def self.question(attr)
@@ -95,6 +96,16 @@ class Report < ActiveRecord::Base
 
   def self.how_many_hits_ranges
     ["None", "1 - 5", "6 - 20", "21 - 100", "101+"]
+  end
+
+  def self.pay_buckets
+    # increasing order
+    ["$0-$4", "$4-$7", "$7-$10", "$10-$15", "$15+"]
+  end
+
+  def self.bucket_bar_val(bucket)
+    # increasing order
+    pay_buckets.index(bucket) == nil ? 0 : pay_buckets.index(bucket) + 1
   end
 
 end

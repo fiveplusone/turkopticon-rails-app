@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200624055850) do
+ActiveRecord::Schema.define(:version => 20200705173307) do
 
   create_table "Dolores_A2IR8TEVONNLZO", :id => false, :force => true do |t|
     t.integer  "id",            :default => 0, :null => false
@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(:version => 20200624055850) do
     t.string   "country"
     t.string   "state"
     t.string   "phone"
-    t.boolean  "optin",                           :default => false
+    t.boolean  "optin"
     t.datetime "latest_review_at"
     t.datetime "latest_login_at"
   end
@@ -216,10 +216,10 @@ ActiveRecord::Schema.define(:version => 20200624055850) do
     t.boolean  "locked"
     t.datetime "locked_until"
     t.integer  "locked_by_person_id"
+    t.string   "pay_bucket"
   end
 
   add_index "reports", ["amzn_requester_name"], :name => "reports_requester_name_index"
-  add_index "reports", ["requester_id"], :name => "requester_id_index"
 
   create_table "reports_purgatory", :id => false, :force => true do |t|
     t.integer  "id",            :default => 0, :null => false
@@ -275,9 +275,8 @@ ActiveRecord::Schema.define(:version => 20200624055850) do
     t.integer  "some_rejected"
     t.integer  "all_approved_or_pending"
     t.integer  "all_pending_or_didnt_do_hits"
+    t.string   "av_pay_bucket"
   end
-
-  add_index "requesters", ["amzn_requester_id"], :name => "amzn_requester_id_index"
 
   create_table "rules_versions", :force => true do |t|
     t.integer  "parent_id"

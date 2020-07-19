@@ -41,6 +41,15 @@
       = radio_button :report, :rejected, "n/a"
       N/A, all still pending or I didn't do any HITs for this requester
     %p
+      %hr
+        %strong Estimated rate per hour for a hit
+        - for p in Report.pay_buckets
+          =radio_button :report, "pay_bucket", p
+          =label_tag p
+        =radio_button :report, "pay_bucket", "n/a"
+        %label_tag N/A
+      %hr
+    %p
       %strong Rate this requester on the following qualities, with 1 being worst among requesters you've had experience with and 5 being best among requesters you've had experience with:
     %table{:cellspacing => "0", :cellpadding => "2"}
       %tr
