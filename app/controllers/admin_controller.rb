@@ -317,6 +317,10 @@ class AdminController < ApplicationController
       conditions = conditions + " and optin = true"
       title = title + "opted_in-"
     end
+    if params[:email_verified][:filter] == "1"
+      conditions = conditions + " and email_verified = true"
+      title = title + "verified_email-"
+    end
     if params[:country][:filter] != ""
       conditions = conditions + " and country = '" + params[:country][:filter] + "'"
       title = title + "from_" + params[:country][:filter] + "-"

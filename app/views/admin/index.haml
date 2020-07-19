@@ -48,4 +48,8 @@
   %label Members subscribed to mailing list
   = check_box "opted_in", "filter"
 
+  %p
+  %label Members with verified email
+  = check_box "email_verified", "filter"
+
   %p= submit_tag "Get CSV"
