@@ -31,20 +31,28 @@ class RegController < ApplicationController
   def register
     @pagetitle = "register"
     @person = Person.new(params[:person])
-    if request.post? and @person.save
-      @person.update_attributes(:display_name => @person.public_email, :show_fancy_links => true)
-      RegMailer::deliver_confirm(@person, confirmation_hash(@person.email))
-      session[:person_id] = @person.id
-      flash[:notice] = "Thanks for signing up. We've sent an email to #{@person.email}. Please click the link in the email to verify your address."
+    if request.post?
+      if params[:robot_check][:check] == "1"
+        if @person.save
+          @person.update_attributes(:display_name => @person.public_email, :show_fancy_links => true)
+          RegMailer::deliver_confirm(@person, confirmation_hash(@person.email))
+          session[:person_id] = @person.id
+          flash[:notice] = "Thanks for signing up. We've sent an email to #{@person.email}. Please click the link in the email to verify your address."
 
-      # create account on turkopticon.info
-      apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
-      user = "{" + @person.to_json.split("{")[2].split("}")[0] + "}".gsub("'","\'")
-      result = `echo '#{user}' | curl -d @- 'https://api.turkopticon.info/accounts?key=#{apikey}' --header 'Content-Type: application/json'`
-      File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT CREATION API WITH: #{user}\nRESULT: #{result}\n\n") }
-
-      redirect_to :controller => "main", :action => "index"
+          # create account on turkopticon.info
+          apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
+          user = "{" + @person.to_json.split("{")[2].split("}")[0] + "}".gsub("'","\'")
+          result = `echo '#{user}' | curl -d @- 'https://api.turkopticon.info/accounts?key=#{apikey}' --header 'Content-Type: application/json'`
+          File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT CREATION API WITH: #{user}\nRESULT: #{result}\n\n") }
+          redirect_to :controller => "main", :action => "index"
+        end 
+      else
+        redirect_to :action => "robot"
+      end
     end
+  end
+
+  def robot
   end
 
   def login

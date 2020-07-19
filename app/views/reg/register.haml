@@ -73,5 +73,11 @@
     .label Receive Updates
     = f.check_box :optin
 
+  %hr.constrain_width
+  %p
+    %p If you are not a robot please check this box.
+    .label I AM NOT A ROBOT
+    = check_box :robot_check, :check
+
   %p
     .button= submit_tag 'Register'
