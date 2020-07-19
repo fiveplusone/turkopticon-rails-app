@@ -319,7 +319,7 @@ class AdminController < ApplicationController
     end
     if params[:email_verified][:filter] == "1"
       conditions = conditions + " and email_verified = true"
-      title = title + "verified_email-"
+      title = title + "email_verified-"
     end
     if params[:country][:filter] != ""
       conditions = conditions + " and country = '" + params[:country][:filter] + "'"
@@ -331,9 +331,9 @@ class AdminController < ApplicationController
     end
 
     @contacts = Person.find(:all, :conditions => [conditions] + args)
-    csv = CSV.generate_line(%w(email, phone, last_login, created_at))
+    csv = CSV.generate_line(%w(email, verified, phone, state, country, optin, last_review, last_login, created_at))
     csv << "\n"
-    @contacts.each { |contact| csv << CSV.generate_line([contact.email, contact.phone, contact.latest_login_at, contact.created_at]) and csv << "\n"}
+    @contacts.each { |contact| csv << CSV.generate_line([contact.email, contact.email_verified, contact.phone, contact.state, contact.country, contact.optin, contact.latest_review_at, contact.latest_login_at, contact.created_at]) and csv << "\n"}
 
     send_data(csv, :type => 'text/csv', :disposition => 'attachment', :filename => title + "contacts-#{Date.today}.csv")
   end
