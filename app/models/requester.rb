@@ -59,6 +59,20 @@ class Requester < ActiveRecord::Base
     Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.fast}.compact.delete_if{|i| i == 0}.mean
   end
 
+  def pay_bucket
+    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}.to_buckets_json
+  end
+
+  def bucket_counts
+    values = Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
+    if values.empty?
+      values = []
+    else
+      values = Report.pay_buckets.collect{|b| [b, values[b] == nil ? 0 : values[b]]}
+    end
+    values
+  end
+
   def avg_attrs
     attrs = {}
     Report.requester_attrs.each{|a|
@@ -110,6 +124,32 @@ class Requester < ActiveRecord::Base
     end
   end
 
+  def self.pay_vis(bucket, counts)
+    vmax = 5.0
+    total = counts.reduce(0){|a,b| a + b[1]}
+    index = Report.bucket_bar_val(bucket)
+    v = 0
+    if index != 0
+      v = counts[index - 1][1].to_f / total * 5
+    end
+    redflag = index <= 2 ? "id='red'" : index <= 3 ? "id='yellow'" : ""
+    spch = 30  # number of total &nbsp; characters in meter
+    retstr = "<span class='progress-meter'><span class='progress-meter-done' #{redflag}>"
+    donefrac = v / vmax
+    ndone = donefrac * spch
+    ndone = ndone.round
+    ndone.times do
+      retstr.concat("&nbsp;")
+    end
+    retstr.concat("</span><span class='progress-meter-undone'>")
+    undone = spch - ndone
+    undone.times do
+      retstr.concat("&nbsp;")
+    end
+    retstr.concat("</span></span>")
+    retstr
+  end
+
   def self.attr_vis(v)  # value "v" should be a decimal in [1.0,vmax]
     vmax = 5.0
     if v.nil?
@@ -138,6 +178,7 @@ class Requester < ActiveRecord::Base
     self.av_pay = pay
     self.av_fair = fair
     self.av_fast = fast
+    self.av_pay_bucket = pay_bucket
     self.tos_flags = reports.select{|r| r.tos_viol}.length
     self.ava = avg_attrs_avg
     self.nrs = report_count
@@ -150,6 +191,12 @@ class Requester < ActiveRecord::Base
     self.save
   end
 
+end
+
+class Hash
+  def to_buckets_json
+    Report.pay_buckets.collect{ |bucket| [bucket, self[bucket] == nil ? 0 : self[bucket]] }.to_json
+  end
 end
 
 class Array
