@@ -38,7 +38,6 @@
          'pay' => $row['av_pay'],
         'fair' => $row['av_fair'],
         'fast' => $row['av_fast'],
-        'pay_buckets' => $row['av_pay_bucket']
       );
     $stats_result['pay_buckets'] = json_decode($row['av_pay_bucket']);
     $stats_result['reviews'] = $row['nrs'];
