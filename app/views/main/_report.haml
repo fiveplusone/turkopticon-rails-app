@@ -40,6 +40,18 @@
           .smlabel= eval("report." + a + ".to_s") + "&nbsp;/&nbsp;5"
           = Requester.attr_vis(eval("report." + a))
         %br/
+      - if !(report.pay_bucket.nil? || report.pay_bucket == "n/a")
+        .smlabel= "pay/hr: "
+        .smlabel= eval("report.pay_bucket")
+        = Requester.attr_vis(Report.bucket_bar_val(report.pay_bucket))
+      - elsif report.pay != 0
+        .smlabel= "pay: "
+        .smlabel= report.pay.to_s + "&nbsp;/&nbsp;5"
+        = Requester.attr_vis(report.pay)
+      - else
+        .smlabel= "pay/hr: "
+        .smlabel no&nbsp;data
+      %br/
       - if report.rejected == "yes"
         .rejected hit rejected
       - if report.rejected == "some"

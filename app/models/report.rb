@@ -77,8 +77,8 @@ class Report < ActiveRecord::Base
   end
 
   def self.requester_attrs
-    ["fair", "fast", "pay", "comm"]
-    # ["fair", "fast", "comm"]
+    # ["fair", "fast", "pay", "comm"]
+    ["fair", "fast", "comm"]
   end
 
   def self.question(attr)

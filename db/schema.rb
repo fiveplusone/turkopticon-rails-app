@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(:version => 20200705173307) do
     t.string   "country"
     t.string   "state"
     t.string   "phone"
-    t.boolean  "optin",                           :default => false
+    t.boolean  "optin"
     t.datetime "latest_review_at"
     t.datetime "latest_login_at"
   end
@@ -220,7 +220,6 @@ ActiveRecord::Schema.define(:version => 20200705173307) do
   end
 
   add_index "reports", ["amzn_requester_name"], :name => "reports_requester_name_index"
-  add_index "reports", ["requester_id"], :name => "requester_id_index"
 
   create_table "reports_purgatory", :id => false, :force => true do |t|
     t.integer  "id",            :default => 0, :null => false
@@ -278,8 +277,6 @@ ActiveRecord::Schema.define(:version => 20200705173307) do
     t.integer  "all_pending_or_didnt_do_hits"
     t.string   "av_pay_bucket"
   end
-
-  add_index "requesters", ["amzn_requester_id"], :name => "amzn_requester_id_index"
 
   create_table "rules_versions", :force => true do |t|
     t.integer  "parent_id"
