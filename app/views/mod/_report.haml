@@ -19,7 +19,7 @@
     %br/
     = report.requester_id.to_s
   %td{:valign => "top"}
-    - for attr in ["fair", "fast", "pay", "comm"]
+    - for attr in ["fair", "fast", "comm"]
       .attr_label= attr + ": "
       - val = eval("report." + attr)
       - if val == 0
@@ -28,6 +28,17 @@
         .attr_label= val.to_s + "&nbsp;/&nbsp;5"
         = Requester.attr_vis(val)
       %br/
+    - if !(report.pay_bucket.nil? || report.pay_bucket == "n/a")
+      .attr_label= "pay/hr: "
+      .attr_label= eval("report.pay_bucket")
+      = Requester.attr_vis(Report.bucket_bar_val(report.pay_bucket))
+    - elsif report.pay != 0
+      .attr_label= "pay: "
+      .attr_label= report.pay.to_s + "&nbsp;/&nbsp;5"
+      = Requester.attr_vis(report.pay)
+    - else
+      .attr_label= "pay/hr: "
+      .attr_label no&nbsp;data
     - if report.tos_viol
       .tos AMT TOS VIOLATION
   %td#text{:valign => "top"}
