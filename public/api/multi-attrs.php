@@ -3,8 +3,10 @@
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
    multi-attrs.php
    ===============
-   Jay Tolentino and Six Silberman
+   Jay Tolentino and Six Silberman and Sim Singh
    5 Feb 2014 17:33
+   ===============
+   Last updated 28 Jul 2020 09:46
    ===============
    This file requires the package php5-mysqlnd!
    Before using this API, run:
@@ -37,6 +39,7 @@
         'fair' => $row['av_fair'],
         'fast' => $row['av_fast']
       );
+    $stats_result['pay_buckets'] = json_decode($row['av_pay_bucket']);
     $stats_result['reviews'] = $row['nrs'];
     $stats_result['tos_flags'] = $row['tos_flags'];
 
@@ -52,9 +55,9 @@
     echo "{";
 
     $logfile = '../../php_api/log/multi-attrs.php.log';
-    $time = date('Y-m-j H:i:s');
+    $time = date('Y-m-d H:i:s');
     $ip = $_SERVER['REMOTE_ADDR'];
-    file_put_contents($logfile, "[API v2014.02.01.1838] ", FILE_APPEND);
+    file_put_contents($logfile, "[API v2020.07.03.2118] ", FILE_APPEND);
     file_put_contents($logfile, "[" . $time . "] ", FILE_APPEND);
     file_put_contents($logfile, "[" . $ip . "] ", FILE_APPEND);
     file_put_contents($logfile, $_GET['ids'] . "\n", FILE_APPEND);
