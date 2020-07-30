@@ -35,8 +35,10 @@
         'comm' => $row['av_comm'],
          'pay' => $row['av_pay'],
         'fair' => $row['av_fair'],
-        'fast' => $row['av_fast']
+        'fast' => $row['av_fast'],
+        'pay_buckets' => $row['av_pay_bucket']
       );
+
     $stats_result['reviews'] = $row['nrs'];
     $stats_result['tos_flags'] = $row['tos_flags'];
 

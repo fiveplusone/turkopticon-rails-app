@@ -259,6 +259,10 @@ class MainController < ApplicationController
           render :action => "add_report" and return
         end
       end
+      # TODO: ask six about how to keep this actually nil, esp in edit
+      if params[:report][:pay_bucket] == "nil"
+        params[:report][:pay_bucket] = nil
+      end
       if @report.save
         Person.find(session[:person_id]).update_attributes(:latest_review_at => @report.created_at)
         @report.update_attributes(:amzn_requester_name => params[:requester][:amzn_name])
