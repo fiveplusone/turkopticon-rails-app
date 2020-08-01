@@ -60,7 +60,12 @@ class Requester < ActiveRecord::Base
   end
 
   def pay_bucket
-    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}.to_buckets_json
+    reports = Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
+    value = nil
+    if !reports.empty?
+      value = reports.to_buckets_json
+    end
+    value
   end
 
   def bucket_counts
