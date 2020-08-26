@@ -8,6 +8,7 @@
    ===============
    Last updated 28 Jul 2020 09:46
    Last updated 24 Aug 2020 19:56
+   Last updated 26 Aug 2020 14:26 PDT
    ===============
    This file requires the package php5-mysqlnd!
    Before using this API, run:
@@ -47,7 +48,7 @@
     return $stats_result;
   }
 
-  if( $_GET['ids'] ) {
+  if(($_GET['ids']) && (preg_match('/^[A-Z0-9,]+$/', $_GET['ids']))){
     $ids = explode(",", $_GET[ 'ids' ]);
 
     // Use $num_ids and $i to check if current ID is not the last ID
@@ -58,7 +59,7 @@
     $logfile = '../../php_api/log/multi-attrs.php.log';
     $time = date('Y-m-d H:i:s');
     $ip = $_SERVER['REMOTE_ADDR'];
-    file_put_contents($logfile, "[API v2020.08.24.1956] ", FILE_APPEND);
+    file_put_contents($logfile, "[API v2020.08.26.1426] ", FILE_APPEND);
     file_put_contents($logfile, "[" . $time . "] ", FILE_APPEND);
     file_put_contents($logfile, "[" . $ip . "] ", FILE_APPEND);
     file_put_contents($logfile, $_GET['ids'] . "\n", FILE_APPEND);
@@ -109,7 +110,7 @@
     }
     echo "}";
   } else {
-    echo "To get data, call this URL with an 'ids' parameter.";
+    echo "To get data, call this URL with an 'ids' parameter. The 'ids' parameter must be a string made up of requester IDs separated by commas.";
   }
   mysqli_close($conn);
 ?>
