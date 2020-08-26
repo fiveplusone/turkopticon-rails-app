@@ -117,7 +117,7 @@
         - if report.person_id == session[:person_id] or Person.find(session[:person_id]).is_admin or Person.find(session[:person_id]).is_moderator
           &nbsp;|&nbsp;
           = link_to "edit", :controller => "main", :action => "edit_report", :id => report.id
-          - if session[:person_id] == 1
+          - if Person.find(session[:person_id]).is_moderator
             &nbsp;|&nbsp;
             - if !report.locked_until.nil? and report.locked_until > Time.now
               locked
