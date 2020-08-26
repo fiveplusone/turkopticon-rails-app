@@ -40,6 +40,29 @@ class ModController < ApplicationController
     end
   end
 
+  def mute_person
+  end
+
+  def do_mute_person
+    begin
+      person_to_mute = Person.find(params[:person][:id])
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "Sorry, there doesn't seem to be an account with that person ID."
+      redirect_to :action => "mute_person" and return
+    end
+    person_to_mute.update_attributes(:muted => true, :muted_by_person_id => session[:person_id], :muted_until => Time.now + 48.hours)
+    flash[:notice] = "Account with ID #{person_to_mute.id.to_s} muted for 48 hours."
+    redirect_to :action => "mute_person"
+  end
+
+  def search_by_email
+    if request.post?
+      @searched = true
+      @email = params[:person][:email]
+      @result = Person.find_by_email(@email)
+    end
+  end
+
   def reassign_report_to_different_requester
   end
 

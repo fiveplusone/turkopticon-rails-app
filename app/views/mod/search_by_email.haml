@@ -1,0 +1,17 @@
+%strong Search for user ID by email
+
+%p
+
+- if @searched
+  - if @result.nil?
+    #error= "No user in database with email " + @email + "."
+  - else
+    #notice= "User with email address " + @email + " has account ID " + @result.id.to_s + "."
+
+- form_tag(:action => "search_by_email") do
+  %table
+    %tr
+      %td
+        .label Enter email address to look for
+        = text_field :person, :email, :value => ""
+  = submit_tag "Search"

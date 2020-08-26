@@ -1,0 +1,22 @@
+%strong Mute a person
+
+%p
+  The account whose ID you enter will not be able to post comments for 48 hours.
+
+%p
+  They will not receive any notification about this, but the "comment" link will disappear for them.
+
+%p
+  Bear in mind this cannot prevent someone from making a new account. New accounts that request commenting are generally granted commenting automatically within 24 hours.
+
+- form_tag(:action => "do_mute_person") do
+  %table{:cellpadding => "8"}
+    %tr
+      %td
+        .label Turkopticon user ID ("person ID")
+        = text_field :person, :id, :value => ""
+      %td
+        %strong How to find this number
+        %br/
+        Click on their username/display name to go to the page that shows all their reviews. After that page loads, look in your browser's URL bar. The URL should be https://turkopticon.ucsd.edu/by/XXXX, where XXXX is a number. It's this number.
+  = submit_tag "Mute their commenting for 48 hours"
