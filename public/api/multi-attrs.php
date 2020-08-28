@@ -9,6 +9,7 @@
    Last updated 28 Jul 2020 09:46
    Last updated 24 Aug 2020 19:56
    Last updated 26 Aug 2020 14:26 PDT
+   Last updated 28 Aug 2020 10:06 PDT
    ===============
    This file requires the package php5-mysqlnd!
    Before using this API, run:
@@ -18,13 +19,6 @@
    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
   header("Access-Control-Allow-Origin: *");
-
-  include '../../php_api/mysqli-dbconn.php';
-
-  /* Connection Error Handling (Procedural): */
-  if (!$conn) {
-     die('Could Not Connect: (' . mysqli_connect_error() . ') ');
-  }
 
   /*
     FUNCTION: gather_requester_stats( $query_result )
@@ -59,7 +53,7 @@
     $logfile = '../../php_api/log/multi-attrs.php.log';
     $time = date('Y-m-d H:i:s');
     $ip = $_SERVER['REMOTE_ADDR'];
-    file_put_contents($logfile, "[API v2020.08.26.1426] ", FILE_APPEND);
+    file_put_contents($logfile, "[API v2020.08.28.1006] ", FILE_APPEND);
     file_put_contents($logfile, "[" . $time . "] ", FILE_APPEND);
     file_put_contents($logfile, "[" . $ip . "] ", FILE_APPEND);
     file_put_contents($logfile, $_GET['ids'] . "\n", FILE_APPEND);
@@ -71,6 +65,8 @@
           file_put_contents($logfile, "    " . $id . ": from the APC\n", FILE_APPEND);
           echo $from_cache;
         } else {
+          include_once '../../php_api/mysqli-dbconn.php';
+          if (!$conn) { die('Could Not Connect: (' . mysqli_connect_error() . ') '); }
           $stmt = mysqli_stmt_init( $conn );
         
           // Create and execute a prepared statment to protect from SQL injection
