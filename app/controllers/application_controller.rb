@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
 
   def authorize
     unless !session[:person_id].nil? and Person.find(session[:person_id]) and !Person.find(session[:person_id]).is_closed
-      session[:original_uri] = request.request_uri
+      session[:original_uri] = request.url
       flash[:notice] = "Please log in."
       redirect_to :controller => "reg", :action => "login"
     end
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
 
   def verify
     unless Person.find(session[:person_id]).email_verified
-      session[:original_url] = request.request_uri
+      session[:original_url] = request.url
       flash[:notice] = "You must verify your email address before you can post."
       redirect_to :controller => "main", :action => "index"
     end

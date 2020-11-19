@@ -238,7 +238,7 @@ class ForumController < ApplicationController
   def authorize_as_admin
     pid = session[:person_id]
     unless !pid.nil? and Person.find(pid) and Person.find(pid).is_admin
-      session[:original_uri] = request.request_uri
+      session[:original_uri] = request.url
       flash[:notice] = "Please log in as an administrator."
       redirect_to :controller => "reg", :action => "login"
     end

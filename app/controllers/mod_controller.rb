@@ -6,13 +6,13 @@ class ModController < ApplicationController
   def authorize_as_moderator
     pid = session[:person_id]
     if pid.nil?
-      session[:original_uri] = request.request_uri
+      session[:original_uri] = request.url
       flash[:notice] = "Please log in as a moderator."
       redirect_to :controller => "reg", :action => "login"
     else
       @person = Person.find(pid)
       unless !@person.nil? and @person.is_moderator
-        session[:original_uri] = request.request_uri
+        session[:original_uri] = request.url
         flash[:notice] = "Please log in as a moderator."
         redirect_to :controller => "reg", :action => "login"
       end
