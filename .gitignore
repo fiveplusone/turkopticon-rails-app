@@ -11,20 +11,28 @@ config/initializers/cookie_verification_secret.rb
 config/initializers/log.rb
 config/initializers/session_store.rb
 index/
-log/
 php_api/dbconn.php
 php_api/mysqli-dbconn.php
-public/
-!public/images/
-!public/javascripts/
-!public/stylesheets/
-!public/turkopticon_installpage/
-!public/turkopticon-2014.01.28.1207.user.js
-!public/api/multi-attrs.php
-!public/api/reviews.php
-!public/favicon.ico
-!public/faq/
-public/
-tmp/
 php_api/access-tokens.php
 etc/
+
+# Ignore bundler config.
+/.bundle
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore pidfiles, but keep the directory.
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
+
+/public/assets
+.byebug_history
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key

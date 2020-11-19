@@ -187,13 +187,13 @@ td {
   border-bottom: 1px solid #C59957;
 }
 
-.fieldWithErrors {
+.field_with_errors {
   border: 1px solid #f00;
   width: 17.5em;
   margin: -1.5em 0 0 10.5em;
 }
 
-.errorExplanation > h2 {
+.error_explanation > h2 {
   display: none;
 }
 
@@ -226,7 +226,7 @@ td {
         margin-bottom: 15px;
 }
 
-#side-b { 
+#side-b {
 	margin-top: -10px;
 	float: left;
 	width: 553px;
@@ -521,7 +521,7 @@ del {
   margin: 10px;
   line-height: 1.5;
   font-size: 1.2em;
-  padding: 8px 30px; 
+  padding: 8px 30px;
 }
 
 #installinfo {
