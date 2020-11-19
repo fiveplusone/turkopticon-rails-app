@@ -1,4 +1,4 @@
-class FlagMailer < ActionMailer::Base
+class FlagMailer < ApplicationMailer
 
   def notify(report_id, comment)
     @subject    = '[turkopticon] Flag raised'
@@ -11,6 +11,6 @@ class FlagMailer < ActionMailer::Base
     @bcc        = 'info@turkopticon.info'
     @sent_on    = Time.now
     @headers    = {}
-  end  
+  end
 
 end

@@ -1,4 +1,4 @@
-class AdminMailer < ActionMailer::Base
+class AdminMailer < ApplicationMailer
 
   @@send_bcc = true
 

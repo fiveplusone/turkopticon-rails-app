@@ -1,4 +1,4 @@
-class NotificationMailer < ActionMailer::Base
+class NotificationMailer < ApplicationMailer
 
   def notification(n)
     @subject = '[turkopticon] ' + n.title
