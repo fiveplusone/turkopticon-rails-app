@@ -23,21 +23,21 @@
       - if report.requester.nil?
         [The requester object does not exist]
       - else
-        = link_to "Averages &raquo;", :controller => "main", :action => "averages", :id => report.requester.amzn_requester_id
+        = link_to "Averages &raquo;".html_safe, :controller => "main", :action => "averages", :id => report.requester.amzn_requester_id
       %br/
-      = link_to "HIT Group &raquo;", "https://www.mturk.com/mturk/searchbar?requesterId=#{report.requester_amzn_id}&selectedSearchType=hitgroups"
+      = link_to "HIT Group &raquo;".html_safe, "https://www.mturk.com/mturk/searchbar?requesterId=#{report.requester_amzn_id}&selectedSearchType=hitgroups"
       %br/
       - if report.requester.nil?
         [The requester object does not exist]
       - else
-        = link_to "Review&nbsp;Requester&nbsp;&raquo;", "/report?requester[amzn_id]=#{report.requester.amzn_requester_id}&requester[amzn_name]=#{report.requester.amzn_requester_name}"
+        = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, "/report?requester[amzn_id]=#{report.requester.amzn_requester_id}&requester[amzn_name]=#{report.requester.amzn_requester_name}"
     %td{:valign => "top", :class => "attrs"}
       - for a in Report.requester_attrs
         .smlabel= a + ": "
         - if eval("report." + a) == 0
           .smlabel no&nbsp;data
         - else
-          .smlabel= eval("report." + a + ".to_s") + "&nbsp;/&nbsp;5"
+          .smlabel= "#{report.public_send(a)}&nbsp;/&nbsp;5".html_safe
           = Requester.attr_vis(eval("report." + a))
         %br/
       - if !(report.pay_bucket.nil? || report.pay_bucket == "n/a")
@@ -46,7 +46,7 @@
         = Requester.attr_vis(Report.bucket_bar_val(report.pay_bucket))
       - elsif report.pay != 0
         .smlabel= "pay: "
-        .smlabel= report.pay.to_s + "&nbsp;/&nbsp;5"
+        .smlabel= (report.pay.to_s + "&nbsp;/&nbsp;5").html_safe
         = Requester.attr_vis(report.pay)
       - else
         .smlabel= "pay/hr: "
@@ -73,23 +73,23 @@
         - if report.dont_censor
           - if Person.find(session[:person_id]).hide_long_reviews and notruncate.nil?
             - out = h(report.description.to_s)
-            = truncate(out, 800).gsub("\r\n","<br/>")
+            = truncate(out, length: 800).gsub("\r\n","<br/>").html_safe
             - if out.length > 800
-              = "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/" + report.id.to_s + "'>Read the full review &rarr;</a><br/><br/>"
+              = "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/#{report.id}'>Read the full review &rarr;</a><br/><br/>".html_safe
           - else
-            = h(report.description.to_s).gsub("\r\n","<br/>")
+            = h(report.description.to_s).gsub("\r\n","<br/>").html_safe
         - else
           - if Person.find(session[:person_id]).hide_long_reviews and notruncate.nil?
             - out = h(report.description.to_s.censor)
-            = truncate(out, 800).gsub("\r\n","<br/>")
+            = truncate(out, length: 800).gsub("\r\n","<br/>").html_safe
             - if out.length > 800
-              = "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/" + report.id.to_s + "'>Read the full review &rarr;</a><br/><br/>"
+              = "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/#{report.id}'>Read the full review &rarr;</a><br/><br/>"
           - else
-            = h(report.description.to_s.censor).gsub("\r\n","<br/>")
+            = h(report.description.to_s.censor).gsub("\r\n","<br/>").html_safe
       - if report.displayed_notes
         %p.notes
           - if report.displayed_notes.length > 70 and notruncate.nil?
-            = truncate(report.displayed_notes, 61) + " (most recent edit)"
+            = truncate(report.displayed_notes, length: 61) + " (most recent edit)"
           - else
             = report.displayed_notes
       .posted_by
@@ -104,9 +104,9 @@
           = link_to report.person.public_email.censor, :controller => "main", :action => "reports_by", :id => report.person_id
         - unless Person.find(session[:person_id]).show_fancy_links == false
           &nbsp;
-          = link_to "<img src='/images/page.png' title='Show all reviews from this person on one page (slow)' border='0' width='8' height='10' />", :controller => "main", :action => "reports_by_one_page", :id => report.person_id
-          = link_to "<img src='/images/bubble.png' title='Show all comments by this person' border='0' width='10' height='10' />", :controller => "main", :action => "comments_by", :id => report.person_id
-          = link_to "<img src='/images/warning.gif' title='Show all reviews flagged by this person' border='0' width='10' height='10' />", :controller => "main", :action => "flagged_by", :id => report.person_id
+          = link_to "<img src='/images/page.png' title='Show all reviews from this person on one page (slow)' border='0' width='8' height='10' />".html_safe, :controller => "main", :action => "reports_by_one_page", :id => report.person_id
+          = link_to "<img src='/images/bubble.png' title='Show all comments by this person' border='0' width='10' height='10' />".html_safe, :controller => "main", :action => "comments_by", :id => report.person_id
+          = link_to "<img src='/images/warning.gif' title='Show all reviews flagged by this person' border='0' width='10' height='10' />".html_safe, :controller => "main", :action => "flagged_by", :id => report.person_id
           - if [1, 2, 74050, 54142, 26343, 63360].include? session[:person_id].to_i
             &nbsp;
             = report.person.email
@@ -142,7 +142,7 @@
         .flag_comment
           %img(src='/images/warning.gif' alt='flag' border='0')
           &nbsp;
-          = h(f.comment).gsub(/\n/, '<br/>').censor
+          = h(f.comment).gsub(/\n/, '<br/>').censor.html_safe
           - if f.displayed_notes
             %p.notes= f.displayed_notes
         .posted_by
@@ -158,8 +158,8 @@
             = link_to f.person.public_email.censor, :controller => "main", :action => "reports_by", :id => f.person_id
           - if Person.find(session[:person_id]).show_fancy_links
             &nbsp;
-            = link_to "<img src='/images/bubble.png' title='Show all comments by this person' border='0' width='10' height='10' />", :controller => "main", :action => "comments_by", :id => f.person_id
-            = link_to "<img src='/images/warning.gif' title='Show all reviews flagged by this person' border='0' width='10' height='10' />", :controller => "main", :action => "flagged_by", :id => f.person_id
+            = link_to "<img src='/images/bubble.png' title='Show all comments by this person' border='0' width='10' height='10' />".html_safe, :controller => "main", :action => "comments_by", :id => f.person_id
+            = link_to "<img src='/images/warning.gif' title='Show all reviews flagged by this person' border='0' width='10' height='10' />".html_safe, :controller => "main", :action => "flagged_by", :id => f.person_id
           /- if f.person_id == session[:person_id] or Person.find(session[:person_id]).is_admin
           /  &nbsp;|&nbsp;
           /  = link_to "edit", :controller => "main", :action => "edit_flag", :id => f.id.to_s
@@ -168,20 +168,20 @@
         - for c in report.comments
           .flag_comment
             %img(src='/images/bubble.png' alt='bubble' border='0')
-            = h(c.body).gsub(/\n/, '<br/>').censor
+            = h(c.body).gsub(/\n/, '<br/>').censor.html_safe
             - if c.displayed_notes
               %p.notes= c.displayed_notes
             .posted_by
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              = c.created_at.strftime("%b %d %Y") + "&nbsp;&nbsp;|&nbsp;"
+              = "#{c.created_at.strftime("%b %d %Y")}&nbsp;&nbsp;|&nbsp;".html_safe
               - if Person.find(session[:person_id]).is_moderator
                 = link_to c.person.mod_display_name.censor, :controller => "main", :action => "reports_by", :id => c.person_id
               - else
                 = link_to c.person.public_email.censor, :controller => "main", :action => "reports_by", :id => c.person_id
               - if Person.find(session[:person_id]).show_fancy_links
                 &nbsp;
-                = link_to "<img src='/images/bubble.png' title='Show all comments by this person' border='0' width='10' height='10' />", :controller => "main", :action => "comments_by", :id => c.person_id
-                = link_to "<img src='/images/warning.gif' title='Show all reviews flagged by this person' border='0' width='10' height='10' />", :controller => "main", :action => "flagged_by", :id => c.person_id
+                = link_to "<img src='/images/bubble.png' title='Show all comments by this person' border='0' width='10' height='10' />".html_safe, :controller => "main", :action => "comments_by", :id => c.person_id
+                = link_to "<img src='/images/warning.gif' title='Show all reviews flagged by this person' border='0' width='10' height='10' />".html_safe, :controller => "main", :action => "flagged_by", :id => c.person_id
               - if c.person_id == session[:person_id] or Person.find(session[:person_id]).is_admin or Person.find(session[:person_id]).is_moderator
                 &nbsp;|&nbsp;
                 = link_to "edit", :controller => "main", :action => "edit_comment", :id => c.id.to_s

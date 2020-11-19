@@ -152,7 +152,7 @@ class Requester < ApplicationRecord
       retstr.concat("&nbsp;")
     end
     retstr.concat("</span></span>")
-    retstr
+    retstr.html_safe
   end
 
   def self.attr_vis(v)  # value "v" should be a decimal in [1.0,vmax]
@@ -175,7 +175,7 @@ class Requester < ApplicationRecord
       retstr.concat("&nbsp;")
     end
     retstr.concat("</span></span>")
-    retstr
+    retstr.html_safe
   end
 
   def cache_columns
