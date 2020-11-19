@@ -129,7 +129,7 @@
   %p Account created: #{@person.created_at}
   %p{:id => "user_info", :style => "display:contents"} #{@person.state != nil && @person.state != "" ? Person.state_long_name(@person.state) + "," : ""} #{@person.country != nil && @person.country != "" ? Person.country_long_name(@person.country) : "No Country Specified"} | #{@person.phone != nil && @person.phone != "" ? @person.phone : "No Phone Specified"}
   %button{:id => "form_for_user_edit"} Edit
-  - form_for :person, :url => {:controller => "reg", :action => "change_phone_and_location"}, :html => {:id => "form_for_user", :style => "display:none"} do |f|
+  = form_for :person, :url => {:controller => "reg", :action => "change_phone_and_location"}, :html => {:id => "form_for_user", :style => "display:none"} do |f|
     %p
       .label Country
       = f.select 'country', Person.country_list, :include_blank => 'Select a Country', :selected => @person.country

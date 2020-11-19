@@ -30,7 +30,7 @@
       %strong Once you select a display name, you cannot change it.
     %p
       %strong Parentheses will not be displayed.
-    - form_for :person, :url => {:controller => "reg", :action => "set_display_name"} do |f|
+    = form_for :person, :url => {:controller => "reg", :action => "set_display_name"} do |f|
       %p
         = f.text_field "display_name", :value => @person.public_email, :onfocus => "if(this.value == '#{@person.public_email}') { this.value = ''; }"
         - if flash[:errors] and flash[:errors][:display_name]
@@ -48,7 +48,7 @@
 .box{:style => "max-width: 500px"}
   %p
     %strong Password
-  - form_for :person, :url => {:controller => "reg", :action => "change_password"} do |f|
+  = form_for :person, :url => {:controller => "reg", :action => "change_password"} do |f|
     %p
       Change password for
       %strong= @person.email
@@ -71,7 +71,7 @@
     %strong Location
   %p Your location helps us connect you to resources for workers based on the state and country you in. This can also help us fundraise to keep Turkopticon free. Some funders target particular states and countries.
 
-  - form_for :person, :url => {:controller => "reg", :action => "change_location"} do |f|
+  = form_for :person, :url => {:controller => "reg", :action => "change_location"} do |f|
     %p
       .label Country
       = f.select 'country', Person.country_list, :include_blank => 'Select a Country', :selected => @person.country
@@ -88,7 +88,7 @@
     %strong Phone Number
   %p We rarely — but sometimes — need to call community members to help them troubleshoot or to ask for your input.
 
-  - form_for :person, :url => {:controller => "reg", :action => "change_phone"} do |f|
+  = form_for :person, :url => {:controller => "reg", :action => "change_phone"} do |f|
     %p
       .label Phone
       = f.text_field 'phone', :size => 20
@@ -102,7 +102,7 @@
     %strong Newsletter Opt-in
   %p Stay up to date with whats going on with Turkopticon and receive our monthly newsletter.
 
-  - form_for :person, :url => {:controller => "reg", :action => "change_optin"} do |f|
+  = form_for :person, :url => {:controller => "reg", :action => "change_optin"} do |f|
     %p
       .label Newsletter
       = f.check_box 'optin'
@@ -114,7 +114,7 @@
   .box{:style => "max-width: 500px"}
     %p
       %strong Change email address
-    - form_for :person, :url => {:controller => "reg", :action => "change_email"} do |f|
+    = form_for :person, :url => {:controller => "reg", :action => "change_email"} do |f|
       %p
         Change email from
         %strong= Person.find(session[:person_id]).email

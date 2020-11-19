@@ -12,7 +12,7 @@
     = @report.created_at.strftime("%b %d %Y")
 
 = error_messages_for :flag
-- form_tag(:action => 'edit_flag') do
+= form_tag(:action => 'edit_flag') do
   = hidden_field :flag, :report_id, :value => @report.id
   = hidden_field :flag, :person_id, :value => @flag.person_id
   %br/

@@ -1,4 +1,4 @@
-- form_tag(:action => 'new_post') do
+= form_tag(:action => 'new_post') do
   - if params[:forum_post].nil? or params[:forum_post][:parent_id].nil?
     %p
       %strong Title

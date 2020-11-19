@@ -27,7 +27,7 @@
   %p#advisory_reverse
     %strong Please note:
     Your review may take up to 20 minutes to be included in the averages displayed by the extensions.
-  - form_tag(:action => 'add_report') do
+  = form_tag(:action => 'add_report') do
     %p
       .label HIT ID
       = text_field :report, :hit_id
