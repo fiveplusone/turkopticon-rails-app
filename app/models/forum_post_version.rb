@@ -1,4 +1,4 @@
-class ForumPostVersion < ActiveRecord::Base
+class ForumPostVersion < ApplicationRecord
 
   def person
     Person.find(self.person_id)

@@ -13,7 +13,7 @@
 #  displayed_notes :text
 #
 
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
 
   belongs_to :person
   belongs_to :report

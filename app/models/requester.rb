@@ -19,7 +19,7 @@
 #
 
 # require 'ruport'
-class Requester < ActiveRecord::Base
+class Requester < ApplicationRecord
 
 #  validates_presence_of :amzn_requester_id
 #  validates_uniqueness_of :amzn_requester_id

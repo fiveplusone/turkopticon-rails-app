@@ -1,4 +1,4 @@
-class RulesVersion < ActiveRecord::Base
+class RulesVersion < ApplicationRecord
   def parent
     RulesVersion.find(parent_id)
   end

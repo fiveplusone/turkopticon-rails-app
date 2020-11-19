@@ -1,2 +1,2 @@
-class Follow < ActiveRecord::Base
+class Follow < ApplicationRecord
 end

@@ -1,2 +1,2 @@
-class ReputationStatement < ActiveRecord::Base
+class ReputationStatement < ApplicationRecord
 end

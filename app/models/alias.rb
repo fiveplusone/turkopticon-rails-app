@@ -10,5 +10,5 @@
 #  updated_at   :datetime
 #
 
-class Alias < ActiveRecord::Base
+class Alias < ApplicationRecord
 end

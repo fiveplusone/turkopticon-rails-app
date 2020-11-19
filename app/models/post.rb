@@ -13,7 +13,7 @@
 #  slug       :string(255)
 #
 
-class Post < ActiveRecord::Base
+class Post < ApplicationRecord
 
   def children
     Post.find_all_by_parent_id(id)

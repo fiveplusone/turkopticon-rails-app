@@ -12,7 +12,7 @@
 #  displayed_notes :text
 #
 
-class Flag < ActiveRecord::Base
+class Flag < ApplicationRecord
 
   belongs_to :person
   belongs_to :report

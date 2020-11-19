@@ -1,4 +1,4 @@
-class ForumPost < ActiveRecord::Base
+class ForumPost < ApplicationRecord
 
   def current_version
     ForumPostVersion.find_by_post_id_and_next(self.id, nil)

@@ -25,7 +25,7 @@
 #  comment_count       :integer(4)
 #
 
-class Report < ActiveRecord::Base
+class Report < ApplicationRecord
 
   belongs_to :person
   belongs_to :requester
