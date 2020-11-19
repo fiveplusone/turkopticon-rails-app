@@ -1,9 +1,5 @@
-class AddConfirmationTokenToPeople < ActiveRecord::Migration
-  def self.up
+class AddConfirmationTokenToPeople < ActiveRecord::Migration[4.2]
+  def change
     add_column :people, :confirmation_token, :string
-  end
-
-  def self.down
-    remove_column :people, :confirmation_token
   end
 end

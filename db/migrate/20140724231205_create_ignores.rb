@@ -1,4 +1,4 @@
-class CreateIgnores < ActiveRecord::Migration
+class CreateIgnores < ActiveRecord::Migration[4.2]
   def self.up
     create_table :ignores do |t|
       t.integer :person_id

@@ -1,4 +1,4 @@
-class AddCommentingEnabledAndDisabledInfoToPeople < ActiveRecord::Migration
+class AddCommentingEnabledAndDisabledInfoToPeople < ActiveRecord::Migration[4.2]
   def self.up
     add_column :people, :commenting_enabled_by, :integer
     add_column :people, :commenting_enabled_at, :datetime

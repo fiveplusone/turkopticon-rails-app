@@ -1,4 +1,4 @@
-class AddAvaAndNrsToRequesters < ActiveRecord::Migration
+class AddAvaAndNrsToRequesters < ActiveRecord::Migration[4.2]
   def self.up
     add_column :requesters, :ava, :decimal, :precision => 3, :scale => 2
     add_column :requesters, :nrs, :integer

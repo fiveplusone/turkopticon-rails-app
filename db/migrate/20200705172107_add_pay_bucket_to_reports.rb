@@ -1,4 +1,4 @@
-class AddPayBucketToReports < ActiveRecord::Migration
+class AddPayBucketToReports < ActiveRecord::Migration[4.2]
   def self.up
     add_column :reports, :pay_bucket, :string
   end

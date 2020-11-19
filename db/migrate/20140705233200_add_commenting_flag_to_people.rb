@@ -1,4 +1,4 @@
-class AddCommentingFlagToPeople < ActiveRecord::Migration
+class AddCommentingFlagToPeople < ActiveRecord::Migration[4.2]
   def self.up
     add_column :people, :can_comment, :boolean
   end

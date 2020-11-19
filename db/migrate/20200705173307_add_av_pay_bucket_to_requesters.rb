@@ -1,4 +1,4 @@
-class AddAvPayBucketToRequesters < ActiveRecord::Migration
+class AddAvPayBucketToRequesters < ActiveRecord::Migration[4.2]
   def self.up
     add_column :requesters, :av_pay_bucket, :string
   end

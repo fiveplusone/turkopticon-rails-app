@@ -1,4 +1,4 @@
-class AddInitialScoreToForumPosts < ActiveRecord::Migration
+class AddInitialScoreToForumPosts < ActiveRecord::Migration[4.2]
   def self.up
     add_column :forum_posts, :initial_score, :decimal, :precision => 5, :scale => 2
   end

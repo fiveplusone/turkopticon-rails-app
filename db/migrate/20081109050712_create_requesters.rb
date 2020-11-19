@@ -1,4 +1,4 @@
-class CreateRequesters < ActiveRecord::Migration
+class CreateRequesters < ActiveRecord::Migration[4.2]
   def self.up
     create_table :requesters do |t|
       t.string :amzn_requester_id

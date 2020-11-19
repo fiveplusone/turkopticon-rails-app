@@ -1,4 +1,4 @@
-class AddDisplayNameToPeople < ActiveRecord::Migration
+class AddDisplayNameToPeople < ActiveRecord::Migration[4.2]
   def self.up
     add_column :people, :display_name, :string
   end

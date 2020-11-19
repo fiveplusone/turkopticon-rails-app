@@ -1,4 +1,4 @@
-class AddDontCensorFlagToReports < ActiveRecord::Migration
+class AddDontCensorFlagToReports < ActiveRecord::Migration[4.2]
   def self.up
     add_column :reports, :dont_censor, :boolean
   end

@@ -1,4 +1,4 @@
-class AddModeratorFlagToPeople < ActiveRecord::Migration
+class AddModeratorFlagToPeople < ActiveRecord::Migration[4.2]
   def self.up
     add_column :people, :is_moderator, :boolean
   end

@@ -1,4 +1,4 @@
-class AddLockedToReviews < ActiveRecord::Migration
+class AddLockedToReviews < ActiveRecord::Migration[4.2]
   def self.up
     add_column :reports, :locked, :boolean
     add_column :reports, :locked_until, :timestamp

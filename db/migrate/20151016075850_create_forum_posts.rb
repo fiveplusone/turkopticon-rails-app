@@ -1,4 +1,4 @@
-class CreateForumPosts < ActiveRecord::Migration
+class CreateForumPosts < ActiveRecord::Migration[4.2]
   def self.up
     create_table :forum_posts do |t|
       t.integer :person_id

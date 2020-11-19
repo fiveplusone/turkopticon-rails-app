@@ -1,4 +1,4 @@
-class AddTosViolFlagToReports < ActiveRecord::Migration
+class AddTosViolFlagToReports < ActiveRecord::Migration[4.2]
   def self.up
     add_column :reports, :tos_viol, :boolean
   end

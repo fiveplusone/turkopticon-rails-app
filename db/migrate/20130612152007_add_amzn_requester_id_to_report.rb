@@ -1,4 +1,4 @@
-class AddAmznRequesterIdToReport < ActiveRecord::Migration
+class AddAmznRequesterIdToReport < ActiveRecord::Migration[4.2]
   def self.up
     add_column :reports, :amzn_requester_id, :string
   end

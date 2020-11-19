@@ -1,4 +1,4 @@
-class CreateReputationStatements < ActiveRecord::Migration
+class CreateReputationStatements < ActiveRecord::Migration[4.2]
   def self.up
     create_table :reputation_statements do |t|
       t.integer :person_id
