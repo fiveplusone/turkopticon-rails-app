@@ -54,7 +54,7 @@ class MainController < ApplicationController
       cond = {:requester_id => params[:id]}
     end
     default_order = Person.find(session[:person_id]).order_reviews_by_edit_date ? "updated_at DESC" : "id DESC"
-    @reports = Report.paginate :page => params[:page], :order => default_order, :conditions => cond
+    @reports = Report.where(cond).paginate(:page => params[:page]).order(default_order)
   end
 
   def averages
@@ -77,7 +77,7 @@ class MainController < ApplicationController
     @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports by " + @display_name
     default_order = Person.find(session[:person_id]).order_reviews_by_edit_date ? "updated_at DESC" : "id DESC"
-    @reports = Report.paginate :page => params[:page], :order => params[:order] ||= default_order, :conditions => {:person_id => params[:id]}
+    @reports = Report.where(:person_id => params[:id]).paginate(:page => params[:page]).order(params[:order] ||= default_order)
     @location = "reports by"
     render :action => "index"
   end
@@ -121,7 +121,7 @@ class MainController < ApplicationController
   def my_flagged
     @pagetitle = "reviews flagged by you"
     @location = "my_flagged"
-    @reports = Person.find(session[:person_id]).flags.collect{|f| f.report}.compact.uniq.paginate :page => params[:page]
+    @reports = Report.joins(:flags).where(flags: { person_id: session[:person_id] }).distinct.paginate :page => params[:page]
     @no_flags = true if @reports.empty?
     render :action => "index"
   end
@@ -129,7 +129,7 @@ class MainController < ApplicationController
   def flagged
     @pagetitle = "flagged reviews"
     @location = "flagged"
-    @reports = Report.paginate(:page => params[:page], :conditions => {:is_flagged => true, :is_hidden => nil}, :order => "id DESC")
+    @reports = Report.where(:is_flagged => true, :is_hidden => nil).paginate(:page => params[:page]).order("id DESC")
     @no_flags = true if @reports.empty?
     render :action => "index"
   end
@@ -137,7 +137,7 @@ class MainController < ApplicationController
   def hidden
     @pagetitle = "hidden reviews"
     @location = "hidden"
-    @reports = Report.paginate(:page => params[:page], :conditions => {:is_hidden => true}, :order => "id DESC")
+    @reports = Report.where(:is_hidden => true).paginate(:page => params[:page]).order("id DESC")
     render :action => "index"
   end
 
@@ -145,9 +145,9 @@ class MainController < ApplicationController
     @pagetitle = "your reviews"
     @location = "my_reviews"
     if Person.find(session[:person_id]).most_recent_first_in_my_reviews
-      @reports = Report.paginate :page => params[:page], :conditions => {:person_id => session[:person_id]}, :order => "id DESC"
+      @reports = Report.where(:person_id => session[:person_id]).paginate(:page => params[:page]).order("id DESC")
     else
-      @reports = Report.paginate :page => params[:page], :conditions => {:person_id => session[:person_id]}
+      @reports = Report.where(:person_id => session[:person_id]).paginate(:page => params[:page])
     end
     @no_reviews = true if @reports.empty?
     render :action => "index"
@@ -167,7 +167,7 @@ class MainController < ApplicationController
   end
 
   def search_mysql # good, but do not use, very slow; will choke site
-    requesters = Requester.find(:all, :conditions => ["amzn_requester_name like ?", "%#{params[:query]}%"])
+    requesters = Requester.where("amzn_requester_name like ?", "%#{params[:query]}%")
     @reports = requesters.collect{|r| r.reports}.flatten
     total_rep_count = @reports.length
     @reports.delete_if{|r| r.is_hidden}
@@ -203,7 +203,7 @@ class MainController < ApplicationController
     if safe_order_values.include?(order)
       cond = ["updated_at > ?", Time.now - 5.days]
       page = params[:page]
-      @requesters = Requester.paginate(:conditions => cond, :page => page, :order => order)
+      @requesters = Requester.where(cond).paginate(:page => page).order(order)
     else
       render :text => "Sorry, something broke."
     end
@@ -509,11 +509,11 @@ class MainController < ApplicationController
 
   def blog
     @location = "blog"
-    @posts = Post.find(:all, :order => "created_at DESC", :conditions => "parent_id is null")
+    @posts = Post.where(parent_id: nil).order(created_at: :desc)
   end
 
   def blogfeed
-    @posts = Post.find(:all, :order => "created_at DESC", :conditions => "parent_id is null")
+    @posts = Post.where(parent_id: nil).order(created_at: :desc)
     respond_to do |format|
       format.rss {render}
     end

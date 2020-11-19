@@ -44,23 +44,23 @@ class Requester < ApplicationRecord
   end
 
   def comm
-    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.comm}.compact.delete_if{|i| i == 0}.mean
+    Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.comm}.compact.delete_if{|i| i == 0}.mean
   end
 
   def pay
-    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay}.compact.delete_if{|i| i == 0}.mean
+    Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.pay}.compact.delete_if{|i| i == 0}.mean
   end
 
   def fair
-    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.fair}.compact.delete_if{|i| i == 0}.mean
+    Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.fair}.compact.delete_if{|i| i == 0}.mean
   end
 
   def fast
-    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.fast}.compact.delete_if{|i| i == 0}.mean
+    Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.fast}.compact.delete_if{|i| i == 0}.mean
   end
 
   def pay_bucket
-    reports = Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
+    reports = Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
     value = nil
     if !reports.empty?
       value = reports.to_buckets_json
@@ -69,7 +69,7 @@ class Requester < ApplicationRecord
   end
 
   def bucket_counts
-    values = Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
+    values = Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
     if values.empty?
       values = []
     else
@@ -81,9 +81,9 @@ class Requester < ApplicationRecord
   def avg_attrs
     attrs = {}
     Report.requester_attrs.each{|a|
-      attrs[a] = Report.find(:all, :conditions => {:requester_id => id}).delete_if{|r| r.is_hidden}.collect{|r| eval("r." + a)}.compact.delete_if{|i| i == 0}.mean
+      attrs[a] = Report.where(:requester_id => id).to_a.delete_if{|r| r.is_hidden}.collect{|r| eval("r." + a)}.compact.delete_if{|i| i == 0}.mean
       # pre-hiding version below
-      # attrs[a] = Report.find(:all, :conditions => {:requester_id => id}).collect{|r| eval("r." + a)}.compact.delete_if{|i| i == 0}.mean
+      # attrs[a] = Report.where(:requester_id => id).collect{|r| eval("r." + a)}.compact.delete_if{|i| i == 0}.mean
     }
     attrs
   end

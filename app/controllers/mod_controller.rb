@@ -136,41 +136,45 @@ class ModController < ApplicationController
 
   def index
     @title = "Reviews with no flags"
-    @reports = Report.paginate(:page => params[:page],
-                               :order => "id DESC",
-                               :conditions => "requester_id is not null and ignore_count = 0 and is_flagged is null")
+    @reports = Report
+      .where("requester_id is not null and ignore_count = 0 and is_flagged is null")
+      .paginate(:page => params[:page])
+      .order("id DESC")
   end
 
   def flagged
     @title = "Reviews with new flags"
-    @reports = Report.paginate(:page => params[:page],
-                               :order => "id DESC",
-                               :conditions => "is_flagged = 1 and ignore_count = 0 and is_hidden is null")
+    @reports = Report
+      .where("is_flagged = 1 and ignore_count = 0 and is_hidden is null")
+      .paginate(:page => params[:page])
+      .(order => "id DESC")
     render :action => "index"
   end
 
   def ignored
     @title = "Reviews with ignored flags"
-    @reports = Report.paginate(:page => params[:page],
-#                               :order => "id DESC",
-                               :order => "updated_at DESC",
-                               :conditions => "is_flagged = 1 and ignore_count > 0")
+    @reports = Report
+      .where("is_flagged = 1 and ignore_count > 0")
+      .paginate(:page => params[:page])
+      .order("updated_at DESC")
     render :action => "index"
   end
 
   def multi_ignored
     @title = "Reviews with ignored flags"
-    @reports = Report.paginate(:page => params[:page],
-                               :order => "id DESC",
-                               :conditions => "is_flagged = 1 and ignore_count > 1")
+    @reports = Report
+      .where("is_flagged = 1 and ignore_count > 1")
+      .paginate(:page => params[:page])
+      .order("id DESC")
     render :action => "index"
   end
 
   def hidden
     @title = "Hidden reviews"
-    @reports = Report.paginate(:page => params[:page],
-                               :order => "id DESC",
-                               :conditions => "is_flagged = 1 and is_hidden = 1")
+    @reports = Report
+      .where("is_flagged = 1 and is_hidden = 1")
+      .paginate(:page => params[:page])
+      .order("id DESC")
     render :action => "index"
   end
 

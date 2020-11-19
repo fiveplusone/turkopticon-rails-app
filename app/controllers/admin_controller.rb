@@ -97,17 +97,17 @@ class AdminController < ApplicationController
 
   def dashboard
     @user_count = Person.count
-    @new_user_count = Person.all(:conditions => ["created_at > ?", Time.now - 1.month]).count
-    @active_user_count = Report.all(:conditions => ["created_at > ?", Time.now - 1.month]).collect{|r| r.person_id}.uniq.count
+    @new_user_count = Person.where("created_at > ?", Time.now - 1.month).count
+    @active_user_count = Report.where("created_at > ?", Time.now - 1.month).collect{|r| r.person_id}.uniq.count
     # @active_user_count = Report.all.select{|r| r.created_at > Time.now - 1.month}.collect{|r| r.person_id}.uniq.count  # slow, don't do that
     @report_count = Report.count
     @requester_count = Requester.count
-    @recent_reports = Report.all(:conditions => ["created_at > ?", Time.now - 1.month])
+    @recent_reports = Report.where("created_at > ?", Time.now - 1.month)
     @recent_report_count = @recent_reports.count
     authors = @recent_reports.map{|r| {"id" => r.person_id, "name" => r.person.display_name.nil? ? r.person.email : r.person.display_name}}
     @author_count = authors.uniq.count
     @authors_with_counts = authors.group_by{|a| [a["id"], a["name"]]}.map{|k, v| [k, v.length]}.sort_by{|a| a[1]}.reverse
-    @recent_flags = Flag.all(:conditions => ["created_at > ?", Time.now - 1.month])
+    @recent_flags = Flag.where("created_at > ?", Time.now - 1.month)
     # @recent_flags = Flag.all.select{|f| f.created_at > Time.now - 1.month}  # slow
     @recently_flagged_reports = @recent_flags.collect{|f| f.report_id}
     @recent_flaggers = @recent_flags.collect{|f| f.person_id}
@@ -330,7 +330,7 @@ class AdminController < ApplicationController
       title = title + "from_" + params[:state][:filter] + "-"
     end
 
-    @contacts = Person.find(:all, :conditions => [conditions] + args)
+    @contacts = Person.where(conditions, *args)
     csv = CSV.generate_line(%w(email, verified, phone, state, country, optin, last_review, last_login, created_at))
     csv << "\n"
     @contacts.each { |contact| csv << CSV.generate_line([contact.email, contact.email_verified, contact.phone, contact.state, contact.country, contact.optin, contact.latest_review_at, contact.latest_login_at, contact.created_at]) and csv << "\n"}

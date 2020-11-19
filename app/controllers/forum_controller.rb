@@ -124,7 +124,7 @@ class ForumController < ApplicationController
 
     # if this person has already thanked three times in the last 24 hours,
     # tell them they have to wait and send them back
-    if ReputationStatement.all(:conditions => ["person_id = ? and statement = 'thanks' and created_at > ?", person_id, Time.now - 1.day]).count >= 3
+    if ReputationStatement.where("person_id = ? and statement = 'thanks' and created_at > ?", person_id, Time.now - 1.day).count >= 3
       flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you can only leave 3 \"thanks\" per day, and you have already left 3 in the last 24 hours. You can delete one or wait."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
@@ -175,7 +175,7 @@ class ForumController < ApplicationController
 
     # if this person has already left 1 'inappropriate' flag in the last 24 hours
     # tell them they have to wait and send them back
-    if ReputationStatement.all(:conditions => ["person_id = ? and statement = 'inappropriate' and created_at > ?", person_id, Time.now - 1.day]).count >= 1
+    if ReputationStatement.where("person_id = ? and statement = 'inappropriate' and created_at > ?", person_id, Time.now - 1.day).count >= 1
       flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you can only leave 1 \"inappropriate\" flag per day, and you have already left one in the last 24 hours. You can delete it or wait."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
