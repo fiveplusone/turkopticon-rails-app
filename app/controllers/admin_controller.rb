@@ -62,7 +62,7 @@ class AdminController < ApplicationController
 #    emails = []
 #    File.open("log/ip500k.log").each{|line| emails << line.split("]")[1].split(" ")[0] if line[0, 1] == "[" and !line.split("]")[1].nil?}
 #    emails.uniq!
-#    emails.each{|e| AdminMailer::deliver_facilitator(Person.find_by_email(e).id.to_s, e)}
+#    emails.each{|e| AdminMailer.facilitator(Person.find_by_email(e).id.to_s, e).deliver_now}
 #    render :text => "Sent #{emails.count.to_s} emails."
 #  end
 
@@ -72,7 +72,7 @@ class AdminController < ApplicationController
     ## out = ""
 #    emails = []
 #    File.open("log/facilitator_emails.txt").each{|e|
-#      AdminMailer::deliver_facilitator_followup(e)
+#      AdminMailer.facilitator_followup(e).deliver_now
 #      emails << e
       ## out += e + "<br/>"
 #    }
@@ -83,7 +83,7 @@ class AdminController < ApplicationController
 #  def send_workshopinfo_emails
 #    emails = []
 #    File.open("log/facilitator_emails.txt").each{|e|
-#      AdminMailer::deliver_workshopinfo(e)
+#      AdminMailer.workshopinfo(e).deliver_now
 #      emails << e
 #    }
 #    count = emails.length
@@ -173,7 +173,7 @@ class AdminController < ApplicationController
   def enable_commenting_and_send_email
     person = Person.find(params[:id])
     person.update_attributes(:can_comment => true)
-    AdminMailer::deliver_enabled(person)
+    AdminMailer.enabled(person).deliver_now
     render :text => "Enabled commenting for user #{params[:id]}."
   end
 
@@ -186,7 +186,7 @@ class AdminController < ApplicationController
   def decline_commenting_request_and_send_email
     person = Person.find(params[:id])
     person.update_attributes(:commenting_requested => nil, :commenting_requested_at => nil)
-    AdminMailer::deliver_declined(person)
+    AdminMailer.declined(person).deliver_now
     render :text => "Declined commenting request for user #{params[:id]}. Email sent."
   end
 
@@ -246,7 +246,7 @@ class AdminController < ApplicationController
     out = "Enabled commenting for:\n"
     enable.each{|person|
       person.update_attributes(:can_comment => true, :commenting_enabled_at => Time.now, :commenting_enabled_by => 0)
-      AdminMailer::deliver_enabled(person)
+      AdminMailer.enabled(person).deliver_now
       out += "#{person.id.to_s}\n"
     }
     render :text => out
@@ -257,17 +257,17 @@ class AdminController < ApplicationController
     out = "Enabled commenting for:\n"
     likely.each{|person|
       person.update_attributes(:can_comment => true)
-      AdminMailer::deliver_enabled(person)
+      AdminMailer.enabled(person).deliver_now
         out += "#{person.id.to_s}    #{person.public_email}\n"
     }
     out += "\n\n"
     unlikely = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).select{|p| p.reports.count < 5}
     unlikely.each{|person|
       person.update_attributes(:commenting_requested => nil, :commenting_requested_at => nil)
-      AdminMailer::deliver_declined(person)
+      AdminMailer.declined(person).deliver_now
     }
     out += "Declined commenting for " + unlikely.map{|p| p.id}.join(", ")
-    AdminMailer::deliver_report(out)
+    AdminMailer.report(out).deliver_now
   end
 
   def duplicated_requesters

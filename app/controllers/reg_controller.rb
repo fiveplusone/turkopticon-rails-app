@@ -21,7 +21,7 @@ class RegController < ApplicationController
       @person.email = @new_email
       @person.email_verified = false
       if @person.save
-        RegMailer::deliver_confirm( @person, confirmation_hash(@person.email) )
+        RegMailer.confirm(@person, confirmation_hash(@person.email)).deliver_now
         flash[:notice] = "An email has been sent to #{@person.email}. Please click the link in the email to verify your email address."
         redirect_to :controller => "main", :action => "index"
       end
@@ -35,7 +35,7 @@ class RegController < ApplicationController
       if params[:robot_check][:check] == "1"
         if @person.save
           @person.update_attributes(:display_name => @person.public_email, :show_fancy_links => true, :confirmation_token => confirmation_hash(@person.email))
-          RegMailer::deliver_confirm(@person, @person.confirmation_token)
+          RegMailer.confirm(@person, @person.confirmation_token).deliver_now
           session[:person_id] = @person.id
           flash[:notice] = "Thanks for signing up. We've sent an email to #{@person.email}. Please click the link in the email to verify your address."
 
@@ -91,7 +91,7 @@ class RegController < ApplicationController
         # Check if email is verified
         if person.email_verified.nil? or person.email_verified == false
           flash[:notice] = "Please verify your current email address, or update your email address, to continue using Turkopticon."
-          RegMailer::deliver_confirm( person, confirmation_hash(person.email) )
+          RegMailer.confirm(person, confirmation_hash(person.email)).deliver_now
           redirect_to :action => "change_email"
         else      
           uri = session[:original_uri]
@@ -204,7 +204,7 @@ class RegController < ApplicationController
         @new_password = params[:person][:password]
         @person.password=(@new_password)
         if @person.save
-          RegMailer::deliver_password_change(@person, @new_password)
+          RegMailer.password_change(@person, @new_password).deliver_now
           flash[:notice] = "Your password has been changed. A confirmation email has been sent to #{@person.email}."
           redirect_to :controller => "main", :action => "index"
         end
@@ -221,7 +221,7 @@ class RegController < ApplicationController
         @new_password = @person.object_id.to_s.gsub(/0/, 'j').gsub(/4/, 'x_')
       	@person.password=(@new_password)
         if @person.save
-      	  RegMailer::deliver_password_reset(@person, @new_password)
+          RegMailer.password_reset(@person, @new_password).deliver_now
       	  flash[:notice] = "Your password has been reset. An email containing the new password has been sent to to #{@person.email}."
       	  redirect_to :controller => "reg", :action => "login"
       	end
@@ -232,7 +232,7 @@ class RegController < ApplicationController
   def send_verification_email
     @person = Person.find(session[:person_id])
     @person.update_attributes(:confirmation_token => confirmation_hash(@person.email))
-    RegMailer::deliver_confirm(@person, @person.confirmation_token)
+    RegMailer.confirm(@person, @person.confirmation_token).deliver_now
     flash[:notice] = "An email has been sent to #{@person.email}. Please click the link in the email to verify your email address."
     redirect_to :controller => "main", :action => "index"
   end
