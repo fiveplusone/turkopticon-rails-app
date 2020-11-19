@@ -1,8 +1,8 @@
 class RegController < ApplicationController
 
   @@email_log = '/home/ssilberman/src/turkopticon/log/email_changes.txt'
-  before_filter :authorize, :only => :settings
-  before_filter :check_ip, :only => :register
+  before_action :authorize, :only => :settings
+  before_action :check_ip, :only => :register
 
   def close
     Person.find(session[:person_id]).close

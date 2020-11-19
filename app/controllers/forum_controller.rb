@@ -1,8 +1,8 @@
 class ForumController < ApplicationController
 
-  before_filter :authorize, :load_person
-  before_filter :authorize_as_admin, :only => [:karma]
-  before_filter :authorize_as_commenter, :only => [:new_post, :edit_post, :delete_post, :thank, :inappropriate, :unthank, :uninappropriate]
+  before_action :authorize, :load_person
+  before_action :authorize_as_admin, :only => [:karma]
+  before_action :authorize_as_commenter, :only => [:new_post, :edit_post, :delete_post, :thank, :inappropriate, :unthank, :uninappropriate]
 
   layout "forum"
 

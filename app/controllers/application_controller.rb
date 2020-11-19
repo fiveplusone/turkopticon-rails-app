@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
 
-  before_filter :title, :check_ip
+  before_action :title, :check_ip
 
   def title
   end

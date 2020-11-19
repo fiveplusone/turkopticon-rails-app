@@ -1,6 +1,6 @@
 class ModController < ApplicationController
 
-  before_filter :authorize, :authorize_as_moderator, :load_person
+  before_action :authorize, :authorize_as_moderator, :load_person
   layout "moderator"
 
   def authorize_as_moderator

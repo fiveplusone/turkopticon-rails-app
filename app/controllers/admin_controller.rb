@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
 
-  before_filter :authorize, :authorize_as_admin, :except => [:review_commenting_requests]
+  before_action :authorize, :authorize_as_admin, :except => [:review_commenting_requests]
   layout nil
 
   def authorize_as_admin

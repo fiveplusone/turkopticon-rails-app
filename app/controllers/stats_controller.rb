@@ -1,6 +1,6 @@
 class StatsController < ApplicationController
 
-  before_filter :authorize
+  before_action :authorize
   layout nil
 
   def index
