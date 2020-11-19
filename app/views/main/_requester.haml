@@ -21,7 +21,7 @@
       .smlabel= "Pay/hr:"
     - if requester.bucket_counts.empty?
       .smlabel no&nbsp;data
-    - else 
+    - else
       %br/
       - requester.bucket_counts.each do |a,v|
         .smlabel= a + ": "

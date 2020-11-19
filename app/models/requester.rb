@@ -97,7 +97,7 @@ class Requester < ApplicationRecord
     for a,v in avg_attrs
       retstr += attr_word(a) + ": " + Requester.attr_vis(v) + " " + sprintf("%0.02f", v) + " / 5<br/>"
     end
-    retstr += "<br><FONT FACE='Verdana, Arial' size=2><u>THIS VERSION OF TURKOPTICON IS NOW OUTDATED</u><br> - Please click <a href='#' onclick='InstallTrigger.install({\"Turkopticon\":\"https://www.stanford.edu/group/experiment/cgi-bin/turkopticon/firefox/turkopticon.xpi\"});'>here</a> to install the new version<br>(you will need to press 'allow' and accept the changes).<br>Click <a href='http://turkopticon.differenceengines.com/main/install_v2'>here</a> for information about the new version.</font><br>"	 
+    retstr += "<br><FONT FACE='Verdana, Arial' size=2><u>THIS VERSION OF TURKOPTICON IS NOW OUTDATED</u><br> - Please click <a href='#' onclick='InstallTrigger.install({\"Turkopticon\":\"https://www.stanford.edu/group/experiment/cgi-bin/turkopticon/firefox/turkopticon.xpi\"});'>here</a> to install the new version<br>(you will need to press 'allow' and accept the changes).<br>Click <a href='http://turkopticon.differenceengines.com/main/install_v2'>here</a> for information about the new version.</font><br>"
     retstr += "numReports:" + report_count.to_s
   end
 
@@ -110,12 +110,12 @@ class Requester < ApplicationRecord
     end
     retstr += "numReports:" + report_count.to_s
   end
-  
+
   def attrs_text_v2
       retstr = ""
     for a,v in avg_attrs
       retstr += attr_word(a) + ": " + Requester.attr_vis(v) + " " + sprintf("%0.02f", v) + " / 5<br/>"
-    end 
+    end
     retstr += "numReports:" + report_count.to_s
   end
 

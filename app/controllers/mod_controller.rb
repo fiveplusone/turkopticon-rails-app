@@ -23,7 +23,7 @@ class ModController < ApplicationController
   end
 
   def close_account
-    
+
   end
 
   def do_close_account

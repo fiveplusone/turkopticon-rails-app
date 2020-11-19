@@ -116,7 +116,7 @@ class MainController < ApplicationController
     @pagetitle = "reports flagged or commented on by " + @display_name
     @reports = @person.flags.map{|f| f.report} + @person.comments.map{|f| f.report}
     render :action => "flagged_by"
-  end  
+  end
 
   def my_flagged
     @pagetitle = "reviews flagged by you"
@@ -468,7 +468,7 @@ class MainController < ApplicationController
       render :text => @requester.attrs_text_2
     end
   end
-  
+
   def requester_attrs_v2
     @requester = Requester.find_by_amzn_requester_id(params[:id])
     if @requester.nil?
@@ -499,7 +499,7 @@ class MainController < ApplicationController
     @pagetitle = "help"
     @location = "help"
   end
-  
+
   def help_v2
   end
 
@@ -603,8 +603,8 @@ class MainController < ApplicationController
   end
 
   def check_for_duplicate_requester_objects
-    ids = Requester.all.map{|r| r.amzn_requester_id}.delete_if{|i| i.blank?} 
-    hash = ids.group_by{|i| i} 
+    ids = Requester.all.map{|r| r.amzn_requester_id}.delete_if{|i| i.blank?}
+    hash = ids.group_by{|i| i}
     duplicate_ids = hash.select{|k, v| v.size > 1}.map(&:first)
     if duplicate_ids.empty?
       render :text => ""

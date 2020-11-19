@@ -45,7 +45,7 @@ class RegController < ApplicationController
           result = `echo '#{user}' | curl -d @- 'https://api.turkopticon.info/accounts?key=#{apikey}' --header 'Content-Type: application/json'`
           File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT CREATION API WITH: #{user}\nRESULT: #{result}\n\n") }
           redirect_to :controller => "main", :action => "index"
-        end 
+        end
       else
         redirect_to :action => "robot"
       end
@@ -93,7 +93,7 @@ class RegController < ApplicationController
           flash[:notice] = "Please verify your current email address, or update your email address, to continue using Turkopticon."
           RegMailer.confirm(person, confirmation_hash(person.email)).deliver_now
           redirect_to :action => "change_email"
-        else      
+        else
           uri = session[:original_uri]
           session[:original_uri] = nil
           redirect_to (uri || {:controller => "main", :action => "index"})
@@ -112,7 +112,7 @@ class RegController < ApplicationController
     flash[:notice] = "Logged out."
     redirect_to :controller => "main", :action => "index"
   end
-  
+
   def settings
     @person = Person.find(session[:person_id])
   end
@@ -219,12 +219,12 @@ class RegController < ApplicationController
         flash[:notice] = "Sorry, that email isn't in the database."
       else
         @new_password = @person.object_id.to_s.gsub(/0/, 'j').gsub(/4/, 'x_')
-      	@person.password=(@new_password)
+        @person.password=(@new_password)
         if @person.save
           RegMailer.password_reset(@person, @new_password).deliver_now
-      	  flash[:notice] = "Your password has been reset. An email containing the new password has been sent to to #{@person.email}."
-      	  redirect_to :controller => "reg", :action => "login"
-      	end
+          flash[:notice] = "Your password has been reset. An email containing the new password has been sent to to #{@person.email}."
+          redirect_to :controller => "reg", :action => "login"
+        end
       end
     end
   end
