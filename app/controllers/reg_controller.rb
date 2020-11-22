@@ -225,7 +225,7 @@ class RegController < ApplicationController
   end
 
   def confirm
-    person = Person.find_by_confirmation_token(params[:hash])
+    person = Person.find_by(confirmation_token: params[:hash])
 
     if person.nil? 
       flash[:notice] = "Sorry, we don't recognize that confirmation link. Please re-send confirmation email."

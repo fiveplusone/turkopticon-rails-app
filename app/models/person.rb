@@ -138,7 +138,7 @@ class Person < ApplicationRecord
 
   def self.active_count
     rv = 0
-    Person.find(:all).each{|p| rv += 1 if p.active?}
+    Person.all.each{|p| rv += 1 if p.active?}
     rv
   end
 
