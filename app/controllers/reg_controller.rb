@@ -1,6 +1,4 @@
 class RegController < ApplicationController
-
-  @@email_log = '/home/ssilberman/src/turkopticon/log/email_changes.txt'
   before_action :authorize, :only => :settings
   before_action :check_ip, :only => :register
 
@@ -15,8 +13,6 @@ class RegController < ApplicationController
     @person = Person.find(session[:person_id])
     if request.post?
       @new_email = params[:person][:email]
-      log_line = '%i) from "%s" to "%s" at %s' % [ @person.id, @person.email, @new_email, Time.now.strftime("%b %d %Y %H:%M") ]
-      File.open( @@email_log, 'a' ) { |ff| ff.write(log_line+"\n") }
 
       @person.email = @new_email
       @person.email_verified = false
