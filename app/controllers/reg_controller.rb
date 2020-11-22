@@ -238,12 +238,6 @@ class RegController < ApplicationController
     end
     flash[:notice] = "Thank you for confirming your email address."
 
-    # activate on turkopticon.info
-    email = person.email
-    apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
-    result = `curl 'https://api.turkopticon.info/accounts/activate?email=#{email}&key=#{apikey}'`
-    File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT ACTIVATION API ENDPOINT WITH: #{email}\nRESULT: #{result}\n\n") }
-
     redirect_to :controller => "main", :action => "index"
   end
 
