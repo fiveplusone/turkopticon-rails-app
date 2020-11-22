@@ -278,8 +278,6 @@ class MainController < ApplicationController
 
           t = Time.now.strftime("%H:%M %a %b %d %Y")
           ip = request.remote_ip
-          IPLogger.info "[#{t}] #{@report.person.email} posted report #{@report.id.to_s} from #{ip}:"
-          IPLogger.info " ---- " + @report.print_h
 
           %w{comm pay fair fast}.each{|a| eval("@report.update_attributes(:" + a + " => 0) if @report." + a + ".nil?")}
           r.cache_columns

@@ -58,7 +58,6 @@ class RegController < ApplicationController
         # session[:person_id] = cookies[:person_id].to_i
         # person = Person.find(session[:person_id])
         #if person
-          #IPLogger.info "[#{Time.now}] #{person.email} logged in with cookie from #{request.remote_ip}"
           #uri = session[:original_uri]
           #session[:original_uri] = nil
           #redirect_to uri || {:controller => "main", :action => "index"}
@@ -74,13 +73,10 @@ class RegController < ApplicationController
         person.update_attributes(:latest_login_at => DateTime.now)
         if person.id == 1
           cookies['person_id'] = "1" # {:value => person.id.to_s, :expires => Time.now + 3600 * 24 * 30}
-          IPLogger.info "    cookies['person_id']: #{cookies['person_id']}"
         end
 
         t = Time.now.strftime("%H:%M %a %b %d %Y")
         ip = request.remote_ip
-        IPLogger.info "[#{t}] #{person.email} logged in from #{ip}"
-        # IPLogger.info "    cookies: #{cookies.inspect}"
         logger.info "[#{t}] #{person.email} logged in from #{ip}"
 
         # Check if email is verified
