@@ -1,6 +1,6 @@
 class MainController < ApplicationController
 
-  before_action :authorize, :except => [:requester_stats, :info, :help, :help_v2, :install_v2, :install_welcome, :requester_attrs, :requester_attrs_v2, :ditz, :blog, :post, :blogfeed, :requesters, :requester_attrs_2, :x, :ferret_index, :rules, :dedupe_reqs, :backup_db, :check_for_duplicate_requester_objects, :wth, :data_use_policy, :commentingreqs]
+  before_action :authorize, :except => [:requester_stats, :info, :help, :help_v2, :install_v2, :install_welcome, :requester_attrs, :requester_attrs_v2, :ditz, :blog, :post, :blogfeed, :requesters, :requester_attrs_2, :x, :rules, :dedupe_reqs, :backup_db, :check_for_duplicate_requester_objects, :wth, :data_use_policy, :commentingreqs]
   before_action :check_for_existing_report, :only => :add_report
   before_action :verify, :only => :add_report
   before_action :authorize_as_commenter, :only => [:add_comment, :add_flag]
@@ -172,27 +172,6 @@ class MainController < ApplicationController
     total_rep_count = @reports.length
     @reports.delete_if{|r| r.is_hidden}
     @hidden_rep_count = total_rep_count - @reports.length
-  end
-
-  def search
-    @reports = Report.find_with_ferret(params[:query])
-    Requester.find_with_ferret(params[:query]).each{|r| r.reports.each{|rep| @reports << rep}}
-    total_rep_count = @reports.length
-    @reports.delete_if{|r| r.is_hidden}
-    @reports = @reports.sort_by{|r| r.created_at}.reverse
-    @hidden_rep_count = total_rep_count - @reports.length
-
-    # log search queries to separate log file
-    # for search redesign
-    log_str = "[" + Time.now.strftime("%Y-%m-%d %H:%M:%S") + "] "
-    log_str += "[" + request.remote_ip + "] "
-    log_str += params[:query] + "\n"
-    File.open("#{RAILS_ROOT}/log/search.log", 'a') {|f| f.write(log_str)}
-  end
-
-  def search_all
-    @reports = Report.find_with_ferret(params[:query])
-    Requester.find_with_ferret(params[:query]).each{|r| r.reports.each{|rep| @reports << rep}}
   end
 
   def requesters
@@ -556,13 +535,6 @@ class MainController < ApplicationController
   end
 
   def wth
-  end
-
-  def ferret_index
-    # call with, e.g.,
-    # wget -c http://turkopticon.differenceengines.com/main/ferret_index > /dev/null 2>&1
-    system "/usr/bin/rake ferret_index"
-    render :text => "Successfully rebuilt Ferret indices"
   end
 
   def dedupe_reqs
