@@ -30,4 +30,4 @@
     other
     %br/
     = submit_tag "Flag Report"
-    = link_to_remote "Cancel", :url => {:action => "cancel_lightbox", :id => @report.id}
+    = link_to "Cancel", :remote => true, :url => {:action => "cancel_lightbox", :id => @report.id}

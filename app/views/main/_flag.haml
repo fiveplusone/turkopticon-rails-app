@@ -44,4 +44,4 @@
       &nbsp;
       = text_field_tag :other_explanation, "explanation for 'other', min. 20 chars, max. 500", {:size => 40, :onfocus => "if(this.value == \"explanation for 'other', min. 20 chars, max. 500\") { this.value = ''; }"}
     = submit_tag "Flag Report"
-    = link_to_remote "Cancel", :url => {:action => "cancel_flag", :id => @report.id}
+    = link_to "Cancel", :remote => true, :url => {:action => "cancel_flag", :id => @report.id}

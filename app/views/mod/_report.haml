@@ -80,7 +80,7 @@
     .placeholder{:id => report.id}
   %td.center{:valign => "top"}
     - if Flag.find_by_person_id_and_report_id(@person.id, report.id).nil?
-      = link_to_remote "Flag", :url => {:controller => "mod", :action => "flag", :id => report.id}
+      = link_to "Flag", :remote => true, :url => {:controller => "mod", :action => "flag", :id => report.id}
       %br/
     - if flags.count > 0
       - if Flag.find_by_person_id_and_report_id(@person.id, report.id).nil?
@@ -89,4 +89,4 @@
       - if Ignore.find_by_person_id_and_report_id(@person.id, report.id).nil?
         = link_to "Ignore&nbsp;Flags", :controller => "mod", :action => "ignore", :id => report.id
         %br/
-    = link_to_remote "Comment", :url => {:controller => "mod", :action => "comment", :id => report.id}
+    = link_to "Comment", :remote => true, :url => {:controller => "mod", :action => "comment", :id => report.id}

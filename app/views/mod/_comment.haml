@@ -5,4 +5,4 @@
     = text_area :comment, :body
     %br/
     = submit_tag "Post Comment"
-    = link_to_remote "Cancel", :url => {:action => "cancel_lightbox", :id => @report.id}
+    = link_to "Cancel", :remote => true, :url => {:action => "cancel_lightbox", :id => @report.id}

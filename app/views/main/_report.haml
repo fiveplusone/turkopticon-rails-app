@@ -130,7 +130,7 @@
             = link_to "unflag", {:controller => "main", :action => "convert_flag", :id => flag.id}, :confirm => "Are you sure? This will convert your flag to a comment."
           - else
             - if Person.find(session[:person_id]).can_comment
-              = link_to_remote "flag", :url => {:controller => "main", :action => "flag", :id => report.id}
+              = link_to "flag", :remote => true, :url => {:controller => "main", :action => "flag", :id => report.id}
           - if Person.find(session[:person_id]).can_comment
             - if (!report.locked_until.nil? and report.locked_until > Time.now) or (Person.find(session[:person_id]).muted and Person.find(session[:person_id]).muted_until > Time.now)
               &nbsp;
