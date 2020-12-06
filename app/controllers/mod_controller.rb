@@ -147,7 +147,7 @@ class ModController < ApplicationController
     @reports = Report
       .where("is_flagged = 1 and ignore_count = 0 and is_hidden is null")
       .paginate(:page => params[:page])
-      .(order => "id DESC")
+      .order("id DESC")
     render :action => "index"
   end
 
