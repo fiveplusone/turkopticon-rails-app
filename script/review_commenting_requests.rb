@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-likely = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).select{|p| p.reports.count >= 5}
+likely = Person.where(:can_comment  => nil, :commenting_requested => true, :commenting_request_ignored => nil).select{|p| p.reports.count >= 5}
 out = "Enabled commenting for:\n"
 likely.each{|person|
   person.update_attributes(:can_comment => true)
@@ -8,7 +8,7 @@ likely.each{|person|
   out += "#{person.id.to_s}    #{person.public_email}\n"
 }
 out += "\n\n"
-unlikely = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).select{|p| p.reports.count < 5}
+unlikely = Person.where(:can_comment  => nil, :commenting_requested => true, :commenting_request_ignored => nil).select{|p| p.reports.count < 5}
 unlikely.each{|person|
   person.update_attributes(:commenting_requested => nil, :commenting_requested_at => nil)
   AdminMailer.declined(person).deliver_now
