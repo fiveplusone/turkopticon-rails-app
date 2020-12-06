@@ -28,7 +28,7 @@
 class Report < ApplicationRecord
 
   belongs_to :person
-  belongs_to :requester
+  belongs_to :requester, :optional => true
   has_many :flags
   has_many :comments
   has_many :ignores
