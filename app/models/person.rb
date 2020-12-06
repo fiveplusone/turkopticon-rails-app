@@ -169,11 +169,11 @@ class Person < ApplicationRecord
   end
 
   def self.review_commenting_requests_count
-    find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).count
+    where(:can_comment => nil, :commenting_requested => true, :commenting_request_ignored => nil).count
   end
 
   def self.review_commenting_requests
-    find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).each{|p|
+    where(:can_comment => nil, :commenting_requested => true, :commenting_request_ignored => nil).each{|p|
       p.update_attributes(:can_comment => true, :commenting_enabled_at => Time.now, :commenting_enabled_by => 0)
       AdminMailer.enabled(p).deliver_now
     }

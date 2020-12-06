@@ -16,7 +16,7 @@
 class Post < ApplicationRecord
 
   def children
-    Post.find_all_by_parent_id(id)
+    Post.where(:parent_id => id)
   end
 
   def parent

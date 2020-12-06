@@ -83,7 +83,7 @@ class MainController < ApplicationController
   end
 
   def reports_by_ip
-    @reports = Report.find_all_by_ip(params[:ip])
+    @reports = Report.where(:ip => params[:ip])
     render :action => "flagged_by"
   end
 
@@ -259,7 +259,6 @@ class MainController < ApplicationController
           render :action => "add_report" and return
         end
       end
-      # TODO: ask six about how to keep this actually nil, esp in edit
       if params[:report][:pay_bucket] == "nil"
         params[:report][:pay_bucket] = nil
       end

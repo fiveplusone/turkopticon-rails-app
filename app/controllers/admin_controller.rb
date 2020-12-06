@@ -50,7 +50,7 @@ class AdminController < ApplicationController
 
 #  def emails_of_commenters_with_no_reviews
 #    @emails = []
-#    Person.find_all_by_can_comment(true).each do |p|
+#    Person.where(:can_comment => true).each do |p|
 #      @emails << p.email if p.reports.empty?
 #    end
 #    render :action => "all_emails"
@@ -208,26 +208,34 @@ class AdminController < ApplicationController
   end
 
   def commenting_requests
-    @people = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).sort_by{|p| p.commenting_requested_at}
+    @people = Person.where(:can_comment => nil, 
+                            :commenting_requested => true, 
+                            :commenting_request_ignored => nil).sort_by{|p| p.commenting_requested_at}
     @all_emails = @people.collect{|p| p.email}
     @all_ids = @people.collect{|p| p.id}
   end
 
   def likely_commenting_requests
-    @people = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).select{|p| p.reports.count >= 5}.sort_by{|p| p.commenting_requested_at}
+    @people = Person.where(:can_comment => nil, 
+                            :commenting_requested => true, 
+                            :commenting_request_ignored => nil).sort_by{|p| p.commenting_requested_at}
     @all_emails = @people.collect{|p| p.email}
     @all_ids = @people.collect{|p| p.id}
     render :action => "commenting_requests"
   end
 
   def unlikely_commenting_requests
-    @people = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).select{|p| p.reports.count < 5}.sort_by{|p| p.commenting_requested_at}
+    @people = Person.where(:can_comment => nil, 
+                            :commenting_requested => true, 
+                            :commenting_request_ignored => nil).sort_by{|p| p.commenting_requested_at}
     @all_emails = @people.collect{|p| p.email}
     @all_ids = @people.collect{|p| p.id}
   end
 
   def zero_rev_commenting_requests
-    @people = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).select{|p| p.reports.count < 1}.sort_by{|p| p.commenting_requested_at}
+    @people = Person.where(:can_comment => nil, 
+                            :commenting_requested => true, 
+                            :commenting_request_ignored => nil).sort_by{|p| p.commenting_requested_at}
     @all_emails = @people.collect{|p| p.email}
     @all_ids = @people.collect{|p| p.id}
   end
@@ -238,11 +246,13 @@ class AdminController < ApplicationController
   end
 
   def enabled_commenters
-    @commenters = Person.find_all_by_can_comment(true).sort_by{|p| p.comments.count}.reverse
+    @commenters = Person.where(:can_comment => true).sort_by{|p| p.comments.count}.reverse
   end
 
   def review_commenting_requests
-    enable = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil)
+    enable = Person.where(:can_comment => nil, 
+                            :commenting_requested => true, 
+                            :commenting_request_ignored => nil)
     out = "Enabled commenting for:\n"
     enable.each{|person|
       person.update_attributes(:can_comment => true, :commenting_enabled_at => Time.now, :commenting_enabled_by => 0)
@@ -253,7 +263,9 @@ class AdminController < ApplicationController
   end
 
   def old_review_commenting_requests  # 2018 Jul 9
-    likely = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).select{|p| p.reports.count >= 5}
+    likely = Person.where(:can_comment => nil, 
+                            :commenting_requested => true, 
+                            :commenting_request_ignored => nil).select{|p| p.reports.count >= 5}
     out = "Enabled commenting for:\n"
     likely.each{|person|
       person.update_attributes(:can_comment => true)
@@ -261,7 +273,9 @@ class AdminController < ApplicationController
         out += "#{person.id.to_s}    #{person.public_email}\n"
     }
     out += "\n\n"
-    unlikely = Person.find_all_by_can_comment_and_commenting_requested_and_commenting_request_ignored(nil, true, nil).select{|p| p.reports.count < 5}
+    unlikely = Person.where(:can_comment => nil, 
+                            :commenting_requested => true, 
+                            :commenting_request_ignored => nil).select{|p| p.reports.count >= 5}
     unlikely.each{|person|
       person.update_attributes(:commenting_requested => nil, :commenting_requested_at => nil)
       AdminMailer.declined(person).deliver_now

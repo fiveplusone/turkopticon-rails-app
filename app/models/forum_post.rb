@@ -38,7 +38,7 @@ class ForumPost < ApplicationRecord
   end
 
   def versions
-    ForumPostVersion.find_all_by_post_id(self.id)
+    ForumPostVersion.where(:post_id => self.id)
   end
 
   def version_count
@@ -46,7 +46,7 @@ class ForumPost < ApplicationRecord
   end
 
   def reply_posts
-    ForumPost.find_all_by_thread_head(self.id)
+    ForumPost.where(:thread_head => self.id)
   end
 
   def undelete
@@ -57,11 +57,11 @@ class ForumPost < ApplicationRecord
   end
 
   def thanks
-    ReputationStatement.find_all_by_post_id_and_statement(self.id, "thanks")
+    ReputationStatement.where(:post_id=> self.id, :statement => "thanks")
   end
 
   def inappropriate
-    ReputationStatement.find_all_by_post_id_and_statement(self.id, "inappropriate")
+    ReputationStatement.where(:post_id => self.id, :statement => "inappropriate")
   end
 
   def has_inappro
