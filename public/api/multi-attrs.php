@@ -11,6 +11,7 @@
    Last updated 26 Aug 2020 14:26 PDT
    Last updated 28 Aug 2020 10:06 PDT
    Last updated 28 Aug 2020 11:58 PDT
+   Last updated 11 Sep 2020 11:08 PDT
    ===============
    This file requires the package php5-mysqlnd!
    Before using this API, run:
@@ -65,13 +66,13 @@
     $i = 0;
     echo "{";
 
-    $logfile = '../../php_api/log/multi-attrs.php.log';
+    // $logfile = '../../php_api/log/multi-attrs.php.log';
     $time = date('Y-m-d H:i:s');
     $ip = $_SERVER['REMOTE_ADDR'];
-    file_put_contents($logfile, "[API v2020.08.28.1006] ", FILE_APPEND);
-    file_put_contents($logfile, "[" . $time . "] ", FILE_APPEND);
-    file_put_contents($logfile, "[" . $ip . "] ", FILE_APPEND);
-    file_put_contents($logfile, $_GET['ids'] . "\n", FILE_APPEND);
+    // file_put_contents($logfile, "[API v2020.09.11.1108] ", FILE_APPEND);
+    // file_put_contents($logfile, "[" . $time . "] ", FILE_APPEND);
+    // file_put_contents($logfile, "[" . $ip . "] ", FILE_APPEND);
+    // file_put_contents($logfile, $_GET['ids'] . "\n", FILE_APPEND);
 
     foreach ($ids as $id) {
       if ($id !== "") {
@@ -96,7 +97,7 @@
               echo $to_cache;
 
               apc_add($id, $to_cache, 2400);    // third parameter is time to live
-              file_put_contents($logfile, "    " . $id . ": from DB: no reports\n", FILE_APPEND);
+              // file_put_contents($logfile, "    " . $id . ": from DB: no reports\n", FILE_APPEND);
 
             } else { /* assume mysqli_num_rows($result) not empty */
 
@@ -105,7 +106,7 @@
               echo $to_cache;
 
               apc_add($id, $to_cache, 1200);    // third parameter is time to live
-              file_put_contents($logfile, "    " . $id . ": from DB\n", FILE_APPEND);
+              // file_put_contents($logfile, "    " . $id . ": from DB\n", FILE_APPEND);
 
 	    }
 
