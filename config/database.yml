@@ -19,8 +19,8 @@ default: &default
   <% elsif !Rails.env.production? %>
   username: root
   password:
-  <% end %>
   socket: /tmp/mysql.sock
+  <% end %>
 
 development:
   <<: *default
