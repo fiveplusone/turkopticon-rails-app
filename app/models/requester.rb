@@ -1,21 +1,25 @@
 # == Schema Information
-# Schema version: 20140610175616
 #
 # Table name: requesters
 #
-#  id                  :integer(4)      not null, primary key
-#  amzn_requester_id   :string(255)
-#  amzn_requester_name :string(255)
-#  created_at          :datetime
-#  updated_at          :datetime
-#  ava                 :decimal(3, 2)
-#  nrs                 :integer(4)
-#  av_comm             :decimal(3, 2)
-#  av_pay              :decimal(3, 2)
-#  av_fair             :decimal(3, 2)
-#  av_fast             :decimal(3, 2)
-#  tos_flags           :integer(4)
-#  old_name            :string(255)
+#  id                           :integer          not null, primary key
+#  all_approved_or_pending      :integer
+#  all_pending_or_didnt_do_hits :integer
+#  all_rejected                 :integer
+#  amzn_requester_name          :string(255)
+#  av_comm                      :decimal(3, 2)
+#  av_fair                      :decimal(3, 2)
+#  av_fast                      :decimal(3, 2)
+#  av_pay                       :decimal(3, 2)
+#  av_pay_bucket                :string(255)
+#  ava                          :decimal(3, 2)
+#  nrs                          :integer
+#  old_name                     :string(255)
+#  some_rejected                :integer
+#  tos_flags                    :integer
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#  amzn_requester_id            :string(255)
 #
 
 # require 'ruport'

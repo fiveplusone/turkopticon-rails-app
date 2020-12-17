@@ -56,6 +56,9 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.2, >= 2.2.2)
+    annotate (3.1.1)
+      activerecord (>= 3.2, < 7.0)
+      rake (>= 10.4, < 14.0)
     bindex (0.8.1)
     bootsnap (1.5.0)
       msgpack (~> 1.0)
@@ -160,6 +163,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate (~> 3.1)
   bootsnap (>= 1.4.2)
   byebug
   haml (~> 5.2)

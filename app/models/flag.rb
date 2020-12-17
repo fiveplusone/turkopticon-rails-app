@@ -1,15 +1,14 @@
 # == Schema Information
-# Schema version: 20140610175616
 #
 # Table name: flags
 #
-#  id              :integer(4)      not null, primary key
-#  report_id       :integer(4)
-#  person_id       :integer(4)
-#  comment         :text
+#  id              :integer          not null, primary key
+#  report_id       :integer
+#  person_id       :integer
+#  comment         :text(65535)
 #  created_at      :datetime
 #  updated_at      :datetime
-#  displayed_notes :text
+#  displayed_notes :text(65535)
 #
 
 class Flag < ApplicationRecord

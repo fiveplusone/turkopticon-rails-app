@@ -1,21 +1,41 @@
 # == Schema Information
-# Schema version: 20140610175616
 #
 # Table name: people
 #
-#  id                              :integer(4)      not null, primary key
+#  id                              :integer          not null, primary key
+#  can_comment                     :boolean
+#  closed_at                       :datetime
+#  commenting_disabled_at          :datetime
+#  commenting_disabled_by          :integer
+#  commenting_enabled_at           :datetime
+#  commenting_enabled_by           :integer
+#  commenting_request_ignored      :boolean
+#  commenting_requested            :boolean
+#  commenting_requested_at         :datetime
+#  confirmation_token              :string(255)
+#  country                         :string(255)
+#  display_name                    :string(255)
 #  email                           :string(255)
+#  email_verified                  :boolean
 #  hashed_password                 :string(255)
+#  hide_long_reviews               :boolean
+#  is_admin                        :boolean
+#  is_closed                       :boolean
+#  is_moderator                    :boolean
+#  latest_login_at                 :datetime
+#  latest_review_at                :datetime
+#  most_recent_first_in_my_reviews :boolean
+#  muted                           :boolean
+#  muted_until                     :datetime
+#  optin                           :boolean          default(FALSE)
+#  order_reviews_by_edit_date      :boolean
+#  phone                           :string(255)
 #  salt                            :string(255)
-#  email_verified                  :boolean(1)
+#  show_fancy_links                :boolean
+#  state                           :string(255)
 #  created_at                      :datetime
 #  updated_at                      :datetime
-#  is_admin                        :boolean(1)
-#  display_name                    :string(255)
-#  is_moderator                    :boolean(1)
-#  is_closed                       :boolean(1)
-#  closed_at                       :datetime
-#  most_recent_first_in_my_reviews :boolean(1)
+#  muted_by_person_id              :integer
 #
 
 class Person < ApplicationRecord

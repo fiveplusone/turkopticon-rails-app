@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: forum_posts
+#
+#  id                      :integer          not null, primary key
+#  person_id               :integer
+#  parent_id               :integer
+#  slug                    :string(255)
+#  sticky                  :boolean
+#  score                   :decimal(5, 2)
+#  replies                 :integer
+#  views                   :integer
+#  last_reply_display_name :string(255)
+#  last_reply_person_id    :string(255)
+#  last_reply_id           :integer
+#  last_reply_at           :datetime
+#  created_at              :datetime
+#  updated_at              :datetime
+#  thread_head             :integer
+#  deleted                 :boolean
+#  initial_score           :decimal(5, 2)
+#
 class ForumPost < ApplicationRecord
 
   def current_version
