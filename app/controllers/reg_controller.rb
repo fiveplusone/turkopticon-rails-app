@@ -34,8 +34,8 @@ class RegController < ApplicationController
     if request.post?
       if params[:robot_check][:check] == "1"
         if @person.save
-          @person.update_attributes(:display_name => @person.public_email, :show_fancy_links => true)
-          RegMailer::deliver_confirm(@person, confirmation_hash(@person.email))
+          @person.update_attributes(:display_name => @person.public_email, :show_fancy_links => true, :confirmation_token => confirmation_hash(@person.email))
+          RegMailer::deliver_confirm(@person, @person.confirmation_token)
           session[:person_id] = @person.id
           flash[:notice] = "Thanks for signing up. We've sent an email to #{@person.email}. Please click the link in the email to verify your address."
 
@@ -231,28 +231,33 @@ class RegController < ApplicationController
 
   def send_verification_email
     @person = Person.find(session[:person_id])
-    RegMailer::deliver_confirm(@person, confirmation_hash(@person.email))
+    @person.update_attributes(:confirmation_token => confirmation_hash(@person.email))
+    RegMailer::deliver_confirm(@person, @person.confirmation_token)
     flash[:notice] = "An email has been sent to #{@person.email}. Please click the link in the email to verify your email address."
     redirect_to :controller => "main", :action => "index"
   end
 
   def confirm
-    for person in Person.find(:all)
-      if confirmation_hash(person.email) == params[:hash] and person.update_attributes(:email_verified => true)
-        if session[:person_id].blank?
-          session[:person_id] = person.id
-        end
-        flash[:notice] = "Thank you for confirming your email address."
+    person = Person.find_by_confirmation_token(params[:hash])
 
-        # activate on turkopticon.info
-        email = person.email
-        apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
-        result = `curl 'https://api.turkopticon.info/accounts/activate?email=#{email}&key=#{apikey}'`
-        File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT ACTIVATION API ENDPOINT WITH: #{email}\nRESULT: #{result}\n\n") }
-
-        redirect_to :controller => "main", :action => "index" and return
-      end
+    if person.nil? 
+      flash[:notice] = "Sorry, we don't recognize that confirmation link. Please re-send confirmation email."
+      redirect_to :controller => "main", :action => "index" and return
     end
+
+    person.update_attributes(:email_verified => true, :confirmation_token => nil)
+    if session[:person_id].blank?
+      session[:person_id] = person.id
+    end
+    flash[:notice] = "Thank you for confirming your email address."
+
+    # activate on turkopticon.info
+    email = person.email
+    apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
+    result = `curl 'https://api.turkopticon.info/accounts/activate?email=#{email}&key=#{apikey}'`
+    File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT ACTIVATION API ENDPOINT WITH: #{email}\nRESULT: #{result}\n\n") }
+
+    redirect_to :controller => "main", :action => "index"
   end
 
   def toggle_my_reviews_order_flag
