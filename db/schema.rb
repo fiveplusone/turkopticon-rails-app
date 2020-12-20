@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200705173307) do
+ActiveRecord::Schema.define(:version => 20201220191728) do
 
   create_table "Dolores_A2IR8TEVONNLZO", :id => false, :force => true do |t|
     t.integer  "id",            :default => 0, :null => false
@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(:version => 20200705173307) do
     t.boolean  "optin"
     t.datetime "latest_review_at"
     t.datetime "latest_login_at"
+    t.string   "confirmation_token"
   end
 
   create_table "posts", :force => true do |t|
