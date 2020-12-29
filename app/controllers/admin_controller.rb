@@ -122,6 +122,7 @@ class AdminController < ApplicationController
     @ordered_flaggers = top_flaggers.sort_by{|k, v| v}.reverse
   end
 
+  # TODO: remove?
   def reviewers
     reviewers = {}
     Report.all.each{|r|
@@ -146,6 +147,7 @@ class AdminController < ApplicationController
     @review_counts = @review_counts.sort_by{|e| e[:review_count]}.reverse
   end
 
+  # TODO: remove?
   def commenters
     @commenters_and_comments = {}
     Comment.all.each{|c|
@@ -170,6 +172,7 @@ class AdminController < ApplicationController
     render :text => "Enabled commenting for user #{params[:id]}."
   end
 
+  # TODO: remove?
   def enable_commenting_and_send_email
     person = Person.find(params[:id])
     person.update_attributes(:can_comment => true)
@@ -183,6 +186,7 @@ class AdminController < ApplicationController
     render :text => "Declined commenting request for user #{params[:id]}."
   end
 
+  # TODO: remove?
   def decline_commenting_request_and_send_email
     person = Person.find(params[:id])
     person.update_attributes(:commenting_requested => nil, :commenting_requested_at => nil)
@@ -207,6 +211,7 @@ class AdminController < ApplicationController
     render :text => "Disabled commenting for user #{params[:id]}."
   end
 
+  # TODO: remove (used by likely_commenting_requests but that's unused)?
   def commenting_requests
     @people = Person.where(:can_comment => nil, 
                             :commenting_requested => true, 
@@ -215,6 +220,7 @@ class AdminController < ApplicationController
     @all_ids = @people.collect{|p| p.id}
   end
 
+  # TODO: remove?
   def likely_commenting_requests
     @people = Person.where(:can_comment => nil, 
                             :commenting_requested => true, 
@@ -224,6 +230,7 @@ class AdminController < ApplicationController
     render :action => "commenting_requests"
   end
 
+  # TODO: remove?
   def unlikely_commenting_requests
     @people = Person.where(:can_comment => nil, 
                             :commenting_requested => true, 
@@ -232,6 +239,7 @@ class AdminController < ApplicationController
     @all_ids = @people.collect{|p| p.id}
   end
 
+  # TODO: remove?
   def zero_rev_commenting_requests
     @people = Person.where(:can_comment => nil, 
                             :commenting_requested => true, 
@@ -245,10 +253,12 @@ class AdminController < ApplicationController
     render :text => "Ignored commenting request from user #{params[:id]}."
   end
 
+  # TODO: remove?
   def enabled_commenters
     @commenters = Person.where(:can_comment => true).sort_by{|p| p.comments.count}.reverse
   end
 
+  # TODO: remove?
   def review_commenting_requests
     enable = Person.where(:can_comment => nil, 
                             :commenting_requested => true, 
@@ -262,6 +272,7 @@ class AdminController < ApplicationController
     render :text => out
   end
 
+  # TODO: remove?
   def old_review_commenting_requests  # 2018 Jul 9
     likely = Person.where(:can_comment => nil, 
                             :commenting_requested => true, 
@@ -284,6 +295,7 @@ class AdminController < ApplicationController
     AdminMailer.report(out).deliver_now
   end
 
+  # TODO: remove?
   def duplicated_requesters
     ids = Requester.all.map{|r| r.amzn_requester_id}.delete_if{|i| i.blank?}
     hash = ids.group_by{|i| i}  # slow
@@ -291,16 +303,10 @@ class AdminController < ApplicationController
     render :text => duplicates.join(", ")
   end
 
+  # TODO: remove?
   def login_as
     session[:person_id] = params[:id]
     redirect_to :controller => "main", :action => "index"
-  end
-
-  def condition_date(params)
-    year = params[:"filter(1i)"] != "" ? params[:"filter(1i)"].to_f : 2008
-    month = params[:"filter(2i)"] != "" ? params[:"filter(2i)"].to_f : 1
-    date = params[:"filter(3i)"] != "" ? params[:"filter(3i)"].to_f : 1
-    Date.new(year, month, date)
   end
 
   def fetch_contacts_csv
@@ -352,4 +358,12 @@ class AdminController < ApplicationController
     send_data(csv, :type => 'text/csv', :disposition => 'attachment', :filename => title + "contacts-#{Date.today}.csv")
   end
 
+  private
+
+  def condition_date(params)
+    year = params[:"filter(1i)"] != "" ? params[:"filter(1i)"].to_f : 2008
+    month = params[:"filter(2i)"] != "" ? params[:"filter(2i)"].to_f : 1
+    date = params[:"filter(3i)"] != "" ? params[:"filter(3i)"].to_f : 1
+    Date.new(year, month, date)
+  end
 end

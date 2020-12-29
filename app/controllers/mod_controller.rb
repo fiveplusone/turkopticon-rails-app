@@ -3,6 +3,7 @@ class ModController < ApplicationController
   before_action :authorize, :authorize_as_moderator, :load_person
   layout "moderator"
 
+  # TODO: remove?
   def authorize_as_moderator
     pid = session[:person_id]
     if pid.nil?
@@ -92,6 +93,7 @@ class ModController < ApplicationController
     redirect_to :action => "reassign_report_to_different_requester"
   end
 
+  # TODO: remove
   def xxx_do_reassign_report_to_different_requester
     @report = Report.find(params[:report_id])
     newreqid = params[:new_req_id]
@@ -128,10 +130,6 @@ class ModController < ApplicationController
       @rv.update_attributes(:parent_id => old.id, :body => new_body, :is_current => true)
       render :text => "Instructions updated."
     end
-  end
-
-  def load_person
-    @person = Person.find(session[:person_id])
   end
 
   def index
@@ -205,6 +203,7 @@ class ModController < ApplicationController
     redirect_to :action => "flagged"
   end
 
+  # TODO: remove?
   def comment
     @report = Report.find(params[:id])
     @comment = Comment.new(params[:comment])
@@ -264,6 +263,7 @@ class ModController < ApplicationController
     redirect_to :controller => "main", :action => "report", :id => @report.id
   end
 
+  # TODO: remove?
   def convert_other_mods_flag
     @flag = Flag.find(params[:id])
     @requester = @flag.report.requester
@@ -273,4 +273,9 @@ class ModController < ApplicationController
     redirect_to :controller => "main", :action => "report", :id => @report.id
   end
 
+  private
+
+  def load_person
+    @person = Person.find(session[:person_id])
+  end
 end

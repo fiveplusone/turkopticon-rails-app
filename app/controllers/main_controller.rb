@@ -5,16 +5,19 @@ class MainController < ApplicationController
   before_action :verify, :only => :add_report
   before_action :authorize_as_commenter, :only => [:add_comment, :add_flag]
 
+  # todo: remove?
   def commentingreqs
     render :text => Person.review_commenting_requests_count
   end
 
+  # TODO: remove?
   def pri
   end
 
   def data_use_policy
   end
 
+  # TODO: remove?
   def survey2016
     redirect_to "https://turkopticon.ucsd.edu/2016survey/"
   end
@@ -23,19 +26,6 @@ class MainController < ApplicationController
     Person.find(session[:person_id]).update_attributes(:commenting_requested => true, :commenting_requested_at => Time.now)
     flash[:notice] = "You've requested commenting. Commenting should be enabled within 24 hours if your account is in good standing. If you don't get an email indicating you have received commenting, check back tomorrow anyway."
     redirect_to :action => "index"
-  end
-
-  def check_for_existing_report
-    if session[:person_id] and Person.find(session[:person_id]) and params[:requester]
-      @requester = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
-      unless @requester.nil?
-        @report = Report.find_by_person_id_and_requester_id(session[:person_id], @requester.id)
-        unless @report.nil? #or session[:person_id] == 1
-          flash[:notice] = "<div class=\"success\">You have a review for that requester already. You can update it if you would like.</div>"
-          redirect_to :action => "edit_report", :id => @report.id
-        end
-      end
-    end
   end
 
   def index
@@ -163,9 +153,11 @@ class MainController < ApplicationController
     @requester_count = @reports.map{|r| r["amzn_requester_id"]}.uniq.count
   end
 
+  # TODO: remove?
   def php_search_form
   end
 
+  # TODO: remove?
   def search_mysql # good, but do not use, very slow; will choke site
     requesters = Requester.where("amzn_requester_name like ?", "%#{params[:query]}%")
     @reports = requesters.collect{|r| r.reports}.flatten
@@ -390,10 +382,12 @@ class MainController < ApplicationController
     end
   end
 
+  # TODO: remove?
   def edit_flag
     render :text => "That function is disabled."
   end
 
+  # TODO: remove?
   def edit_flag_disabled
   # def edit_flag
     @pagetitle = "edit flag"
@@ -417,6 +411,7 @@ class MainController < ApplicationController
     end
   end
 
+  # TODO: remove?
   def requester_stats
     @requester = Requester.find_by_amzn_requester_id(params[:id])
     if @requester.nil?
@@ -426,6 +421,7 @@ class MainController < ApplicationController
     end
   end
 
+  # TODO: remove?
   def requester_attrs
     @requester = Requester.find_by_amzn_requester_id(params[:id])
     if @requester.nil?
@@ -435,6 +431,7 @@ class MainController < ApplicationController
     end
   end
 
+  # TODO: remove?
   def requester_attrs_2
     @requester = Requester.find_by_amzn_requester_id(params[:id])
     if @requester.nil?
@@ -444,6 +441,7 @@ class MainController < ApplicationController
     end
   end
 
+  # TODO: remove?
   def requester_attrs_v2
     @requester = Requester.find_by_amzn_requester_id(params[:id])
     if @requester.nil?
@@ -457,14 +455,17 @@ class MainController < ApplicationController
     @location = "about"
   end
 
+  # TODO: remove?
   def info2
     @location = "about"
   end
 
+  # TODO: remove?
   def install_welcome
     @location = "install_welcome"
   end
 
+  # TODO: remove?
   def install_v2
     @pagetitle = "install_v2"
     @location = "install_v2"
@@ -475,9 +476,11 @@ class MainController < ApplicationController
     @location = "help"
   end
 
+  # TODO: remove?
   def help_v2
   end
 
+  # TODO: remove?
   def ditz
     redirect_to "http://turkopticon.differenceengines.com/ditz/index.html"
   end
@@ -487,6 +490,7 @@ class MainController < ApplicationController
     @posts = Post.where(parent_id: nil).order(created_at: :desc)
   end
 
+  # TODO: remove?
   def blogfeed
     @posts = Post.where(parent_id: nil).order(created_at: :desc)
     respond_to do |format|
@@ -527,6 +531,7 @@ class MainController < ApplicationController
     end
   end
 
+  # TODO: remove?
   def x
   end
 
@@ -534,13 +539,16 @@ class MainController < ApplicationController
     @location = "rules"
   end
 
+  # TODO: remove?
   def wth
   end
 
+  # TODO: remove?
   def dedupe_reqs
     render :text => "Did nothing, this is currently deactivated"
   end
 
+  # TODO: remove?
   def dedupe_reqs_old
     # don't use this
     ids = {}
@@ -565,11 +573,13 @@ class MainController < ApplicationController
     render :text => "Successfully deduplicated #{mult.length} Requester objects"
   end
 
+  # TODO: remove?
   def backup_db
     system "mysqldump -ce -u rahrahfe_bentham -pn0mn0m=== rahrahfe_turkopticon > /home1/rahrahfe/turkopticon-passenger/backups/turkopticon-db-`date +%Y.%m.%d.%H%M`.sql"
     render :text => "Backed up database."
   end
 
+  # TODO: remove?
   def check_for_duplicate_requester_objects
     ids = Requester.all.map{|r| r.amzn_requester_id}.delete_if{|i| i.blank?}
     hash = ids.group_by{|i| i}
@@ -581,4 +591,18 @@ class MainController < ApplicationController
     end
   end
 
+  private
+
+  def check_for_existing_report
+    if session[:person_id] and Person.find(session[:person_id]) and params[:requester]
+      @requester = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
+      unless @requester.nil?
+        @report = Report.find_by_person_id_and_requester_id(session[:person_id], @requester.id)
+        unless @report.nil? #or session[:person_id] == 1
+          flash[:notice] = "<div class=\"success\">You have a review for that requester already. You can update it if you would like.</div>"
+          redirect_to :action => "edit_report", :id => @report.id
+        end
+      end
+    end
+  end
 end

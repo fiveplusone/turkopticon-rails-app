@@ -3,6 +3,7 @@ class StatsController < ApplicationController
   before_action :authorize
   layout nil
 
+  # TODO: remove?
   def index
     @reviews = Report.count
     tos_viol_reps = Report.where(:tos_viol => true)

@@ -6,10 +6,6 @@ class ForumController < ApplicationController
 
   layout "forum"
 
-  def load_person
-    @person = Person.find(session[:person_id])
-  end
-
   def index
     # get all posts with null parent ID
     @posts = ForumPost.where(:parent_id => nil, :deleted => nil).delete_if{|p| p.score <= -5.0 and p.has_inappro}.sort_by{|p| p.last_reply_at || p.updated_at}.reverse
@@ -232,7 +228,21 @@ class ForumController < ApplicationController
     render :action => "show_post"  # this is currently a confusing view; should be improved before making public
   end
 
+  # TODO: remove?
   def settings
+  end
+
+  def about
+  end
+
+  # TODO: remove?
+  def karma
+  end
+
+  private
+
+  def load_person
+    @person = Person.find(session[:person_id])
   end
 
   def authorize_as_admin
@@ -251,11 +261,4 @@ class ForumController < ApplicationController
       redirect_to :action => "index"
     end
   end
-
-  def about
-  end
-
-  def karma
-  end
-
 end
