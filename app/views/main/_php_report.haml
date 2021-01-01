@@ -6,27 +6,27 @@
     .strong= link_to h(req_name), :controller => "main", "action" => "index", :id => h(req_id)
     = h(req_id)
     %br/
-    = link_to "Averages &raquo;", :controller => "main", :action => "averages", :id => req_id
+    = link_to "Averages &raquo;".html_safe, :controller => "main", :action => "averages", :id => req_id
     %br/
-    = link_to "HIT Group &raquo;", "https://www.mturk.com/mturk/searchbar?requesterId=#{req_id}&selectedSearchType=hitgroups"
+    = link_to "HIT Group &raquo;".html_safe, "https://www.mturk.com/mturk/searchbar?requesterId=#{req_id}&selectedSearchType=hitgroups"
     %br/
-    = link_to "Review Requester &raquo;", "/report?requester[amzn_id]=#{req_id}&requester[amzn_name]=#{req_name}"
+    = link_to "Review Requester &raquo;".html_safe, "/report?requester[amzn_id]=#{req_id}&requester[amzn_name]=#{req_name}"
   %td{:valign => "top"}
     - for attr in ["fair", "fast", "pay", "comm"]
       .smlabel= attr + ": "
       - if eval("report[\"" + attr + "\"]") == 0
         .smlabel no&nbsp;data
       - else
-        .smlabel= eval("report[\"" + attr + "\"]").to_s + "&nbsp;/&nbsp;5"
+        .smlabel= "#{eval("report[\"" + attr + "\"]")}&nbsp;/&nbsp;5".html_safe
         = Requester.attr_vis(eval("report[\"" + attr + "\"]"))
       %br/
     - if report["tos_viol"] == 1
       .tosviol violates mturk terms of service &nbsp;&nbsp;&nbsp; <a href="/help#tos">[?]</a>
   %td{:valign => "top"}
     - if !report["text"].nil?
-      = h(report["text"].censor).gsub("\r\n","<br />")
+      = h(report["text"].censor).gsub("\r\n","<br />").html_safe
     - if !report["displayed_notes"].nil?
-      %p.notes= report["displayed_notes"]
+      %p.notes= report["displayed_notes"].html_safe
     .posted_by
       = report["created_at"].strftime("%b %d %Y")
       &nbsp;|&nbsp;
@@ -36,4 +36,4 @@
       &nbsp;|&nbsp;
       = link_to "comment", :controller => "main", :action => "add_comment", :id => report["to_report_id"]
       &nbsp;|&nbsp;
-      = link_to report["flag_count"].to_s + " flags, " + report["comment_count"].to_s + " comments &raquo;", :controller => "main", :action => "report", :id => report["to_report_id"]
+      = link_to "#{report["flag_count"]} flags, #{report["comment_count"]} comments &raquo;".html_safe, :controller => "main", :action => "report", :id => report["to_report_id"]

@@ -7,13 +7,13 @@
 
 - if @result_count == 0
   %p
-    = "No search results for <span style='color: #f00; font-weight: bold;'>" + h(params[:query]) + "</span> :("
+    No search results for #{content_tag :span, h(params[:query]), style: 'color: #f00; font-weight: bold;'} :(
 - else
   - if @requester_count > 1
     %p#advisory.red.bigger
-      = "Your search returned reviews of " + @requester_count.to_s + " different requesters. If you are leaving a review, please be sure to review the right one! Thank you!"
+      Your search returned reviews of #{@requester_count} different requesters. If you are leaving a review, please be sure to review the right one! Thank you!
   %p
-    = "Search results for <span style='color: #f00; font-weight: bold;'>" + h(params[:query]) + "</span>:"
+    Search results for #{content_tag :span, h(params[:query]), style: 'color: #f00; font-weight: bold;'}:
 
   .box
     %p
@@ -28,9 +28,9 @@
       = @result_count
       results
     %p
-      = "Query time: " + "%2.5f" % @query_time
+      Query time: #{'%2.5f' % @query_time}
     %p
-      = "Render time: " + "%2.5f" % @render_time
+      Render time: #{'%2.5f' % @render_time}
     - if @no_flags
       %p You haven't flagged any reviews.
     - if @no_reviews
