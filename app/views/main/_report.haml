@@ -91,7 +91,7 @@
           - if report.displayed_notes.length > 70 and notruncate.nil?
             = truncate(report.displayed_notes, length: 61) + " (most recent edit)"
           - else
-            = report.displayed_notes
+            = report.displayed_notes.html_safe
       .posted_by
         - if Person.find(session[:person_id]).is_admin
           = report.created_at.strftime("%b %d %Y %H:%M")
@@ -144,7 +144,7 @@
           &nbsp;
           = h(f.comment).gsub(/\n/, '<br/>').censor.html_safe
           - if f.displayed_notes
-            %p.notes= f.displayed_notes
+            %p.notes= f.displayed_notes.html_safe
         .posted_by
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           = f.created_at.strftime("%b %d %Y")
@@ -170,7 +170,7 @@
             %img(src='/images/bubble.png' alt='bubble' border='0')
             = h(c.body).gsub(/\n/, '<br/>').censor.html_safe
             - if c.displayed_notes
-              %p.notes= c.displayed_notes
+              %p.notes= c.displayed_notes.html_safe
             .posted_by
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               = "#{c.created_at.strftime("%b %d %Y")}&nbsp;&nbsp;|&nbsp;".html_safe
