@@ -33,23 +33,23 @@
         = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, "/report?requester[amzn_id]=#{report.requester.amzn_requester_id}&requester[amzn_name]=#{report.requester.amzn_requester_name}"
     %td{:valign => "top", :class => "attrs"}
       - for a in Report.requester_attrs
-        .smlabel= a + ": "
+        .smlabel #{a}:
         - if eval("report." + a) == 0
           .smlabel no&nbsp;data
         - else
-          .smlabel= "#{report.public_send(a)}&nbsp;/&nbsp;5".html_safe
+          .smlabel #{report.public_send(a)}&nbsp;/&nbsp;5
           = Requester.attr_vis(eval("report." + a))
         %br/
       - if !(report.pay_bucket.nil? || report.pay_bucket == "n/a")
-        .smlabel= "pay/hr: "
+        .smlabel pay/hr:
         .smlabel= eval("report.pay_bucket")
         = Requester.attr_vis(Report.bucket_bar_val(report.pay_bucket))
       - elsif report.pay != 0
-        .smlabel= "pay: "
-        .smlabel= (report.pay.to_s + "&nbsp;/&nbsp;5").html_safe
+        .smlabel pay:
+        .smlabel #{report.pay}&nbsp;/&nbsp;5
         = Requester.attr_vis(report.pay)
       - else
-        .smlabel= "pay/hr: "
+        .smlabel pay/hr:
         .smlabel no&nbsp;data
       %br/
       - if report.rejected == "yes"
@@ -75,7 +75,12 @@
             - out = h(report.description.to_s)
             = truncate(out, length: 800).gsub("\r\n","<br/>").html_safe
             - if out.length > 800
-              = "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/#{report.id}'>Read the full review &rarr;</a><br/><br/>".html_safe
+              %br/
+              %br/
+              %strong This review is over 800 characters long and is partially hidden.
+              = link_to 'Read the full review &rarr;'.html_safe, controller: 'main', action: 'report', id: report.id
+              %br/
+              %br/
           - else
             = h(report.description.to_s).gsub("\r\n","<br/>").html_safe
         - else
@@ -83,7 +88,12 @@
             - out = h(report.description.to_s.censor)
             = truncate(out, length: 800).gsub("\r\n","<br/>").html_safe
             - if out.length > 800
-              = "<br/><br/><strong>This review is over 800 characters long and is partially hidden.</strong> <a href='/get_report/#{report.id}'>Read the full review &rarr;</a><br/><br/>"
+              %br/
+              %br/
+              %strong This review is over 800 characters long and is partially hidden.
+              = link_to 'Read the full review &rarr;'.html_safe, controller: 'main', action: 'report', id: report.id
+              %br/
+              %br/
           - else
             = h(report.description.to_s.censor).gsub("\r\n","<br/>").html_safe
       - if report.displayed_notes
@@ -173,7 +183,7 @@
               %p.notes= c.displayed_notes.html_safe
             .posted_by
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              = "#{c.created_at.strftime("%b %d %Y")}&nbsp;&nbsp;|&nbsp;".html_safe
+              #{c.created_at.strftime("%b %d %Y")}&nbsp;&nbsp;|&nbsp;
               - if Person.find(session[:person_id]).is_moderator
                 = link_to c.person.mod_display_name.censor, :controller => "main", :action => "reports_by", :id => c.person_id
               - else
