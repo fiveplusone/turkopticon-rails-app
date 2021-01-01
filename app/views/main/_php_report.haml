@@ -13,12 +13,12 @@
     = link_to "Review Requester &raquo;".html_safe, "/report?requester[amzn_id]=#{req_id}&requester[amzn_name]=#{req_name}"
   %td{:valign => "top"}
     - for attr in ["fair", "fast", "pay", "comm"]
-      .smlabel= attr + ": "
-      - if eval("report[\"" + attr + "\"]") == 0
+      .smlabel attr:
+      - if report[attr] == 0
         .smlabel no&nbsp;data
       - else
-        .smlabel= "#{eval("report[\"" + attr + "\"]")}&nbsp;/&nbsp;5".html_safe
-        = Requester.attr_vis(eval("report[\"" + attr + "\"]"))
+        .smlabel #{report[attr]}&nbsp;/&nbsp;5
+        = Requester.attr_vis(report[attr])
       %br/
     - if report["tos_viol"] == 1
       .tosviol violates mturk terms of service &nbsp;&nbsp;&nbsp; <a href="/help#tos">[?]</a>
