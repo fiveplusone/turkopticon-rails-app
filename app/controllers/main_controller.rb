@@ -144,13 +144,56 @@ class MainController < ApplicationController
   end
 
   def php_search
-    @result = `php #{Rails.root.join('php_api', 'search.php')} "#{params[:query]}"`
-    parsed_result = JSON[@result]
-    @reports = parsed_result["reviews"]
-    @render_time = parsed_result["render_time"] ||= 0.0
-    @query_time = parsed_result["query_time"] ||= 0.0
-    @result_count = parsed_result["results_count"]
-    @requester_count = @reports.map{|r| r["amzn_requester_id"]}.uniq.count
+    search_term = params[:query]
+    if search_term.match?(/\AA[0-9A-Z]{9,}\z/)
+      search_condition = 'reports.amzn_requester_id = ?'
+      search_string = search_term
+    else
+      search_condition = 'reports.amzn_requester_name like ?'
+      search_string = "%#{search_term}%"
+    end
+
+    sql = <<~SQL
+      SELECT
+        reports.amzn_requester_id,
+        reports.amzn_requester_name,
+        reports.id AS to_report_id,
+        reports.fair,
+        reports.fast,
+        reports.pay,
+        reports.comm,
+        reports.description AS text,
+        reports.person_id AS reviewer_id,
+        reports.created_at,
+        reports.tos_viol,
+        reports.displayed_notes,
+        reports.is_flagged,
+        reports.is_hidden,
+        reports.flag_count,
+        reports.comment_count,
+        people.id,
+        people.display_name
+      FROM people, reports
+      WHERE #{search_condition}
+      AND reports.amzn_requester_id IS NOT NULL
+      AND reports.amzn_requester_name IS NOT NULL
+      AND reports.is_hidden IS NULL
+      AND people.id = reports.person_id
+      ORDER BY reports.amzn_requester_name, to_report_id DESC
+    SQL
+
+    sql = ActiveRecord::Base.sanitize_sql([sql, search_string])
+
+    query_start_time = Time.now
+    results = ActiveRecord::Base.connection.select_all(sql)
+    @query_time = Time.now - query_start_time
+
+    render_start_time = Time.now
+    @reports = results.to_a
+    @render_time = Time.now - render_start_time
+
+    @result_count = results.count
+    @requester_count = @reports.map { |r| r['amzn_requester_id'] }.uniq.count
   end
 
   # TODO: remove?
