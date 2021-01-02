@@ -23,7 +23,7 @@ class StatsController < ApplicationController
     [1, 2, 3, 4, 5].each{|i| attrs.each{|attr| @scores[attr][i] = 0}}
     reports.each{|r|
       attrs.each{|attr|
-        attr_val = eval("r." + attr)
+        attr_val = r.public_send(attr)
         @scores[attr][attr_val] += 1 unless attr_val.nil? or attr_val == 0
       }
     }

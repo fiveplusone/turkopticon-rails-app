@@ -21,7 +21,7 @@
   %td{:valign => "top"}
     - for attr in ["fair", "fast", "comm"]
       .attr_label= attr + ": "
-      - val = eval("report." + attr)
+      - val = report.public_send(attr)
       - if val == 0
         .attr_label no&nbsp;data
       - else
@@ -30,7 +30,7 @@
       %br/
     - if !(report.pay_bucket.nil? || report.pay_bucket == "n/a")
       .attr_label= "pay/hr: "
-      .attr_label= eval("report.pay_bucket")
+      .attr_label= report.pay_bucket
       = Requester.attr_vis(Report.bucket_bar_val(report.pay_bucket))
     - elsif report.pay != 0
       .attr_label= "pay: "

@@ -34,15 +34,15 @@
     %td{:valign => "top", :class => "attrs"}
       - for a in Report.requester_attrs
         .smlabel #{a}:
-        - if eval("report." + a) == 0
+        - if report.public_send(a) == 0
           .smlabel no&nbsp;data
         - else
           .smlabel #{report.public_send(a)}&nbsp;/&nbsp;5
-          = Requester.attr_vis(eval("report." + a))
+          = Requester.attr_vis(report.public_send(a))
         %br/
       - if !(report.pay_bucket.nil? || report.pay_bucket == "n/a")
         .smlabel pay/hr:
-        .smlabel= eval("report.pay_bucket")
+        .smlabel= report.pay_bucket
         = Requester.attr_vis(Report.bucket_bar_val(report.pay_bucket))
       - elsif report.pay != 0
         .smlabel pay:

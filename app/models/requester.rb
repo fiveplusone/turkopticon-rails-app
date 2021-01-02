@@ -85,9 +85,9 @@ class Requester < ApplicationRecord
   def avg_attrs
     attrs = {}
     Report.requester_attrs.each{|a|
-      attrs[a] = Report.where(:requester_id => id).to_a.delete_if{|r| r.is_hidden}.collect{|r| eval("r." + a)}.compact.delete_if{|i| i == 0}.mean
+      attrs[a] = Report.where(:requester_id => id).to_a.delete_if{|r| r.is_hidden}.collect { |r| r.public_send(a) }.compact.delete_if{|i| i == 0}.mean
       # pre-hiding version below
-      # attrs[a] = Report.where(:requester_id => id).collect{|r| eval("r." + a)}.compact.delete_if{|i| i == 0}.mean
+      # attrs[a] = Report.where(:requester_id => id).collect { |r| r.public_send(a) }.compact.delete_if{|i| i == 0}.mean
     }
     attrs
   end

@@ -292,7 +292,9 @@ class MainController < ApplicationController
           t = Time.now.strftime("%H:%M %a %b %d %Y")
           ip = request.remote_ip
 
-          %w{comm pay fair fast}.each{|a| eval("@report.update_attributes(:" + a + " => 0) if @report." + a + ".nil?")}
+          %w{comm pay fair fast}.each do |a|
+            @report.update(a => 0) if @report.public_send(a).nil?
+          end
           r.cache_columns
           flash[:notice] = "<div class=\"success\">Report successfully saved.</div>"
           rurl = params[:url][:url].blank? ? "https://www.mturk.com/mturk/findhits?match=false" : params[:url][:url]
