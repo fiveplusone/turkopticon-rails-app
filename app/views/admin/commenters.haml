@@ -42,10 +42,10 @@
     %strong= info[:public_email]
     = "/"
     %strong= info[:mod_display_name]
-  = " (UID " + person_id.to_s + ", " + info[:comments].count.to_s + " comments)"
+  (UID #{person_id}, #{info[:comments].count} comments)
   %br/
   - info[:comments].each do |c|
-    = c[:comment_id].to_s + " (" + c[:date].to_s + ") : " + c[:body].to_s
+    #{c[:comment_id]} (#{c[:date]}) : #{c[:body]}
     %br/
   %br/
 

@@ -165,6 +165,6 @@
     - unless params[:hidden]
       - if Requester.find_by_amzn_requester_id(params[:id]).has_hidden_reports?
         %p
-          = "This requester has " + Requester.find_by_amzn_requester_id(params[:id]).hidden_report_count.to_s + " hidden reviews. "
+          This requester has #{Requester.find_by_amzn_requester_id(params[:id]).hidden_report_count} hidden reviews.
           = link_to "Click here", :controller => "main", :action => "index", :id => params[:id], :hidden => true
           to see them.

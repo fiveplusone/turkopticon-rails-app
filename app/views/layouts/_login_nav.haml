@@ -4,7 +4,7 @@
   = link_to "register", :controller => "reg", :action => "register"
 - else
   - person = Person.find(session[:person_id])
-  = person.email + ' (id: ' + session[:person_id].to_s + ')'
+  #{person.email} (id: #{session[:person_id]})
   - if person.is_moderator
     (verified - moderator)
   - elsif person.email_verified and !person.can_comment and !person.commenting_requested and !person.commenting_requested_at

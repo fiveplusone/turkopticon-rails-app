@@ -18,7 +18,7 @@
         = report.requester_id.to_s
         %br/
         Report ID:
-        = link_to report.id.to_s, :controller => "main", :action => "report", :id => report.id.to_s
+        = link_to report.id.to_s, :controller => "main", :action => "report", :id => report.id
         %br/
       - if report.requester.nil?
         [The requester object does not exist]
