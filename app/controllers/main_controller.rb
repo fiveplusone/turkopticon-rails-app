@@ -185,14 +185,10 @@ class MainController < ApplicationController
     sql = ActiveRecord::Base.sanitize_sql([sql, search_string])
 
     query_start_time = Time.now
-    results = ActiveRecord::Base.connection.select_all(sql)
+    @reports = ActiveRecord::Base.connection.select_all(sql)
     @query_time = Time.now - query_start_time
 
-    render_start_time = Time.now
-    @reports = results.to_a
-    @render_time = Time.now - render_start_time
-
-    @result_count = results.count
+    @result_count = @reports.count
     @requester_count = @reports.map { |r| r['amzn_requester_id'] }.uniq.count
   end
 
