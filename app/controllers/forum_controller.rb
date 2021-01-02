@@ -8,7 +8,7 @@ class ForumController < ApplicationController
 
   def index
     # get all posts with null parent ID
-    @posts = ForumPost.where(:parent_id => nil, :deleted => nil).delete_if{|p| p.score <= -5.0 and p.has_inappro}.sort_by{|p| p.last_reply_at || p.updated_at}.reverse
+    @posts = ForumPost.where(:parent_id => nil, :deleted => nil).reject{|p| p.score <= -5.0 and p.has_inappro}.sort_by{|p| p.last_reply_at || p.updated_at}.reverse
   end
 
   def new_post
