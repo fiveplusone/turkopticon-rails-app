@@ -306,7 +306,7 @@ class AdminController < ApplicationController
   # TODO: remove?
   def login_as
     session[:person_id] = params[:id]
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def fetch_contacts_csv

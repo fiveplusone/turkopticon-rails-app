@@ -6,7 +6,7 @@ class RegController < ApplicationController
     Person.find(session[:person_id]).close
     session[:person_id] = nil
     flash[:notice] = "Your account was closed."
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def change_email
@@ -19,7 +19,7 @@ class RegController < ApplicationController
       if @person.save
         RegMailer.confirm(@person, confirmation_hash(@person.email)).deliver_now
         flash[:notice] = "An email has been sent to #{@person.email}. Please click the link in the email to verify your email address."
-        redirect_to :controller => "main", :action => "index"
+        redirect_to :controller => "main", :action => "index", :id => nil
       end
     end
   end
@@ -35,7 +35,7 @@ class RegController < ApplicationController
           session[:person_id] = @person.id
           flash[:notice] = "Thanks for signing up. We've sent an email to #{@person.email}. Please click the link in the email to verify your address."
 
-          redirect_to :controller => "main", :action => "index"
+          redirect_to :controller => "main", :action => "index", :id => nil
         end
       else
         redirect_to :action => "robot"
@@ -56,7 +56,7 @@ class RegController < ApplicationController
         #if person
           #uri = session[:original_uri]
           #session[:original_uri] = nil
-          #redirect_to uri || {:controller => "main", :action => "index"}
+          #redirect_to uri || {:controller => "main", :action => "index", :id => nil}
         #else
           #render :text => "invalid cookie"
         #end
@@ -83,7 +83,7 @@ class RegController < ApplicationController
         else
           uri = session[:original_uri]
           session[:original_uri] = nil
-          redirect_to (uri || {:controller => "main", :action => "index"})
+          redirect_to (uri || {:controller => "main", :action => "index", :id => nil})
         end
       else
         flash[:notice] = "Sorry, invalid username/password combination."
@@ -97,7 +97,7 @@ class RegController < ApplicationController
     session[:person_id] = nil
     #cookies.delete :person_id
     flash[:notice] = "Logged out."
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def settings
@@ -193,7 +193,7 @@ class RegController < ApplicationController
         if @person.save
           RegMailer.password_change(@person, @new_password).deliver_now
           flash[:notice] = "Your password has been changed. A confirmation email has been sent to #{@person.email}."
-          redirect_to :controller => "main", :action => "index"
+          redirect_to :controller => "main", :action => "index", :id => nil
         end
       end
     end
@@ -221,7 +221,7 @@ class RegController < ApplicationController
     @person.update_attributes(:confirmation_token => confirmation_hash(@person.email))
     RegMailer.confirm(@person, @person.confirmation_token).deliver_now
     flash[:notice] = "An email has been sent to #{@person.email}. Please click the link in the email to verify your email address."
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def confirm
@@ -229,7 +229,7 @@ class RegController < ApplicationController
 
     if person.nil? 
       flash[:notice] = "Sorry, we don't recognize that confirmation link. Please re-send confirmation email."
-      redirect_to :controller => "main", :action => "index" and return
+      redirect_to :controller => "main", :action => "index", :id => nil and return
     end
 
     person.update_attributes(:email_verified => true, :confirmation_token => nil)
@@ -238,7 +238,7 @@ class RegController < ApplicationController
     end
     flash[:notice] = "Thank you for confirming your email address."
 
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def toggle_my_reviews_order_flag
@@ -248,7 +248,7 @@ class RegController < ApplicationController
 
   def toggle_order_by_flag
     Person.find(session[:person_id]).toggle_order_by_flag
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def fancy_links_off

@@ -33,14 +33,14 @@ class ApplicationController < ActionController::Base
     unless Person.find(session[:person_id]).email_verified
       session[:original_url] = request.url
       flash[:notice] = "You must verify your email address before you can post."
-      redirect_to :controller => "main", :action => "index"
+      redirect_to :controller => "main", :action => "index", :id => nil
     end
   end
 
   def authorize_as_commenter
     unless Person.find(session[:person_id]).can_comment
       flash[:notice] = "Sorry, your account doesn't seem to have commenting and flagging enabled."
-      redirect_to :controller => "main", :action => "index"
+      redirect_to :controller => "main", :action => "index", :id => nil
     end
   end
 

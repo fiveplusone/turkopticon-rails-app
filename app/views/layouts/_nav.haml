@@ -7,7 +7,7 @@
   - if @location == "reports"
     Reviews&nbsp;
   - else
-    = link_to "Reviews", :controller => "main", :action => "index"
+    = link_to "Reviews", :controller => "main", :action => "index", :id => nil
     &nbsp;
 
 - if session[:person_id]
