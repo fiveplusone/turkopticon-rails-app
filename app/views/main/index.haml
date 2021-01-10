@@ -1,4 +1,4 @@
-= javascript_include_tag :defaults
+= javascript_include_tag :partial_replacer
 
 :javascript
   function addText(id, text) {
@@ -151,11 +151,13 @@
   = render :partial => 'main/tabs'
   %p
     %table#reports{ :cellpadding => "5", :cellspacing => "0" }
-      %tr.th
-        %th AMT Requester
-        %th.rating Rating <span style="font-weight: normal;">[<a href="/main/help#attr">info</a>]</span>
-        %th Description
-      = render :partial => 'main/report', :collection => @reports, :locals => { :notruncate => nil }
+      %thead
+        %tr
+          %th AMT Requester
+          %th.rating Rating <span style="font-weight: normal;">[<a href="/main/help#attr">info</a>]</span>
+          %th Description
+      %tbody
+        = render :partial => 'main/report', :collection => @reports, :locals => { :notruncate => nil }
   - if @no_flags
     %p You haven't flagged any reviews.
   - if @no_reviews

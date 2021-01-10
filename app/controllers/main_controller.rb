@@ -302,27 +302,31 @@ class MainController < ApplicationController
 
   def add_flag
     @report = Report.find(params[:id])
-    @flag = Flag.new(params[:flag])
+    @flag = Flag.new(report: @report, person_id: session[:person_id], comment: params[:flag][:comment])
     if request.post?
       if params[:flag][:comment].blank?
-        flash[:notice] = "<div class=\"error\">Please add a comment.</div>"
-        render :action => "add_flag", :id => @report.id and return
+        @flag.errors[:base] << 'Please add a comment'
+        render partial: 'flag', status: :unprocessable_entity
+        return
       end
       pfc = params[:flag][:comment]
-      pfce = params[:other_explanation]
+      pfce = params[:flag][:other_explanation]
       l = pfce.length if pfce
       default_pfce = "explanation for 'other', min. 20 chars, max. 500"
       if pfc == "other"
         if pfce == default_pfce or (!l.nil? and (l < 20 or l > 500))
-          render :text => "Sorry, you must enter an explanation for your flag not shorter than 20 characters and not longer than 500 characters. Please use your browser's 'back' button to go back." and return
+          @other_explanation = pfce
+          @flag.errors[:base] << 'Explanation must be between 20 and 500 characters'
+          render partial: 'flag', status: :unprocessable_entity
+          return
         else
           @flag.comment = pfc + ": " + pfce
         end
       end
       if @flag.save and @report.update_flag_data
         @report.update_attributes(:flag_count => @report.flags.count)
-        flash[:notice] = "<div class=\"success\">Report was flagged.</div>"
-        redirect_to :controller => "main", :action => "index", :id => @report.requester_amzn_id
+        flash.now[:success] = 'Report was flagged.'
+        render partial: 'main/report', locals: { report: @report }
       end
     end
   end
@@ -330,10 +334,8 @@ class MainController < ApplicationController
   def flag
     @report = Report.find(params[:id])
     @flag = Flag.new
-  end
 
-  def cancel_flag
-    @id = params[:id]
+    render partial: 'flag'
   end
 
   # this one is deprecated in favor of convert_flag below

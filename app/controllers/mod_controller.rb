@@ -178,11 +178,32 @@ class ModController < ApplicationController
 
   def flag
     @report = Report.find(params[:id])
-    @flag = Flag.new(params[:flag])
-    if request.post? and @flag.save and @report.update_flag_data
-      @report.update_attributes(:flag_count => @report.flags.count)
-      flash[:notice] = "Flagged report #{params[:id]}."
-      redirect_to :action => "index"
+    if request.post?
+      @flag = Flag.new(report: @report, person_id: session[:person_id], comment: params[:flag][:comment])
+      if params[:flag][:comment].blank?
+        @flag.errors[:base] << 'Please add a comment'
+        render partial: 'flag', status: :unprocessable_entity
+        return
+      end
+      pfc = params[:flag][:comment]
+      @other_explanation = params[:flag][:other_explanation].to_s
+      if pfc == "other"
+        if @other_explanation.length < 20 || @other_explanation.length > 500
+          @flag.errors[:base] << 'Explanation must be between 20 and 500 characters'
+          render partial: 'flag', status: :unprocessable_entity
+          return
+        else
+          @flag.comment = pfc + ": " + @other_explanation
+        end
+      end
+      if @flag.save and @report.update_flag_data
+        @report.update_attributes(:flag_count => @report.flags.count)
+        flash.now[:success] = 'Report was flagged.'
+        render partial: 'report', locals: { report: @report }
+      end
+    else
+      @flag = Flag.new
+      render partial: 'flag'
     end
   end
 
@@ -203,19 +224,25 @@ class ModController < ApplicationController
     redirect_to :action => "flagged"
   end
 
-  # TODO: remove?
   def comment
     @report = Report.find(params[:id])
-    @comment = Comment.new(params[:comment])
-    if request.post? and @comment.save
-      @report.update_attributes(:comment_count => @report.comments.count)
-      flash[:notice] = "Comment added to report #{params[:id]}."
-      redirect_to :action => "flagged"
-    end
-  end
+    if request.post?
+      @comment = Comment.new(report: @report, person_id: session[:person_id], body: params[:comment][:body])
 
-  def cancel_lightbox
-    @id = params[:id]
+      if @comment.valid?
+        ActiveRecord::Base.transaction do
+          @comment.save!
+          @report.update!(comment_count: @report.comments.count)
+        end
+
+        flash.now[:success] = "Comment added to report #{params[:id]}."
+        render partial: 'report', locals: { report: @report }
+      else
+        render partial: 'comment', status: :unprocessable_entity
+      end
+    else
+      render partial: 'comment'
+    end
   end
 
   def disable_commenting

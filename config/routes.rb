@@ -71,7 +71,6 @@ Rails.application.routes.draw do
   match 'main/request_commenting', :controller => "main", :action => "request_commenting", :via => :get
   match 'main/reports_by_ip', :controller => "main", :action => "reports_by_ip", :via => :get
   match 'main/php_search', :controller => "main", :action => "php_search", :via => :post
-  match 'main/cancel_flag/:id', :controller => "main", :action => "cancel_flag", :via => :get
   match 'main/unflag/:id', :controller => "main", :action => "unflag", :via => :get
   match 'main/convert_flag/:id', :controller => "main", :action => "convert_flag", :via => :get
   match 'main/add_comment/:id', :controller => "main", :action => "add_comment", :via => %i[get post]
@@ -97,7 +96,6 @@ Rails.application.routes.draw do
   match 'mod/flag/:id', :controller => "mod", :action => "flag", :via => %i[get post]
   match 'mod/agree_with_flagger/:id', :controller => "mod", :action => "agree_with_flagger", :via => :get
   match 'mod/ignore/:id', :controller => "mod", :action => "ignore", :via => :get
-  match 'mod/cancel_lightbox/:id', :controller => "mod", :action => "cancel_lightbox", :via => :get
   match 'mod/disable_commenting/:id', :controller => "mod", :action => "disable_commenting", :via => :get
   match 'mod/enable_commenting/:id', :controller => "mod", :action => "enable_commenting", :via => :get
   match 'mod/convert_other_persons_flag/:id', :controller => "mod", :action => "convert_other_persons_flag", :via => :get

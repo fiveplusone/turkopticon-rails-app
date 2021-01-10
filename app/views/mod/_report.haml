@@ -1,4 +1,4 @@
-%tr{:class => cycle('odd', '')}
+%tr{:id => "report-#{report.id}", :class => cycle('odd', '')}
   %td{:valign => "top"}= link_to report.id.to_s, :controller => "main", :action => "report", :id => report.id
   %td{:valign => "top"}
     = link_to report.person.mod_display_name, :controller => "main", :action => "reports_by", :id => report.person_id
@@ -79,10 +79,10 @@
           %strong= ignore.person.display_name
           at #{ignore.created_at.strftime("%b %d %Y %H:%M")}
           %br/
-    .placeholder{:id => report.id}
+    .placeholder
   %td.center{:valign => "top"}
     - if Flag.find_by_person_id_and_report_id(@person.id, report.id).nil?
-      = link_to "Flag", :remote => true, :url => {:controller => "mod", :action => "flag", :id => report.id}
+      = link_to "Flag", { :controller => "mod", :action => "flag", :id => report.id }, class: 'partial-replacer-remote', data: { partial_replacer_target: "#report-#{report.id} .placeholder" }
       %br/
     - if flags.count > 0
       - if Flag.find_by_person_id_and_report_id(@person.id, report.id).nil?
@@ -91,4 +91,4 @@
       - if Ignore.find_by_person_id_and_report_id(@person.id, report.id).nil?
         = link_to "Ignore&nbsp;Flags".html_safe, :controller => "mod", :action => "ignore", :id => report.id
         %br/
-    = link_to "Comment", :remote => true, :url => {:controller => "mod", :action => "comment", :id => report.id}
+    = link_to "Comment", { :controller => "mod", :action => "comment", :id => report.id }, class: 'partial-replacer-remote', data: { partial_replacer_target: "#report-#{report.id} .placeholder" }

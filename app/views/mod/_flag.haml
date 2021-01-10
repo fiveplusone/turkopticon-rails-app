@@ -1,7 +1,6 @@
 .lightbox{:id => @report.id}
-  = form_tag("/mod/flag/#{@report.id}") do
-    = hidden_field :flag, :report_id, :value => @report.id
-    = hidden_field :flag, :person_id, :value => session[:person_id]
+  = form_tag("/mod/flag/#{@report.id}", class: 'partial-replacer-remote', data: { partial_replacer_invalid: "#report-#{@report.id} .placeholder", partial_replacer_success: "#report-#{@report.id}" }) do
+    = error_messages_for :flag
     = radio_button :flag, :comment, "profanity"
     profanity
     %br/
@@ -28,6 +27,8 @@
     %br/
     = radio_button :flag, :comment, "other"
     other
+    &nbsp;
+    = text_field :flag, :other_explanation, value: @other_explanation, placeholder: "explanation for 'other', min. 20 chars, max. 500", size: 40
     %br/
     = submit_tag "Flag Report"
-    = link_to "Cancel", :remote => true, :url => {:action => "cancel_lightbox", :id => @report.id}
+    = link_to "Cancel", '#', class: 'partial-replacer-clear', data: { partial_replacer_clear: "#report-#{@report.id} .placeholder" }

@@ -106,7 +106,7 @@ a:hover {
   padding: 0;
 }
 
-.success, .error {
+.success, .error, .notice, .warning {
   font-size: 1.2em;
 }
 
@@ -128,6 +128,18 @@ a:hover {
 .error {
   padding: 5px;
   margin: 10px 0;
+  color: #f00;
+  font-weight: bold;
+}
+
+.notice {
+  padding: 5px;
+  color: #000;
+  font-weight: bold;
+}
+
+.warning {
+  padding: 5px;
   color: #f00;
   font-weight: bold;
 }

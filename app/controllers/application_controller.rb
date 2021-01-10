@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
 
   before_action :title, :check_ip
 
+  after_action :set_flash_for_partial_replacer, :set_partial_replacer_response_header
+
   def title
   end
 
@@ -52,4 +54,23 @@ class ApplicationController < ActionController::Base
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password").
   # filter_parameter_logging :password
+
+  def set_flash_for_partial_replacer
+    return unless partial_replacer_remote?
+
+    response.headers['X-Partial-Replacer-Flash-Success'] = flash[:success] if flash[:success]
+    response.headers['X-Partial-Replacer-Flash-Notice'] = flash[:notice] if flash[:notice]
+    response.headers['X-Partial-Replacer-Flash-Warning'] = flash[:warning] if flash[:warning]
+    response.headers['X-Partial-Replacer-Flash-Error'] = flash[:error] if flash[:error]
+  end
+
+  def set_partial_replacer_response_header
+    return unless partial_replacer_remote?
+
+    response.headers['X-Partial-Replacer-Remote'] = true
+  end
+
+  def partial_replacer_remote?
+    request.headers['X-Partial-Replacer-Remote'].present?
+  end
 end
