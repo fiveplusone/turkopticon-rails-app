@@ -1,10 +1,5 @@
 %div{:class => "lightbox", :id => @report.id}
   %strong Flag this report
-  - if Person.find(session[:person_id]).is_moderator
-    %span{:style => "font-size: 0.8em; margin-left: 0.8em;"}
-      %a{:href => "javascript:void(0)", :onclick => "javascript:addText('report-#{@report.id}', 'profanity');"} profanity
-      |
-      %a{:href => "javascript:void(0);", :onclick => "javascript:addText(report-#{@report.id}, 'agree with flagger');"} agree with flagger
   /= render :partial => 'main/how_to_flag'
   = form_for(@flag, url: { controller: 'main', action: 'add_flag', id: @report.id }, html: { class: 'partial-replacer-remote' }, data: { partial_replacer_invalid: "#report-#{@report.id} .placeholder", partial_replacer_success: "#report-#{@report.id}" }) do |f|
     = error_messages_for :flag
