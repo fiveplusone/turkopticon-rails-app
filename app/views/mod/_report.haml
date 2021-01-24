@@ -66,7 +66,7 @@
               - else
                 %img{:src => "/images/bubble.png"}
             %td
-              = item.class == Flag ? item.comment.gsub(/\n/,'<br/>').html_safe : item.body.gsub(/\n/,'<br/>').html_safe
+              = item.class == Flag ? h(item.comment).gsub(/\n/,'<br/>').html_safe : h(item.body).gsub(/\n/,'<br/>').html_safe
               .notes= item.displayed_notes&.html_safe
               .meta
                 = item.created_at.strftime("%b %d %Y %H:%M")
