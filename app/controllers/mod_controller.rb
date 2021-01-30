@@ -3,23 +3,6 @@ class ModController < ApplicationController
   before_action :authorize, :authorize_as_moderator, :load_person
   layout "moderator"
 
-  # TODO: remove?
-  def authorize_as_moderator
-    pid = session[:person_id]
-    if pid.nil?
-      session[:original_uri] = request.url
-      flash[:notice] = "Please log in as a moderator."
-      redirect_to :controller => "reg", :action => "login"
-    else
-      @person = Person.find(pid)
-      unless !@person.nil? and @person.is_moderator
-        session[:original_uri] = request.url
-        flash[:notice] = "Please log in as a moderator."
-        redirect_to :controller => "reg", :action => "login"
-      end
-    end
-  end
-
   def utils
   end
 
@@ -91,24 +74,6 @@ class ModController < ApplicationController
     ReviewReassignLogger.info "[#{t}] User #{person_id.to_s} (#{ip}) reassigned review #{report.id.to_s} from requester #{oldreq.id.to_s} to requester #{newreq.id.to_s}"
     flash[:notice] = "Review #{report.id.to_s} assigned to new requester."
     redirect_to :action => "reassign_report_to_different_requester"
-  end
-
-  # TODO: remove
-  def xxx_do_reassign_report_to_different_requester
-    @report = Report.find(params[:report_id])
-    newreqid = params[:new_req_id]
-    oldreq = @report.requester
-    newreq = Requester.find(newreqid)
-    if true
-    end
-    if params[:new_req_id] and params[:new_req_name]
-      # see if requester object with that amzn id and name exists; if yes, get TO req id; if not, create, then get TO req id
-      # update report attributes (requester_id, amzn req id, amzn req name)
-      # update old requester object cache columns
-      # update new requester object cache columns
-    else
-      # error (display in flash notice)
-    end
   end
 
   def lock_thread
@@ -290,17 +255,23 @@ class ModController < ApplicationController
     redirect_to :controller => "main", :action => "report", :id => @report.id
   end
 
-  # TODO: remove?
-  def convert_other_mods_flag
-    @flag = Flag.find(params[:id])
-    @requester = @flag.report.requester
-    @report = @flag.report
-    @flag.convert_to_comment_by(@person)
-    @report.update_attributes(:flag_count => @report.flags.count, :comment_count => @report.comments.count)
-    redirect_to :controller => "main", :action => "report", :id => @report.id
-  end
-
   private
+
+  def authorize_as_moderator
+    pid = session[:person_id]
+    if pid.nil?
+      session[:original_uri] = request.url
+      flash[:notice] = "Please log in as a moderator."
+      redirect_to :controller => "reg", :action => "login"
+    else
+      @person = Person.find(pid)
+      unless !@person.nil? and @person.is_moderator
+        session[:original_uri] = request.url
+        flash[:notice] = "Please log in as a moderator."
+        redirect_to :controller => "reg", :action => "login"
+      end
+    end
+  end
 
   def load_person
     @person = Person.find(session[:person_id])

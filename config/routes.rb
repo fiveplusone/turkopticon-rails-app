@@ -3,9 +3,7 @@ Rails.application.routes.draw do
   match '2016survey', :controller => "main", :action => "survey2016", :via => :all
   match 'forum', :controller => "forum", :action => "index", :via => :all
   match 'rules', :controller => "main", :action => "rules", :via => :all
-  match 'stats', :controller => "stats", :via => :all
-  match 'mod', :controller => "mod", :via => :all
-  match 'x', :controller => "main", :action => "x", :via => :all
+  match 'stats', :controller => "stats", :action => "index", :via => :all
   match 'pri', :controller => "main", :action => "pri", :via => :all
   match 'issues', :controller => "main", :action => "issues", :via => :all
   match 'login', :controller => "reg", :action => "login", :via => :all
@@ -16,9 +14,7 @@ Rails.application.routes.draw do
   match 'reports', :controller => "main", :action => "index", :via => :all
   match 'edit/:id', :controller => "main", :action => "edit_report", :via => :all
   match 'info', :controller => "main", :action => "info", :via => :all
-  match 'ditz', :controller => "main", :action => "ditz", :via => :all
   match 'blog', :controller => "main", :action => "blog", :via => :all
-  match 'feed', :controller => "main", :action => "blogfeed", :via => :all
   match 'help', :controller => "main", :action => "help", :via => :all
   match 'aves/:id', :controller => "main", :action => "averages", :via => :all
   match 'post/:id', :controller => "main", :action => "post", :via => :all
@@ -38,10 +34,8 @@ Rails.application.routes.draw do
   match 'all_by/:id', :controller => "main", :action => "all_by", :via => :all
   match 'reviews_by_one_page/:id', :controller => "main", :action => "reports_by_one_page", :via => :all
   match 'admin', :controller => "admin", :action => "index", :via => :all
-  match 'wth', :controller => "main", :action => "wth", :via => :all
   match ':id', :controller => "main", :action => "index", :via => :all
   match 'get_report/:id', :controller => "main", :action => "report", :via => :all
-  match 'requester_stats/:id', :controller => "main", :action => "requester_stats", :via => :all
   match 'attrs/:id', :controller => "main", :action => "requester_attrs", :via => :all
   match 'attrsv2/:id', :controller => "main", :action => "requester_attrs_v2", :via => :all
   match 'confirm/:hash', :controller => "reg", :action => "confirm", :via => :all
@@ -119,8 +113,4 @@ Rails.application.routes.draw do
   match 'reg/hide_long_reviews_on', :controller => "reg", :action => "hide_long_reviews_on", via: :get
 
   match 'stats/reviews', :controller => "stats", :action => "reviews", via: :get
-
-  match ':controller/:action/:id', :via => :all
-  match ':controller/:action/:id.:format', :via => :all
-  match ':controller/:action', :via => :all
 end

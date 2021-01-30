@@ -3,7 +3,6 @@
   %head
     %title= @pagetitle.nil? ? "turkopticon." : "turkopticon : " + @pagetitle
     = stylesheet_link_tag 'generic'
-    %link{:href => "/feed", :rel => "alternate", :title => "RSS", :type => "application/rss+xml"}
     %meta{:name => "google-site-verification", :content => "UWLKIWNd0faYwT10vzkBZI5wvuQpuRtiEcZh9ZiMsBM"}
   %body
     #login_nav= render :partial => 'layouts/login_nav'

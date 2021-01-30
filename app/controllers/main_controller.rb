@@ -1,25 +1,20 @@
 class MainController < ApplicationController
 
-  before_action :authorize, :except => [:requester_stats, :info, :help, :help_v2, :install_v2, :install_welcome, :requester_attrs, :requester_attrs_v2, :ditz, :blog, :post, :blogfeed, :requesters, :requester_attrs_2, :x, :rules, :dedupe_reqs, :backup_db, :check_for_duplicate_requester_objects, :wth, :data_use_policy, :commentingreqs]
+  before_action :authorize, :except => [:info, :help, :blog, :post, :requesters, :rules, :data_use_policy]
   before_action :check_for_existing_report, :only => :add_report
   before_action :verify, :only => :add_report
   before_action :authorize_as_commenter, :only => [:add_comment, :add_flag]
 
-  # todo: remove?
-  def commentingreqs
-    render :text => Person.review_commenting_requests_count
-  end
-
-  # TODO: remove?
+  # TODO: add a link to this
   def pri
   end
 
   def data_use_policy
   end
 
-  # TODO: remove?
+  # TODO: check into version control - it's a static page right now just on the server
   def survey2016
-    redirect_to "https://turkopticon.ucsd.edu/2016survey/"
+    redirect_to "/2016survey/"
   end
 
   def request_commenting
@@ -190,19 +185,6 @@ class MainController < ApplicationController
 
     @result_count = @reports.count
     @requester_count = @reports.map { |r| r['amzn_requester_id'] }.uniq.count
-  end
-
-  # TODO: remove?
-  def php_search_form
-  end
-
-  # TODO: remove?
-  def search_mysql # good, but do not use, very slow; will choke site
-    requesters = Requester.where("amzn_requester_name like ?", "%#{params[:query]}%")
-    @reports = requesters.collect{|r| r.reports}.flatten
-    total_rep_count = @reports.length
-    @reports.delete_if{|r| r.is_hidden}
-    @hidden_rep_count = total_rep_count - @reports.length
   end
 
   def requesters
@@ -425,93 +407,8 @@ class MainController < ApplicationController
     end
   end
 
-  # TODO: remove?
-  def edit_flag
-    render :text => "That function is disabled."
-  end
-
-  # TODO: remove?
-  def edit_flag_disabled
-  # def edit_flag
-    @pagetitle = "edit flag"
-    @flag = Flag.find(params[:id])
-    if session[:person_id] == @flag.person_id or Person.find(session[:person_id]).is_admin
-      @report = @flag.report
-      if request.post? and @flag.update_attributes(params[:flag])
-        if session[:person_id] == @flag.person_id
-          editor = "the author "
-        else
-          editor = "<strong>" + Person.find(session[:person_id]).display_name + " (admin)</strong> "
-        end
-        note = "This flag was edited by " + editor + Time.now.strftime("%a %b %d %H:%M %Z") + ".<br/>"
-        @flag.update_attributes(:displayed_notes => note + @flag.displayed_notes.to_s)
-        flash[:notice] = "<div class=\"success\">Flag updated.</div>"
-        redirect_to :action => "report", :id => @flag.report_id.to_s
-      end
-    else
-      flash[:notice] = "<div class=\"error\">You can't edit that flag.</div>"
-      redirect_to :action => "index"
-    end
-  end
-
-  # TODO: remove?
-  def requester_stats
-    @requester = Requester.find_by_amzn_requester_id(params[:id])
-    if @requester.nil?
-      render :text => "null"
-    else
-      render :text => "reports:" + @requester.report_count.to_s + ",users:" + @requester.reporter_count.to_s
-    end
-  end
-
-  # TODO: remove?
-  def requester_attrs
-    @requester = Requester.find_by_amzn_requester_id(params[:id])
-    if @requester.nil?
-      render :text => "null"
-    else
-      render :text => @requester.attrs_text
-    end
-  end
-
-  # TODO: remove?
-  def requester_attrs_2
-    @requester = Requester.find_by_amzn_requester_id(params[:id])
-    if @requester.nil?
-      render :text => "null"
-    else
-      render :text => @requester.attrs_text_2
-    end
-  end
-
-  # TODO: remove?
-  def requester_attrs_v2
-    @requester = Requester.find_by_amzn_requester_id(params[:id])
-    if @requester.nil?
-      render :text => "null"
-    else
-      render :text => @requester.attrs_text_v2
-    end
-  end
-
   def info
     @location = "about"
-  end
-
-  # TODO: remove?
-  def info2
-    @location = "about"
-  end
-
-  # TODO: remove?
-  def install_welcome
-    @location = "install_welcome"
-  end
-
-  # TODO: remove?
-  def install_v2
-    @pagetitle = "install_v2"
-    @location = "install_v2"
   end
 
   def help
@@ -519,26 +416,9 @@ class MainController < ApplicationController
     @location = "help"
   end
 
-  # TODO: remove?
-  def help_v2
-  end
-
-  # TODO: remove?
-  def ditz
-    redirect_to "http://turkopticon.differenceengines.com/ditz/index.html"
-  end
-
   def blog
     @location = "blog"
     @posts = Post.where(parent_id: nil).order(created_at: :desc)
-  end
-
-  # TODO: remove?
-  def blogfeed
-    @posts = Post.where(parent_id: nil).order(created_at: :desc)
-    respond_to do |format|
-      format.rss {render}
-    end
   end
 
   def post
@@ -574,64 +454,8 @@ class MainController < ApplicationController
     end
   end
 
-  # TODO: remove?
-  def x
-  end
-
   def rules
     @location = "rules"
-  end
-
-  # TODO: remove?
-  def wth
-  end
-
-  # TODO: remove?
-  def dedupe_reqs
-    render :text => "Did nothing, this is currently deactivated"
-  end
-
-  # TODO: remove?
-  def dedupe_reqs_old
-    # don't use this
-    ids = {}
-    Requester.all.each{|r|
-    id = r.amzn_requester_id
-    unless id.nil? or r.amzn_requester_name.blank?
-      ids[id].nil? ? ids[id] = [r.id] : ids[id] << r.id
-    end
-    }
-    mult = ids.select{|k, v| v.length > 1}
-    mult.each{|r|
-    ii = r.last
-    cid = ii.shift
-      ii.each{|i|
-        Requester.find(i).reports.each{|r|
-        r.update_attributes(:requester_id => cid)
-        }
-      Requester.find(i).destroy
-      }
-    Requester.find(cid).cache_columns
-    }
-    render :text => "Successfully deduplicated #{mult.length} Requester objects"
-  end
-
-  # TODO: remove?
-  def backup_db
-    system "mysqldump -ce -u rahrahfe_bentham -pn0mn0m=== rahrahfe_turkopticon > /home1/rahrahfe/turkopticon-passenger/backups/turkopticon-db-`date +%Y.%m.%d.%H%M`.sql"
-    render :text => "Backed up database."
-  end
-
-  # TODO: remove?
-  def check_for_duplicate_requester_objects
-    ids = Requester.all.map{|r| r.amzn_requester_id}.delete_if{|i| i.blank?}
-    hash = ids.group_by{|i| i}
-    duplicate_ids = hash.select{|k, v| v.size > 1}.map(&:first)
-    if duplicate_ids.empty?
-      render :text => ""
-    else
-      render :text => "Duplicate Requester objects exist for requesters with IDs " + duplicate_ids.join(", ")
-    end
   end
 
   private

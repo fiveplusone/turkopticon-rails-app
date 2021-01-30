@@ -1,7 +1,6 @@
 class ForumController < ApplicationController
 
   before_action :authorize, :load_person
-  before_action :authorize_as_admin, :only => [:karma]
   before_action :authorize_as_commenter, :only => [:new_post, :edit_post, :delete_post, :thank, :inappropriate, :unthank, :uninappropriate]
 
   layout "forum"
@@ -228,30 +227,13 @@ class ForumController < ApplicationController
     render :action => "show_post"  # this is currently a confusing view; should be improved before making public
   end
 
-  # TODO: remove?
-  def settings
-  end
-
   def about
-  end
-
-  # TODO: remove?
-  def karma
   end
 
   private
 
   def load_person
     @person = Person.find(session[:person_id])
-  end
-
-  def authorize_as_admin
-    pid = session[:person_id]
-    unless !pid.nil? and Person.find(pid) and Person.find(pid).is_admin
-      session[:original_uri] = request.url
-      flash[:notice] = "Please log in as an administrator."
-      redirect_to :controller => "reg", :action => "login"
-    end
   end
 
   def authorize_as_commenter

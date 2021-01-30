@@ -3,7 +3,7 @@
 
 class ApplicationController < ActionController::Base
 
-  layout "generic", :except => [:blogfeed]
+  layout "generic"
 
   helper :all # include all helpers, all the time
 
