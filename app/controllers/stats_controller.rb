@@ -3,16 +3,15 @@ class StatsController < ApplicationController
   before_action :authorize
   layout nil
 
-  # TODO: remove?
+  # This link is given to people when they want stats about turkopticon
   def index
     @reviews = Report.count
     tos_viol_reps = Report.where(:tos_viol => true)
     @tos_flags = tos_viol_reps.count
     @requesters = Requester.count
-    @reqs_with_tos_flags = tos_viol_reps.map{|r| r.requester_id}.uniq.count
+    @reqs_with_tos_flags = tos_viol_reps.distinct.count(:requester_id)
     @users = Person.count
-    reps = Report.all
-    @posting_users = reps.map{|r| r.person_id}.uniq.count
+    @posting_users = Report.all.distinct.count(:person_id)
   end
 
   def reviews
