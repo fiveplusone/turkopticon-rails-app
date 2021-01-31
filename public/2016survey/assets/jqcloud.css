@@ -1,0 +1,47 @@
+/* fonts */
+div.jqcloud {
+	font-family: "proxima-nova-n4","proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif
+	font-size: 10px;
+	line-height: normal;
+	}
+
+div.jqcloud a {
+	font-size: inherit;
+	text-decoration: none;
+	}
+
+div.jqcloud span.w10 {font-size:550%;}
+div.jqcloud span.w9 {font-size:500%;}
+div.jqcloud span.w8 {font-size:450%;}
+div.jqcloud span.w7 {font-size:400%;}
+div.jqcloud span.w6 {font-size:350%;}
+div.jqcloud span.w5 {font-size:300%;}
+div.jqcloud span.w4 {font-size:250%;}
+div.jqcloud span.w3 {font-size:200%;}
+div.jqcloud span.w2 {font-size:150%;}
+div.jqcloud span.w1 {font-size:100%;}
+
+/* colors */
+div.jqcloud {color:#3A8EA8;}
+div.jqcloud a {color:#40A2C1;}
+div.jqcloud a:hover  {color:#3A8EA8;}
+div.jqcloud span.w10 {opacity:1;}
+div.jqcloud span.w9  {opacity:.9;}
+div.jqcloud span.w8  {opacity:.8;}
+div.jqcloud span.w7  {opacity:.7;}
+div.jqcloud span.w6  {opacity:.6;}
+div.jqcloud span.w5  {opacity:.5;}
+div.jqcloud span.w4  {opacity:.4;}
+div.jqcloud span.w3  {opacity:.3;}
+div.jqcloud span.w2  {opacity:.2;}
+div.jqcloud span.w1  {opacity:.1;}
+
+/* layout */
+div.jqcloud {
+	overflow:hidden;
+	position:relative;
+	}
+div.jqcloud span:not(.linkish) {padding:0;display:inline-block;cursor:default;}
+div.jqcloud a span {cursor:pointer;}
+div.jqcloud a:hover span,
+div.jqcloud span:hover {opacity:1;background:#FFFFFF;border-radius:3px;padding:0 6px;margin:0 0 0 -6px;box-shadow:0 0 .5em rgba(0,0,0,.35);z-index:15;color: #565656 !important;}

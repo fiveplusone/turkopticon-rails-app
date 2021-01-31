@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   root :controller => "main", :action => "info"
-  match '2016survey', :controller => "main", :action => "survey2016", :via => :all
   match 'forum', :controller => "forum", :action => "index", :via => :all
   match 'rules', :controller => "main", :action => "rules", :via => :all
   match 'stats', :controller => "stats", :action => "index", :via => :all
