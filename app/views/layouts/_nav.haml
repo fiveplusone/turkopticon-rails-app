@@ -10,10 +10,8 @@
     = link_to "Reviews", :controller => "main", :action => "index", :id => nil
     &nbsp;
 
-- if session[:person_id]
+- if current_user
   #search= render :partial => 'layouts/search'
-
-- if session[:person_id]
   %div{:style => "text-align: right; margin-top: -1.4em;"}
     = render :partial => 'layouts/nav_right'
 - else

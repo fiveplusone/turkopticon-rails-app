@@ -1,9 +1,9 @@
-- dn = @person.display_name
-- dn = @person.email if dn.nil?
+- dn = current_user.display_name
+- dn = current_user.email if dn.nil?
 
 Logged in as
 %strong= dn
 &nbsp;(ID: 
-= @person.id.to_s
+= current_user.id
 )&nbsp;|&nbsp;
 = link_to 'Logout', controller: 'reg', action: 'logout'

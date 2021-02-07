@@ -2,7 +2,7 @@
 = error_messages_for :report
 = error_messages_for :requester
 = form_tag(:action => 'edit_report') do
-  - if @report.person_id == session[:person_id] or Person.find(session[:person_id]).is_admin
+  - if @report.person_id == current_user.id || current_user.is_admin
     %p
       .label HIT ID
       = text_field :report, :hit_id
@@ -63,7 +63,7 @@
           - for i in [*1..5]
             %td= radio_button :report, a.to_sym, i
           %td= radio_button :report, a.to_sym, 0
-  - if @report.person_id != session[:person_id]
+  - if @report.person_id != current_user.id
     %p
       .label ToS violator?
       = check_box :report, :tos_viol

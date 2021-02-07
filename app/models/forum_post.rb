@@ -21,6 +21,7 @@
 #  initial_score           :decimal(5, 2)
 #
 class ForumPost < ApplicationRecord
+  belongs_to :person
 
   def current_version
     ForumPostVersion.find_by_post_id_and_next(self.id, nil)
@@ -31,7 +32,7 @@ class ForumPost < ApplicationRecord
   end
 
   def author_name
-    Person.find(self.person_id).public_email
+    person.public_email
   end
 
   def body

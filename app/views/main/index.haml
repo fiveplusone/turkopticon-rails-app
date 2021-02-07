@@ -5,7 +5,7 @@
     document.getElementById("box_" + id.toString()).value = text;
   }
 
-- if @location == 'reports by' and Person.find(session[:person_id]).is_moderator
+- if @location == 'reports by' and current_user.is_moderator?
   :javascript
     window.onload = () => {
       country_select = document.getElementById('person_country');
@@ -49,7 +49,7 @@
 %p#advisory
   Reviews, comments, and flag content should follow the Turkopticon #{link_to 'civility guidelines', controller: 'main', action: 'rules'}. Please review them before posting. Content that does not follow the guidelines may be edited.
 
-- if @location == 'reports by' and Person.find(session[:person_id]).is_moderator
+- if @location == 'reports by' and current_user.is_moderator?
   %h2 About #{@display_name}
   %p Account created: #{@person.created_at}
   %p{:id => "user_info", :style => "display:contents"} #{@person.state != nil && @person.state != "" ? Person.state_long_name(@person.state) + "," : ""} #{@person.country != nil && @person.country != "" ? Person.country_long_name(@person.country) : "No Country Specified"} | #{@person.phone != nil && @person.phone != "" ? @person.phone : "No Phone Specified"}
@@ -57,10 +57,10 @@
   = form_for :person, :url => {:controller => "reg", :action => "change_phone_and_location"}, :html => {:id => "form_for_user", :style => "display:none"} do |f|
     %p
       .label Country
-      = f.select 'country', Person.country_list, :include_blank => 'Select a Country', :selected => @person.country
+      = f.select 'country', Person.country_list, :include_blank => 'Select a Country', :selected => current_user.country
     %p
       .label{:id => 'state_label'} State
-      = f.select 'state', Person.us_states_list, :include_blank => 'Select a State', :selected => @person.state
+      = f.select 'state', Person.us_states_list, :include_blank => 'Select a State', :selected => current_user.state
     %p
       .label Phone
       = f.text_field 'phone', :size => 20

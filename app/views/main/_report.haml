@@ -13,7 +13,7 @@
       .strong= link_to h(report.requester_amzn_name), :controller => "main", :action => "index", :id => rid
       = h(report.requester_amzn_id)
       %br/
-      - if Person.find(session[:person_id]).is_moderator
+      - if current_user.is_moderator
         Req ID:
         = report.requester_id.to_s
         %br/
@@ -30,7 +30,7 @@
       - if report.requester.nil?
         [The requester object does not exist]
       - else
-        - if (Person.find(session[:person_id]).muted and Person.find(session[:person_id]).muted_until > Time.now)
+        - if current_user.muted && current_user.muted_until > Time.now
           &nbsp;
         - else
           = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, controller: 'main', action: 'add_report', requester: { amzn_id: report.requester.amzn_requester_id, amzn_name: report.requester.amzn_requester_name }
@@ -74,7 +74,7 @@
             %br/
             = h(report.hit_names.censor)
         - if report.dont_censor
-          - if Person.find(session[:person_id]).hide_long_reviews and notruncate.nil?
+          - if current_user.hide_long_reviews and notruncate.nil?
             - out = h(report.description.to_s)
             = truncate(out, length: 800).gsub("\r\n","<br/>").html_safe
             - if out.length > 800
@@ -87,7 +87,7 @@
           - else
             = h(report.description.to_s).gsub("\r\n","<br/>").html_safe
         - else
-          - if Person.find(session[:person_id]).hide_long_reviews and notruncate.nil?
+          - if current_user.hide_long_reviews and notruncate.nil?
             - out = h(report.description.to_s.censor)
             = truncate(out, length: 800).gsub("\r\n","<br/>").html_safe
             - if out.length > 800
@@ -106,46 +106,46 @@
           - else
             = report.displayed_notes.html_safe
       .posted_by
-        - if Person.find(session[:person_id]).is_admin
+        - if current_user.is_admin
           = report.created_at.strftime("%b %d %Y %H:%M")
         - else
           = report.created_at.strftime("%b %d %Y")
         &nbsp;|&nbsp;
-        - if Person.find(session[:person_id]).is_moderator
+        - if current_user.is_moderator
           = link_to report.person.mod_display_name.censor, :controller => "main", :action => "reports_by", :id => report.person_id
         - else
           = link_to report.person.public_email.censor, :controller => "main", :action => "reports_by", :id => report.person_id
-        - unless Person.find(session[:person_id]).show_fancy_links == false
+        - unless current_user.show_fancy_links == false
           &nbsp;
           = link_to image_tag('/images/page.png', title: 'Show all reviews from this person on one page (slow)', border: 0, width: 8, height: 10), :controller => "main", :action => "reports_by_one_page", :id => report.person_id
           = link_to image_tag('/images/bubble.png', title: 'Show all comments by this person', border: 0,  width: 10, height:10), :controller => "main", :action => "comments_by", :id => report.person_id
           = link_to image_tag('/images/warning.gif', title: 'Show all reviews flagged by this person', border: 0, width: 10, height: 10), :controller => "main", :action => "flagged_by", :id => report.person_id
-          - if [1, 2, 74050, 139249, 26343, 139250].include? session[:person_id].to_i
+          - if [1, 2, 74050, 139249, 26343, 139250].include? current_user.id
             &nbsp;
             = report.person.email
         - if report.ip
-          - if Person.find(session[:person_id]).is_moderator
+          - if current_user.is_moderator
             &nbsp;|&nbsp;
             = link_to report.ip, :controller => "main", :action => "reports_by_ip", :ip => report.ip
-        - if report.person_id == session[:person_id] or Person.find(session[:person_id]).is_admin or Person.find(session[:person_id]).is_moderator
+        - if report.person_id == current_user.id or current_user.is_admin or current_user.is_moderator
           &nbsp;|&nbsp;
           = link_to "edit", :controller => "main", :action => "edit_report", :id => report.id
-          - if Person.find(session[:person_id]).is_moderator
+          - if current_user.is_moderator
             &nbsp;|&nbsp;
             - if !report.locked_until.nil? and report.locked_until > Time.now
               locked
             - else
               = link_to "lock", :controller => "mod", :action => "lock_thread", :id => report.id
-        - unless session[:person_id].nil?
-          - flag = Flag.find_by_report_id_and_person_id(report.id, session[:person_id])
+        - if current_user
+          - flag = Flag.find_by(report: report, person: current_user)
           &nbsp;|&nbsp;
           - if flag
             = link_to "unflag", {:controller => "main", :action => "convert_flag", :id => flag.id}, :confirm => "Are you sure? This will convert your flag to a comment."
           - else
-            - if Person.find(session[:person_id]).can_comment
+            - if current_user.can_comment
               = link_to "flag", { :controller => "main", :action => "flag", :id => report.id }, class: 'partial-replacer-remote', data: { partial_replacer_target: "#report-#{report.id} .placeholder" }
-          - if Person.find(session[:person_id]).can_comment
-            - if (!report.locked_until.nil? and report.locked_until > Time.now) or (Person.find(session[:person_id]).muted and Person.find(session[:person_id]).muted_until > Time.now)
+          - if current_user.can_comment
+            - if (!report.locked_until.nil? and report.locked_until > Time.now) or (current_user.muted and current_user.muted_until > Time.now)
               &nbsp;
             - else
               &nbsp;|&nbsp;
@@ -162,14 +162,14 @@
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           = f.created_at.strftime("%b %d %Y")
           &nbsp;
-          - if Person.find(session[:person_id]).is_moderator
+          - if current_user.is_moderator
             = link_to f.person.mod_display_name.censor, :controller => "main", :action => "reports_by", :id => f.person_id
-            - if session[:person_id] != f.person_id
+            - if current_user.id != f.person_id
               &nbsp;|&nbsp;
               = link_to "convert", {:controller => "mod", :action => "convert_other_persons_flag", :id => f.id}, :confirm => "Are you sure? This will convert the flag to a comment. This can't be undone."
           - else
             = link_to f.person.public_email.censor, :controller => "main", :action => "reports_by", :id => f.person_id
-          - if Person.find(session[:person_id]).show_fancy_links
+          - if current_user.show_fancy_links
             &nbsp;
             = link_to image_tag('/images/bubble.png', title: 'Show all comments by this person', border: 0, width: 10, height:10), :controller => "main", :action => "comments_by", :id => f.person_id
             = link_to image_tag('/images/warning.gif', title: 'Show all reviews flagged by this person', border: 0, width: 10, height: 10), :controller => "main", :action => "flagged_by", :id => f.person_id
@@ -184,15 +184,15 @@
             .posted_by
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               #{c.created_at.strftime("%b %d %Y")}&nbsp;&nbsp;|&nbsp;
-              - if Person.find(session[:person_id]).is_moderator
+              - if current_user.is_moderator
                 = link_to c.person.mod_display_name.censor, :controller => "main", :action => "reports_by", :id => c.person_id
               - else
                 = link_to c.person.public_email.censor, :controller => "main", :action => "reports_by", :id => c.person_id
-              - if Person.find(session[:person_id]).show_fancy_links
+              - if current_user.show_fancy_links
                 &nbsp;
                 = link_to image_tag('/images/bubble.png', title: 'Show all comments by this person', border: 0, width: 10, height:10), :controller => "main", :action => "comments_by", :id => c.person_id
                 = link_to image_tag('/images/warning.gif', title: 'Show all reviews flagged by this person', border: 0, width: 10, height: 10), :controller => "main", :action => "flagged_by", :id => c.person_id
-              - if c.person_id == session[:person_id] or Person.find(session[:person_id]).is_admin or Person.find(session[:person_id]).is_moderator
+              - if c.person_id == current_user or current_user.is_admin or current_user.is_moderator
                 &nbsp;|&nbsp;
                 = link_to "edit", :controller => "main", :action => "edit_comment", :id => c.id.to_s
       .placeholder

@@ -1,6 +1,6 @@
 class ForumController < ApplicationController
 
-  before_action :authorize, :load_person
+  before_action :authorize
   before_action :authorize_as_commenter, :only => [:new_post, :edit_post, :delete_post, :thank, :inappropriate, :unthank, :uninappropriate]
 
   layout "forum"
@@ -13,10 +13,12 @@ class ForumController < ApplicationController
   def new_post
     # make new post and post_version objects
     # if request is post, check for errors, save new objects if OK
-    @post = ForumPost.new(params[:forum_post])
-    @post_version = ForumPostVersion.new(params[:forum_post_version])
+    @post = ForumPost.new(params[:forum_post].permit(:parent_id), person: current_user)
+    @post.thread_head = ForumPost.find(@post.parent_id).thread_head if @post.parent_id
+    @thread_head = ForumPost.find(@post.thread_head) if @post.thread_head
+    @post_version = ForumPostVersion.new(**params[:forum_post_version].permit(:title, :body), person: current_user, ip: request.remote_ip)
     if request.post?
-      unless @person.email_verified
+      unless current_user.email_verified
         flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you must verify your email address before you can post. You may #{helpers.link_to 'send the verification email again', controller: 'reg', action: 'send_verification_email'}."
         render :action => "new_post" and return
       end
@@ -28,28 +30,22 @@ class ForumController < ApplicationController
         flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Please give the post a title."
         render :action => "new_post" and return
       end
-      if @post.save and @post_version.save and @post_version.update_attributes(:post_id => @post.id)
-        if @post.parent_id
-          ForumPost.find(@post.thread_head).update_replies
-        else
-          @post.update_attributes(:thread_head => @post.id)
-        end
-
+      ActiveRecord::Base.transaction do
         # set initial post score to user's karma
         # create FPI object if it doesn't exist yet (and set karma to 1)
-        fpi = ForumPersonInfo.find_by_person_id(session[:person_id])
-        if fpi.nil?
-          fpi = ForumPersonInfo.create(:person_id => session[:person_id])
-        end
-        if fpi.karma.nil?
-          fpi.update_attributes(:karma => 1)
-        end
-        @post.update_attributes(:score => fpi.karma)
+        fpi = ForumPersonInfo.create_with(karma: 1).find_or_create_by!(person: current_user)
 
-        flash[:notice] = "Post saved."
-        rid = @post.parent_id.nil? ? @post.id : @post.thread_head
-        redirect_to controller: 'forum', action: 'show_post', id: rid, anchor: "post-#{@post.id}"
+        @post.score = fpi.karma
+        @post.save!
+        @post_version.post_id = @post.id
+        @post_version.save!
+        @thread_head&.update_replies
+        @post.update!(thread_head: @post.id) if @post.parent_id.blank?
       end
+
+      flash[:notice] = "Post saved."
+      rid = @post.parent_id.nil? ? @post.id : @post.thread_head
+      redirect_to controller: 'forum', action: 'show_post', id: rid, anchor: "post-#{@post.id}"
     end
   end
 
@@ -74,7 +70,11 @@ class ForumController < ApplicationController
   def edit_post
     @post = ForumPost.find(params[:id])
     @current_version = @post.current_version
-    @post_version = ForumPostVersion.new(params[:forum_post_version])
+    @post_version = ForumPostVersion.new(
+      **params[:forum_post_version].permit(:title, :body),
+      person: current_user,
+      ip: request.remote_ip,
+    )
     if request.post?
       if params[:forum_post_version][:body].blank?
         flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Please put something in the post body."
@@ -93,11 +93,12 @@ class ForumController < ApplicationController
 
   def delete_post
     @post = ForumPost.find(params[:id])
-    @post_version = ForumPostVersion.new(:person_id => session[:person_id],
-                         :post_id => @post.id,
-                         :body => "This post was deleted.",
-                         :ip => request.remote_ip)
-    @post_version.save
+    @post_version = ForumPostVersion.create(
+      person: current_user,
+      post_id: @post.id,
+      body: 'This post was deleted.',
+      ip: request.remote_ip,
+    )
     @post.current_version.update_attributes(:next => @post_version.id)
     @post.update_attributes(:deleted => true)
     flash[:notice] = "The post was deleted."
@@ -109,40 +110,40 @@ class ForumController < ApplicationController
   end
 
   def thank
-    person_id = session[:person_id]
-
     # if this person has already thanked this post, tell them and send them back
-    if ReputationStatement.find_by_person_id_and_post_id_and_statement(person_id, params[:id], "thanks")
+    if ReputationStatement.find_by(person: current_user, post_id: params[:id], statement: 'thanks')
       flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you have already given thanks for this post!"
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
     # if this person has already thanked three times in the last 24 hours,
     # tell them they have to wait and send them back
-    if ReputationStatement.where("person_id = ? and statement = 'thanks' and created_at > ?", person_id, Time.now - 1.day).count >= 3
+    if ReputationStatement.where(person: current_user, statement: 'thanks').where('created_at > ?', Time.now - 1.day).count >= 3
       flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you can only leave 3 \"thanks\" per day, and you have already left 3 in the last 24 hours. You can delete one or wait."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
-    person_info = ForumPersonInfo.find_by_person_id(person_id)
+    person_info = ForumPersonInfo.find_by(person: current_user)
     if person_info.nil?
-      person_info = ForumPersonInfo.create(:person_id => person_id)
+      person_info = ForumPersonInfo.create(person: current_user)
     end
     effect = person_info.up_effect
     pid = ForumPost.find(params[:id]).person_id  # person who posted the post
                                                  # being rated
 
     # block self-thanking
-    if pid == person_id
+    if pid == current_user.id
       flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Please don't try to thank yourself :-/"
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
-    ReputationStatement.new(:person_id => person_id,
-                            :post_id => params[:id],
-                            :statement => "thanks",
-                            :effect => effect,
-                            :ip => request.remote_ip).save
+    ReputationStatement.create(
+      person: current_user,
+      post_id: params[:id],
+      statement: "thanks",
+      effect: effect,
+      ip: request.remote_ip,
+    )
     fpi = ForumPersonInfo.find_by_person_id(pid)
     if fpi.nil?
       fpi = ForumPersonInfo.create(:person_id => pid, :karma => 1)
@@ -160,33 +161,33 @@ class ForumController < ApplicationController
   end
 
   def inappropriate
-    person_id = session[:person_id]
-
     # if the user flagging has already flagged this post, say so and send them back
-    if ReputationStatement.find_by_person_id_and_post_id_and_statement(person_id, params[:id], "inappropriate")
+    if ReputationStatement.find_by(person: current_user, post_id: params[:id], statement: 'inappropriate')
       flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>You've already flagged this post as inappropriate."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
     # if this person has already left 1 'inappropriate' flag in the last 24 hours
     # tell them they have to wait and send them back
-    if ReputationStatement.where("person_id = ? and statement = 'inappropriate' and created_at > ?", person_id, Time.now - 1.day).count >= 1
+    if ReputationStatement.where(person: current_user, statement: 'inappropriate').where('created_at > ?', Time.now - 1.day).count >= 1
       flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you can only leave 1 \"inappropriate\" flag per day, and you have already left one in the last 24 hours. You can delete it or wait."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
-    person_info = ForumPersonInfo.find_by_person_id(person_id)
+    person_info = ForumPersonInfo.find_by(person: current_user)
     if person_info.nil?
-      person_info = ForumPersonInfo.create(:person_id => person_id)
+      person_info = ForumPersonInfo.create(person: current_user)
     end
     effect = person_info.down_effect
     pid = ForumPost.find(params[:id]).person_id  # person who posted the post
                                                  # being rated
-    ReputationStatement.new(:person_id => person_id,
-                            :post_id => params[:id],
-                            :statement => "inappropriate",
-                            :effect => effect,
-                            :ip => request.remote_ip).save
+    ReputationStatement.create(
+      person: current_user,
+      post_id: params[:id],
+      statement: 'inappropriate',
+      effect: effect,
+      ip: request.remote_ip,
+    )
     fpi = ForumPersonInfo.find_by_person_id(pid)
     if fpi.nil?
       fpi = ForumPersonInfo.create(:person_id => pid, :karma => 1)
@@ -204,8 +205,7 @@ class ForumController < ApplicationController
   end
 
   def unthank
-    rs = ReputationStatement.find_by_person_id_and_post_id(session[:person_id],
-                                                           params[:id])
+    rs = ReputationStatement.find_by(person: current_user, post_id: params[:id])
     # update post score
     fp = ForumPost.find(params[:id])
     fp.update_attributes(:score => fp.score - rs.effect)
@@ -232,15 +232,10 @@ class ForumController < ApplicationController
 
   private
 
-  def load_person
-    @person = Person.find(session[:person_id])
-  end
-
   def authorize_as_commenter
-    pid = session[:person_id]
-    unless !pid.nil? and Person.find(pid) and Person.find(pid).can_comment
-      flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, only people with commenting ability can do that.</style>"
-      redirect_to :action => "index"
-    end
+    return true if current_user.can_comment?
+
+    flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, only people with commenting ability can do that.</style>"
+    redirect_to action: 'index'
   end
 end

@@ -13,10 +13,7 @@
 #  person_id  :integer
 #
 class ForumPostVersion < ApplicationRecord
-
-  def person
-    Person.find(self.person_id)
-  end
+  belongs_to :person
 
   def author_name
     person.public_email

@@ -13,7 +13,7 @@ class MainController < ApplicationController
   end
 
   def request_commenting
-    Person.find(session[:person_id]).update_attributes(:commenting_requested => true, :commenting_requested_at => Time.now)
+    current_user.update_attributes(:commenting_requested => true, :commenting_requested_at => Time.now)
     flash[:notice] = "You've requested commenting. Commenting should be enabled within 24 hours if your account is in good standing. If you don't get an email indicating you have received commenting, check back tomorrow anyway."
     redirect_to :action => "index"
   end
@@ -36,7 +36,7 @@ class MainController < ApplicationController
       redirect_to controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
       return
     end
-    default_order = Person.find(session[:person_id]).order_reviews_by_edit_date ? "updated_at DESC" : "id DESC"
+    default_order = current_user.order_reviews_by_edit_date? ? "updated_at DESC" : "id DESC"
     @reports = Report.where(cond).paginate(:page => params[:page]).order(default_order)
   end
 
@@ -57,10 +57,10 @@ class MainController < ApplicationController
 
   def reports_by
     @person = Person.find(params[:id])
-    @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
+    @display_name = current_user.is_moderator? ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports by " + @display_name
-    default_order = Person.find(session[:person_id]).order_reviews_by_edit_date ? "updated_at DESC" : "id DESC"
-    @reports = Report.where(:person_id => params[:id]).paginate(:page => params[:page]).order(params[:order] ||= default_order)
+    default_order = current_user.order_reviews_by_edit_date? ? "updated_at DESC" : "id DESC"
+    @reports = Report.where(person: @person).paginate(:page => params[:page]).order(params[:order] ||= default_order)
     @location = "reports by"
     render :action => "index"
   end
@@ -72,7 +72,7 @@ class MainController < ApplicationController
 
   def reports_by_one_page
     @person = Person.find(params[:id])
-    @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
+    @display_name = current_user.is_moderator? ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports by " + @display_name + " (one page)"
     @reports = @person.reports.reverse
     render :action => "flagged_by"
@@ -80,22 +80,22 @@ class MainController < ApplicationController
 
   def flagged_by
     @person = Person.find(params[:id])
-    @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
+    @display_name = current_user.is_moderator? ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports flagged by " + @display_name
     @reports = @person.flags.map{|f| f.report}
   end
 
   def comments_by
     @person = Person.find(params[:id])
-    @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
+    @display_name = current_user.is_moderator? ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports commented on by " + @display_name
     @reports = @person.comments.map{|f| f.report}
     render :action => "flagged_by"
   end
 
   def all_by
-    @person = Person.find(params[:id])
-    @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
+    the_person = Person.find(params[:id])
+    @display_name = current_user.is_moderator? ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports flagged or commented on by " + @display_name
     @reports = @person.flags.map{|f| f.report} + @person.comments.map{|f| f.report}
     render :action => "flagged_by"
@@ -104,7 +104,7 @@ class MainController < ApplicationController
   def my_flagged
     @pagetitle = "reviews flagged by you"
     @location = "my_flagged"
-    @reports = Report.joins(:flags).where(flags: { person_id: session[:person_id] }).distinct.paginate :page => params[:page]
+    @reports = Report.joins(:flags).where(flags: { person: current_user }).distinct.paginate :page => params[:page]
     @no_flags = true if @reports.empty?
     render :action => "index"
   end
@@ -127,11 +127,8 @@ class MainController < ApplicationController
   def my_reviews
     @pagetitle = "your reviews"
     @location = "my_reviews"
-    if Person.find(session[:person_id]).most_recent_first_in_my_reviews
-      @reports = Report.where(:person_id => session[:person_id]).paginate(:page => params[:page]).order("id DESC")
-    else
-      @reports = Report.where(:person_id => session[:person_id]).paginate(:page => params[:page])
-    end
+    @reports = Report.where(person: current_user).paginate(:page => params[:page])
+    @reports = @reports.order(id: :desc) if current_user.most_recent_first_in_my_reviews?
     @no_reviews = true if @reports.empty?
     render :action => "index"
   end
@@ -221,7 +218,22 @@ class MainController < ApplicationController
       redirect_to :action => "index" and return
     end
     @pagetitle = "add report"
-    @report = Report.new(params[:report])
+    @report = Report.new(
+      **params[:report].permit(
+        :hit_id,
+        :hit_names,
+        :tos_viol,
+        :how_many_hits,
+        :rejected,
+        :pay_bucket,
+        :fast,
+        :fair,
+        :comm,
+        :description,
+      ),
+      person: current_user,
+      ip: request.remote_ip,
+    )
     if request.post?
       if params[:requester][:amzn_id].blank?
         flash[:notice] = "<div class=\"error\">Please fill in the requester ID.</div>"
@@ -258,15 +270,14 @@ class MainController < ApplicationController
         params[:report][:pay_bucket] = nil
       end
       if @report.save
-        Person.find(session[:person_id]).update_attributes(:latest_review_at => @report.created_at)
+        current_user.update_attributes(:latest_review_at => @report.created_at)
         @report.update_attributes(:amzn_requester_name => params[:requester][:amzn_name])
         r = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
         if !r.nil? and r.amzn_requester_name == "null"
           r.update_attributes(:amzn_requester_name => params[:requester][:amzn_name])
         end
         if r.nil?
-          Requester.new(:amzn_requester_id => params[:requester][:amzn_id], :amzn_requester_name => params[:requester][:amzn_name]).save
-          r = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
+          r = Requester.create(amzn_requester_id: params[:requester][:amzn_id], amzn_requester_name: params[:requester][:amzn_name])
         end
         if @report.update_attributes(:requester_id => r.id, :amzn_requester_id => r.amzn_requester_id)
 
@@ -287,7 +298,7 @@ class MainController < ApplicationController
 
   def add_flag
     @report = Report.find(params[:id])
-    @flag = Flag.new(report: @report, person_id: session[:person_id], comment: params.dig(:flag, :comment))
+    @flag = Flag.new(report: @report, person: current_user, comment: params.dig(:flag, :comment))
     if request.post?
       if params[:flag][:comment].blank?
         @flag.errors[:base] << 'Please add a comment'
@@ -346,7 +357,7 @@ class MainController < ApplicationController
 
   def add_comment
     @report = Report.find(params[:id])
-    @comment = Comment.new(params[:comment])
+    @comment = Comment.new(person: current_user, report: @report, body: params[:comment][:body])
     if request.post?
       if params[:comment][:body].blank?
         flash[:notice] = "<div class=\"error\">Please add a comment.</div>"
@@ -367,16 +378,11 @@ class MainController < ApplicationController
   def edit_report
     @pagetitle = "edit report"
     @report = Report.find(params[:id])
-    if session[:person_id] == @report.person_id or Person.find(session[:person_id]).is_admin or Person.find(session[:person_id]).is_moderator
+    if current_user.id == @report.person_id || current_user.is_admin? || current_user.is_moderator?
       @requester = Requester.find(@report.requester_id)
       if request.post? and @report.update_attributes(params[:report])
-        editor = ""
-        if session[:person_id] == @report.person_id
-          editor = "the author "
-        else
-          editor = "<strong>" + Person.find(session[:person_id]).public_email + "</strong> "
-        end
-        note = "This review was edited by " + editor + Time.now.strftime("%a %b %d %H:%M %Z") + ".<br/>"
+        editor = current_user.id == @report.person_id ? 'the author' : "<strong>#{current_user.public_email}</strong>"
+        note = "This review was edited by #{editor} #{Time.now.strftime('%a %b %d %H:%M %Z')}.<br/>"
         @report.update_attributes(:displayed_notes => note + @report.displayed_notes.to_s)
         @requester.cache_columns
         flash[:notice] = "<div class=\"success\">Report updated.</div>"
@@ -391,15 +397,11 @@ class MainController < ApplicationController
   def edit_comment
     @pagetitle = "edit comment"
     @comment = Comment.find(params[:id])
-    if session[:person_id] == @comment.person_id or Person.find(session[:person_id]).is_admin or Person.find(session[:person_id]).is_moderator
+    if current_user.id == @comment.person_id || current_user.is_admin? || current_user.is_moderator?
       @report = @comment.report
       if request.post? and @comment.update_attributes(params[:comment])
-        if session[:person_id] == @comment.person_id
-          editor = "the author "
-        else
-          editor = "<strong>" + Person.find(session[:person_id]).public_email + " </strong> "
-        end
-        note = "This comment was edited by " + editor + Time.now.strftime("%a %b %d %H:%M %Z") + ".<br/>"
+        editor = current_user.id == @comment.person_id ? 'the author' : "<strong>#{current_user.public_email}</strong>"
+        note = "This comment was edited by #{editor} #{Time.now.strftime('%a %b %d %H:%M %Z')}.<br/>"
         @comment.update_attributes(:displayed_notes => note + @comment.displayed_notes.to_s)
         flash[:notice] = "<div class=\"success\">Comment updated.</div>"
         redirect_to :action => "report", :id => @comment.report_id.to_s
@@ -436,7 +438,7 @@ class MainController < ApplicationController
   end
 
   def add_post
-    @post = Post.new(params[:post])
+    @post = Post.new(**params[:post].permit(:parent_id, :title, :body), person: current_user)
     if request.post? and @post.save
       @post.update_attributes(:slug => @post.title.downcase.gsub(/ /,"_"))
       # insert slug uniqueness checking here if this becomes an issue
@@ -451,7 +453,7 @@ class MainController < ApplicationController
 
   def edit_post
     @post = Post.find(params[:id])
-    if request.post? and @post.update_attributes(params[:post])
+    if request.post? and @post.update_attributes(**params[:post].permit(:title, :body))
       flash[:notice] = "<div class='success'>Post updated.</div>"
       redirect_to :action => "post", :id => @post.id
     end
@@ -464,10 +466,10 @@ class MainController < ApplicationController
   private
 
   def check_for_existing_report
-    if session[:person_id] and Person.find(session[:person_id]) and params[:requester]
+    if params[:requester]
       @requester = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
       unless @requester.nil?
-        @report = Report.find_by_person_id_and_requester_id(session[:person_id], @requester.id)
+        @report = Report.find_by(person: current_user, requester: @requester)
         unless @report.nil? #or session[:person_id] == 1
           flash[:notice] = "<div class=\"success\">You have a review for that requester already. You can update it if you would like.</div>"
           redirect_to :action => "edit_report", :id => @report.id

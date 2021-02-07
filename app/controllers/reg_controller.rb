@@ -1,27 +1,20 @@
 class RegController < ApplicationController
-  before_action :authorize, :only => :settings
+  before_action :authorize, except: %i[register robot login reset_password confirm]
   before_action :check_ip, :only => :register
 
   def close
-    Person.find(session[:person_id]).close
+    current_user.close
     session[:person_id] = nil
     flash[:notice] = "Your account was closed."
     redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def change_email
-    @person = Person.find(session[:person_id])
-    if request.post?
-      @new_email = params[:person][:email]
-
-      @person.email = @new_email
-      @person.email_verified = false
-      if @person.save
-        RegMailer.confirm(@person, confirmation_hash(@person.email)).deliver_now
-        flash[:notice] = "An email has been sent to #{@person.email}. Please click the link in the email to verify your email address."
-        redirect_to :controller => "main", :action => "index", :id => nil
-      end
-    end
+    new_email = params[:user][:email]
+    current_user.update!(email: new_email, email_verified: false, confirmation_token: confirmation_hash(new_email))
+    RegMailer.confirm(current_user, current_user.confirmation_token).deliver_now
+    flash[:notice] = "An email has been sent to #{new_email}. Please click the link in the email to verify your email address."
+    redirect_to controller: 'main', action: 'index', id: nil
   end
 
   def register
@@ -101,115 +94,70 @@ class RegController < ApplicationController
   end
 
   def settings
-    @person = Person.find(session[:person_id])
   end
 
   def set_display_name
-    @person = Person.find(session[:person_id])
-    if @person.display_name and @person.display_name != @person.public_email
+    if current_user.display_name && current_user.display_name != current_user.public_email
       flash[:errors] = {}
       flash[:errors][:display_name] = "You already have a display name."
     elsif Person.find_by_display_name(params[:person][:display_name])
       flash[:errors] = {}
       flash[:errors][:display_name] = "The display name '#{params[:person][:display_name]}' is taken."
     else
-      @person.update_attributes(params[:person])
+      current_user.update!(display_name: params[:person][:display_name])
     end
     redirect_to :controller => "reg", :action => "settings"
   end
 
   def change_location
-    @person = Person.find(session[:person_id])
-    if request.post?
-      @new_country = params[:person][:country]
-      @new_state = params[:person][:state]
-
-      @person.country = @new_country
-      @person.state = @new_state
-
-      if @person.save
-        flash[:notice] = "Your location has been updated."
-      end
-    end
+    current_user.update!(**params[:person].permit(:country, :state))
+    flash[:notice] = 'Your location has been updated.'
     redirect_to :controller => "reg", :action => "settings"
   end
 
   def change_phone
-    @person = Person.find(session[:person_id])
-    if request.post?
-      @new_phone = params[:person][:phone]
-
-      @person.phone = @new_phone
-
-      if @person.save
-        flash[:notice] = "Your phone number has been updated."
-      end
-    end
+    current_user.update!(phone: params[:person][:phone])
+    flash[:notice] = 'Your phone number has been updated.'
     redirect_to :controller => "reg", :action => "settings"
   end
 
+  # This looks weird because it's called from index.haml not from settings
   def change_phone_and_location
-    @person = Person.find(params[:person][:id])
-    if request.post?
-      @new_phone = params[:person][:phone]
-      @new_country = params[:person][:country]
-      @new_state = params[:person][:state]
+    person = Person.find(params[:person][:id])
+    person.update!(params[:person].permit(:phone, :country, :state))
 
-      @person.country = @new_country
-      @person.state = @new_state
-      @person.phone = @new_phone
-
-      if @person.save
-        flash[:notice] = "This person's info has been updated."
-      end
-    end
-    redirect_to :controller => "main", :action => "reports_by", :id => @person.id
+    flash[:notice] = "This person's info has been updated."
+    redirect_to controller: 'main', action: 'reports_by', id: person.id
   end
 
   def change_optin
-    @person = Person.find(session[:person_id])
-    if request.post?
-      @new_optin = params[:person][:optin]
-
-      @person.optin = @new_optin
-
-      if @person.save
-        flash[:notice] = "You have opted #{@new_optin == "1" ? "in to" : "out of"} our Newsletter"
-      end
-    end
+    current_user.update!(optin: params[:person][:optin])
+    flash[:notice] = "You have opted #{current_user.optin? ? 'in to' : 'out of'} our Newsletter"
     redirect_to :controller => "reg", :action => "settings"
   end
 
   def change_password
-    @person = Person.find(session[:person_id])
-    if request.post?
-      if params[:person][:password] != params[:person][:password_confirmation]
-        flash[:errors] = {}
-        flash[:errors][:password] = "Password and confirmation must match."
-        redirect_to :action => "settings"
-      else
-        @new_password = params[:person][:password]
-        @person.password=(@new_password)
-        if @person.save
-          RegMailer.password_change(@person).deliver_now
-          flash[:notice] = "Your password has been changed. A confirmation email has been sent to #{@person.email}."
-          redirect_to :controller => "main", :action => "index", :id => nil
-        end
-      end
+    if params[:person][:password] != params[:person][:password_confirmation]
+      flash[:errors] = { password: 'Password and confirmation must match.' }
+      return redirect_to action: 'settings'
     end
+    current_user.update!(password: params[:person][:password])
+    RegMailer.password_change(current_user).deliver_now
+    flash[:notice] = "Your password has been changed. A confirmation email has been sent to #{current_user.email}."
+    redirect_to controller: 'main', action: 'index', id: nil
   end
 
   def reset_password
     if request.post?
-      @person = Person.find_by_email(params[:person][:email])
-      if @person.nil?
+      person = Person.find_by_email(params[:person][:email])
+      if person.nil?
         flash[:notice] = "Sorry, that email isn't in the database."
       else
-        @new_password = @person.object_id.to_s.gsub(/0/, 'j').gsub(/4/, 'x_')
-        @person.password=(@new_password)
-        if @person.save
-          RegMailer.password_reset(@person, @new_password).deliver_now
-          flash[:notice] = "Your password has been reset. An email containing the new password has been sent to to #{@person.email}."
+        new_password = person.object_id.to_s.gsub(/0/, 'j').gsub(/4/, 'x_')
+        person.password = new_password
+        if person.save
+          RegMailer.password_reset(person, new_password).deliver_now
+          flash[:notice] = "Your password has been reset. An email containing the new password has been sent to to #{person.email}."
           redirect_to :controller => "reg", :action => "login"
         end
       end
@@ -217,10 +165,9 @@ class RegController < ApplicationController
   end
 
   def send_verification_email
-    @person = Person.find(session[:person_id])
-    @person.update_attributes(:confirmation_token => confirmation_hash(@person.email))
-    RegMailer.confirm(@person, @person.confirmation_token).deliver_now
-    flash[:notice] = "An email has been sent to #{@person.email}. Please click the link in the email to verify your email address."
+    current_user.update!(confirmation_token: confirmation_hash(current_user.email))
+    RegMailer.confirm(current_user, current_user.confirmation_token).deliver_now
+    flash[:notice] = "An email has been sent to #{current_user.email}. Please click the link in the email to verify your email address."
     redirect_to :controller => "main", :action => "index", :id => nil
   end
 
@@ -242,35 +189,35 @@ class RegController < ApplicationController
   end
 
   def toggle_my_reviews_order_flag
-    Person.find(session[:person_id]).toggle_my_reviews_order_flag
+    current_user.toggle_my_reviews_order_flag
     redirect_to :controller => "main", :action => "my_reviews"
   end
 
   def toggle_order_by_flag
-    Person.find(session[:person_id]).toggle_order_by_flag
+    current_user.toggle_order_by_flag
     redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def fancy_links_off
-    Person.find(session[:person_id]).update_attributes(:show_fancy_links => nil)
+    current_user.update!(show_fancy_links: nil)
     flash[:notice] = "Extra links turned off."
     redirect_to :action => "settings"
   end
 
   def fancy_links_on
-    Person.find(session[:person_id]).update_attributes(:show_fancy_links => true)
+    current_user.update!(show_fancy_links: true)
     flash[:notice] = "Extra links turned on."
     redirect_to :action => "settings"
   end
 
   def hide_long_reviews_off
-    Person.find(session[:person_id]).update_attributes(:hide_long_reviews => nil)
+    current_user.update!(hide_long_reviews: nil)
     flash[:notice] = "Hide long reviews turned off."
     redirect_to :action => "settings"
   end
 
   def hide_long_reviews_on
-    Person.find(session[:person_id]).update_attributes(:hide_long_reviews => true)
+    current_user.update!(hide_long_reviews: true)
     flash[:notice] = "Hide long reviews turned on."
     redirect_to :action => "settings"
   end

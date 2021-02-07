@@ -1,6 +1,6 @@
 class ModController < ApplicationController
 
-  before_action :authorize, :authorize_as_moderator, :load_person
+  before_action :authorize, :authorize_as_moderator
   layout "moderator"
 
   def utils
@@ -34,7 +34,7 @@ class ModController < ApplicationController
       flash[:error] = "Sorry, there doesn't seem to be an account with that person ID."
       redirect_to :action => "mute_person" and return
     end
-    person_to_mute.update_attributes(:muted => true, :muted_by_person_id => session[:person_id], :muted_until => Time.now + 48.hours)
+    person_to_mute.update!(muted: true, muted_by_person_id: current_user.id, muted_until: Time.now + 48.hours)
     flash[:notice] = "Account with ID #{person_to_mute.id.to_s} muted for 48 hours."
     redirect_to :action => "mute_person"
   end
@@ -70,8 +70,7 @@ class ModController < ApplicationController
     # log:
     t = Time.now.strftime("%H:%M %a %b %d %Y")
     ip = request.remote_ip
-    person_id = session[:person_id]
-    ReviewReassignLogger.info "[#{t}] User #{person_id.to_s} (#{ip}) reassigned review #{report.id.to_s} from requester #{oldreq.id.to_s} to requester #{newreq.id.to_s}"
+    Rails.logger.info "[#{t}] User #{current_user.id} (#{ip}) reassigned review #{report.id} from requester #{oldreq.id} to requester #{newreq.id}"
     flash[:notice] = "Review #{report.id.to_s} assigned to new requester."
     redirect_to :action => "reassign_report_to_different_requester"
   end
@@ -79,7 +78,7 @@ class ModController < ApplicationController
   def lock_thread
     @report = Report.find(params[:id])
     locktime = Time.now + 48.hours
-    @report.update_attributes(:locked_by_person_id => session[:person_id], :locked_until => locktime)
+    @report.update!(locked_by_person_id: current_user.id, locked_until: locktime)
     flash[:notice] = "The thread will be locked until " + locktime.strftime("%a %b %d %Y %H:%M %Z")
     redirect_to :controller => "main", :action => "report", :id => @report.id
   end
@@ -87,7 +86,7 @@ class ModController < ApplicationController
   def edit_rules
     @rv = RulesVersion.new(params[:rules_version])
     if request.post?
-      @rv.edited_by_person_id = session[:person_id]
+      @rv.edited_by_person_id = current_user.id
       @rv.save
       old = RulesVersion.current
       old.update_attributes(:is_current => nil)
@@ -144,7 +143,7 @@ class ModController < ApplicationController
   def flag
     @report = Report.find(params[:id])
     if request.post?
-      @flag = Flag.new(report: @report, person_id: session[:person_id], comment: params[:flag][:comment])
+      @flag = Flag.new(report: @report, person: current_user, comment: params[:flag][:comment])
       if params[:flag][:comment].blank?
         @flag.errors[:base] << 'Please add a comment'
         render partial: 'flag', status: :unprocessable_entity
@@ -173,8 +172,8 @@ class ModController < ApplicationController
   end
 
   def agree_with_flagger
-    Flag.create(:person_id => session[:person_id], :report_id => params[:id], :comment => "agree w/ flagger")
     report = Report.find(params[:id])
+    Flag.create!(person: current_user, report: report, comment: 'agree w/ flagger')
     report.update_flag_data
     report.update_attributes(:flag_count => report.flags.count)
     flash[:notice] = "Added new flag to report #{params[:id]} with text 'agree w/ flagger'."
@@ -182,8 +181,8 @@ class ModController < ApplicationController
   end
 
   def ignore
-    Ignore.create(:person_id => session[:person_id], :report_id => params[:id])
     report = Report.find(params[:id])
+    Ignore.create(person: current_user, report: report)
     report.update_attributes(:ignore_count => report.ignores.count)
     flash[:notice] = "Ignored flags on report #{params[:id]}."
     redirect_to :action => "flagged"
@@ -192,7 +191,7 @@ class ModController < ApplicationController
   def comment
     @report = Report.find(params[:id])
     if request.post?
-      @comment = Comment.new(report: @report, person_id: session[:person_id], body: params[:comment][:body])
+      @comment = Comment.new(report: @report, person: current_user, body: params[:comment][:body])
 
       if @comment.valid?
         ActiveRecord::Base.transaction do
@@ -220,17 +219,22 @@ class ModController < ApplicationController
   end
 
   def do_enable_commenting
-    # remember @person is the logged in person
+    # remember current_user is the logged in person
     p = Person.find(params[:person][:id])
-    p.update_attributes(:can_comment => true, :commenting_enabled_by => @person.id, :commenting_enabled_at => Time.now)
+    p.update!(can_comment: true, commenting_enabled_by: current_user.id, commenting_enabled_at: Time.now)
     flash[:notice] = "Enabled commenting for user #{params[:person][:id]} / #{p.public_email}."
     redirect_to :controller => "mod", :action => "enable_commenting_form"
   end
 
   def do_disable_commenting
-    # remember @person is the logged in person
+    # remember current_user is the logged in person
     p = Person.find(params[:person][:id])
-    p.update_attributes(:can_comment => false, :commenting_request_ignored => true, :commenting_disabled_by => @person.id, :commenting_disabled_at => Time.now)
+    p.update!(
+      can_comment: false,
+      commenting_request_ignored: true,
+      commenting_disabled_by: current_user.id,
+      commenting_disabled_at: Time.now,
+    )
     flash[:notice] = "Disabled commenting for user #{params[:person][:id]} / #{p.public_email}."
     redirect_to :controller => "mod", :action => "disable_commenting_form"
   end
@@ -255,7 +259,7 @@ class ModController < ApplicationController
     @flag = Flag.find(params[:id])
     @requester = @flag.report.requester
     @report = @flag.report
-    @flag.convert_to_comment_by(@flag.person, @person)
+    @flag.convert_to_comment_by(@flag.person, current_user)
     @report.update_attributes(:flag_count => @report.flags.count, :comment_count => @report.comments.count)
     redirect_to :controller => "main", :action => "report", :id => @report.id
   end
@@ -263,22 +267,10 @@ class ModController < ApplicationController
   private
 
   def authorize_as_moderator
-    pid = session[:person_id]
-    if pid.nil?
-      session[:original_uri] = request.url
-      flash[:notice] = "Please log in as a moderator."
-      redirect_to :controller => "reg", :action => "login"
-    else
-      @person = Person.find(pid)
-      unless !@person.nil? and @person.is_moderator
-        session[:original_uri] = request.url
-        flash[:notice] = "Please log in as a moderator."
-        redirect_to :controller => "reg", :action => "login"
-      end
-    end
-  end
+    return true if current_user.is_moderator
 
-  def load_person
-    @person = Person.find(session[:person_id])
+    session[:original_uri] = request.url
+    flash[:notice] = 'Please log in as a moderator.'
+    redirect_to controller: 'reg', action: 'login'
   end
 end

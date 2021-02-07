@@ -12,6 +12,8 @@
 class ForumPersonInfo < ApplicationRecord
   self.table_name = 'forum_person_info'
 
+  belongs_to :person
+
   def up_effect
     self.initialize_karma
     self.karma < 0.0 ? 0.0 : self.karma

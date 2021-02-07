@@ -1,4 +1,4 @@
 Logged in as
-%strong= @person.display_name
+%strong= current_user.display_name
 &nbsp;&nbsp;&nbsp;&nbsp;
 = link_to 'Logout', controller: 'reg', action: 'logout'

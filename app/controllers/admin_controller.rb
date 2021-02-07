@@ -183,12 +183,11 @@ class AdminController < ApplicationController
   private
 
   def authorize_as_admin
-    pid = session[:person_id]
-    unless !pid.nil? and Person.find(pid) and Person.find(pid).is_admin
-      session[:original_uri] = request.url
-      flash[:notice] = "Please log in as an administrator."
-      redirect_to :controller => "reg", :action => "login"
-    end
+    return true if current_user.is_admin?
+
+    session[:original_uri] = request.url
+    flash[:notice] = 'Please log in as an administrator.'
+    redirect_to controller: 'reg', action: 'login'
   end
 
   def condition_date(params)

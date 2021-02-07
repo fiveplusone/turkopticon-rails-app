@@ -7,9 +7,14 @@ class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
 
-  before_action :title, :check_ip
+  before_action :find_user, :check_ip
 
   after_action :set_flash_for_partial_replacer, :set_partial_replacer_response_header
+
+  attr_reader :current_user
+  helper_method :current_user
+
+  private
 
   def title
   end
@@ -22,28 +27,35 @@ class ApplicationController < ActionController::Base
     request.env['HTTP_X_REAL_IP'] || request.env['REMOTE_ADDR']
   end
 
+  def find_user
+    person_id = session[:person_id]
+    return unless person_id
+
+    @current_user = Person.find_by(id: person_id)
+    session[:person_id] = nil unless @current_user
+  end
 
   def authorize
-    unless !session[:person_id].nil? and Person.find(session[:person_id]) and !Person.find(session[:person_id]).is_closed
-      session[:original_uri] = request.url
-      flash[:notice] = "Please log in."
-      redirect_to :controller => "reg", :action => "login"
-    end
+    return true if current_user && !current_user.is_closed
+
+    session[:original_uri] = request.url
+    flash[:notice] = 'Please log in.'
+    redirect_to controller: 'reg', action: 'login'
   end
 
   def verify
-    unless Person.find(session[:person_id]).email_verified
-      session[:original_url] = request.url
-      flash[:notice] = "You must verify your email address before you can post."
-      redirect_to :controller => "main", :action => "index", :id => nil
-    end
+    return true if current_user.email_verified?
+
+    session[:original_url] = request.url
+    flash[:notice] = 'You must verify your email address before you can post.'
+    redirect_to controller: 'main', action: 'index', id: nil
   end
 
   def authorize_as_commenter
-    unless Person.find(session[:person_id]).can_comment
-      flash[:notice] = "Sorry, your account doesn't seem to have commenting and flagging enabled."
-      redirect_to :controller => "main", :action => "index", :id => nil
-    end
+    return true if current_user.can_comment?
+
+    flash[:notice] = "Sorry, your account doesn't seem to have commenting and flagging enabled."
+    redirect_to controller: 'main', action: 'index', id: nil
   end
 
   # See ActionController::RequestForgeryProtection for details

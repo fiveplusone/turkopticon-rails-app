@@ -24,22 +24,22 @@
 .box{:style => "max-width: 500px"}
   %p
     %strong Display Name
-  - if @person.display_name.nil? or @person.display_name == @person.truncated_email
+  - if current_user.display_name.nil? or current_user.display_name == current_user.truncated_email
     %p We're now encouraging display names to make it easier to get to know fellow reviewers on the site while keeping your email address private. We have been displaying a shortened version of your email address with your reviews. Choose the name you would like displayed instead.
     %p
       %strong Once you select a display name, you cannot change it.
     %p
       %strong Parentheses will not be displayed.
-    = form_for :person, :url => {:controller => "reg", :action => "set_display_name"} do |f|
+    = form_for current_user, as: :person, :url => {:controller => "reg", :action => "set_display_name"} do |f|
       %p
-        = f.text_field "display_name", :value => @person.public_email, :onfocus => "if(this.value == '#{@person.public_email}') { this.value = ''; }"
+        = f.text_field "display_name", :value => current_user.public_email, :onfocus => "if(this.value == '#{current_user.public_email}') { this.value = ''; }"
         - if flash[:errors] and flash[:errors][:display_name]
           %span.error= flash[:errors][:display_name]
       %p= submit_tag "Save this as my display name"
   - else
     %p
       Your display name:
-      %strong= @person.display_name.gsub(/[()]/,"")
+      %strong= current_user.display_name.gsub(/[()]/,"")
     %p
       We're now encouraging display names to make it easier to get to know fellow reviewers on the site while keeping your email address private. This name is shown with your reviews. You can't change the name associated with your account once you've set it. This helps us prevent people from impersonating each other. (Sad to say, it does happen.)
 
@@ -48,10 +48,10 @@
 .box{:style => "max-width: 500px"}
   %p
     %strong Password
-  = form_for :person, :url => {:controller => "reg", :action => "change_password"} do |f|
+  = form_for current_user, as: :person, :url => {:controller => "reg", :action => "change_password"} do |f|
     %p
       Change password for
-      %strong= @person.email
+      %strong= current_user.email
       to
       %br/
       = f.password_field "password"
@@ -71,13 +71,13 @@
     %strong Location
   %p Your location helps us connect you to resources for workers based on the state and country you in. This can also help us fundraise to keep Turkopticon free. Some funders target particular states and countries.
 
-  = form_for :person, :url => {:controller => "reg", :action => "change_location"} do |f|
+  = form_for current_user, as: :person, :url => {:controller => "reg", :action => "change_location"} do |f|
     %p
       .label Country
-      = f.select 'country', Person.country_list, :include_blank => 'Select a Country', :selected => @person.country
+      = f.select 'country', Person.country_list, :include_blank => 'Select a Country', :selected => current_user.country
     %p
       .label{:id => 'state_label'} State
-      = f.select 'state', Person.us_states_list, :include_blank => 'Select a State', :selected => @person.state
+      = f.select 'state', Person.us_states_list, :include_blank => 'Select a State', :selected => current_user.state
     %p
       = submit_tag "Save as my Location"
 
@@ -88,7 +88,7 @@
     %strong Phone Number
   %p We rarely — but sometimes — need to call community members to help them troubleshoot or to ask for your input.
 
-  = form_for :person, :url => {:controller => "reg", :action => "change_phone"} do |f|
+  = form_for current_user, as: :person, :url => {:controller => "reg", :action => "change_phone"} do |f|
     %p
       .label Phone
       = f.text_field 'phone', :size => 20
@@ -102,22 +102,22 @@
     %strong Newsletter Opt-in
   %p Stay up to date with whats going on with Turkopticon and receive our monthly newsletter.
 
-  = form_for :person, :url => {:controller => "reg", :action => "change_optin"} do |f|
+  = form_for current_user, as: :person, :url => {:controller => "reg", :action => "change_optin"} do |f|
     %p
       .label Newsletter
       = f.check_box 'optin'
     %p
       = submit_tag "Save my Opt in Status"
 
-
-- if session[:person_id] == 4343
+/ TODO: WTF???????
+- if current_user.id == 4343
   .box{:style => "max-width: 500px"}
     %p
       %strong Change email address
-    = form_for :person, :url => {:controller => "reg", :action => "change_email"} do |f|
+    = form_for current_user, as: :person, :url => {:controller => "reg", :action => "change_email"} do |f|
       %p
         Change email from
-        %strong= Person.find(session[:person_id]).email
+        %strong= current_user.email
         to
         = f.text_field :email
       %p
@@ -130,7 +130,7 @@
     %strong Extra links
     %p "Extra links" adds comment and flag icons next to everyone's names. If you click on them, you will go to a page where you can see all the comments or flags ever posted by that person. Extra links are on by default.
     %p
-      - if Person.find(session[:person_id]).show_fancy_links or Person.find(session[:person_id]).show_fancy_links.nil?
+      - if current_user.show_fancy_links or current_user.show_fancy_links.nil?
         Extra links are <strong>on</strong>.&nbsp;
         = link_to "Turn extra links off", :controller => "reg", :action => "fancy_links_off"
       - else
@@ -144,7 +144,7 @@
     %strong Hide long reviews
     %p "Hide long reviews" cuts off reviews after 800 characters and replaces the "left over" characters with the link to a page where you can see the whole review on its own.
     %p
-      - if Person.find(session[:person_id]).hide_long_reviews
+      - if current_user.hide_long_reviews
         Hide long reviews is <strong>on</strong>.&nbsp;
         = link_to "Turn hide long reviews off", :controller => "reg", :action => "hide_long_reviews_off"
       - else

@@ -12,4 +12,5 @@
 #  ip         :string(255)
 #
 class ReputationStatement < ApplicationRecord
+  belongs_to :person
 end

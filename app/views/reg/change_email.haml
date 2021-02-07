@@ -1,9 +1,9 @@
-= error_messages_for :person
+= error_messages_for current_user
 
-= form_for :person do |f|
+= form_for current_user, as: :person do |f|
   %p
     Change email for
-    %strong= Person.find(session[:person_id]).email
+    %strong= current_user.email
     to
     %br/
     = f.text_field :email

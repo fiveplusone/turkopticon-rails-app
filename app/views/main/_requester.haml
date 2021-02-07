@@ -30,7 +30,7 @@
         %br/
   %td{:align => "center", :valign => "top"}= requester.reports.length
   %td{:valign => "top"}
-    - if session[:person_id] and Person.find(session[:person_id])
-      - r = Report.find_by_person_id_and_requester_id(session[:person_id], requester.id)
+    - if current_user
+      - r = Report.find_by(person: current_user, requester: requester)
       - unless r.nil?
         = link_to "update my report", :controller => "main", :action => "edit_report", :id => r.id

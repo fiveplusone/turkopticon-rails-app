@@ -14,6 +14,7 @@
 #
 
 class Post < ApplicationRecord
+  belongs_to :person
 
   def children
     Post.where(:parent_id => id)
@@ -24,7 +25,7 @@ class Post < ApplicationRecord
   end
 
   def author_email
-    Person.find(person_id).public_email
+    person.public_email
   end
 
 end

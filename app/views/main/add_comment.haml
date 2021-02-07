@@ -17,8 +17,6 @@
 - else
   = error_messages_for :comment
   = form_tag(:action => 'add_comment') do
-    = hidden_field :comment, :report_id, :value => @report.id
-    = hidden_field :comment, :person_id, :value => session[:person_id]
     %br/
     = text_area :comment, :body, :style => "width: 100%; height: 10em"
     %p

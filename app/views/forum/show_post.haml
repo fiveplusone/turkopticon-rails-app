@@ -13,7 +13,7 @@
         %td.post_meta
           / = link_to post.author_name, :action => "posts_by", :id => post.person_id
           %strong= post.author_name
-          - if @person.is_admin
+          - if current_user.is_admin?
             %br/
             Karma: #{ForumPersonInfo.find_by_person_id(post.person_id).karma.to_digits}
           %br/
@@ -51,20 +51,20 @@
             - inappro.each do |i|
               = Person.find(i.person_id).public_email
               &nbsp;
-      - if @person.is_admin and post.score
+      - if current_user.is_admin? and post.score
         %tr
           %td{:class => "post_actions", :colspan => "2"}
             Post score: #{post.score.to_digits}
       %tr
         %td{:class => "post_actions", :colspan => "2"}
-          - if post.person_id == @person.id
+          - if post.person_id == current_user.id
             = link_to "Edit", :action => "edit_post", :id => post.id
             &nbsp;|&nbsp;
             = link_to "Delete", { :action => "delete_post", :id => post.id }, :confirm => "Are you sure?"
             &nbsp;|&nbsp;
-          = link_to "Reply", :action => "new_post", :forum_post => {:parent_id => post.id, :thread_head => post.thread_head}
-          - unless post.person_id == @person.id
-            - rs = ReputationStatement.find_by_post_id_and_person_id(post.id, @person.id)
+          = link_to "Reply", :action => "new_post", :forum_post => {:parent_id => post.id}
+          - unless post.person_id == current_user.id
+            - rs = ReputationStatement.find_by(post_id: post.id, person: current_user)
             - if rs
               - if rs.statement == "thanks"
                 &nbsp;|&nbsp;
