@@ -113,11 +113,6 @@ class AdminController < ApplicationController
     @ordered_flaggers = top_flaggers.sort_by{|k, v| v}.reverse
   end
 
-  def enable_commenting
-    Person.find(params[:id]).update_attributes(:can_comment => true)
-    render :text => "Enabled commenting for user #{params[:id]}."
-  end
-
   def decline_commenting_request
     person = Person.find(params[:id])
     person.update_attributes(:commenting_requested => nil, :commenting_requested_at => nil)
@@ -134,11 +129,6 @@ class AdminController < ApplicationController
     ids = params[:ids].split(",")
     ids.each{|i| Person.find(i).update_attributes(:commenting_requested => nil, :commenting_requested_at => nil)}
     render :text => "Declined commenting requests for users #{ids.join(", ")}."
-  end
-
-  def disable_commenting
-    Person.find(params[:id]).update_attributes(:can_comment => false)
-    render :text => "Disabled commenting for user #{params[:id]}."
   end
 
   def fetch_contacts_csv
