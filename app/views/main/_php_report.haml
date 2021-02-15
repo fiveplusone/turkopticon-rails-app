@@ -10,7 +10,7 @@
     %br/
     = link_to "HIT Group &raquo;".html_safe, "https://www.mturk.com/mturk/searchbar?requesterId=#{req_id}&selectedSearchType=hitgroups"
     %br/
-    = link_to "Review Requester &raquo;".html_safe, "/report?requester[amzn_id]=#{req_id}&requester[amzn_name]=#{req_name}"
+    = link_to "Review Requester &raquo;".html_safe, controller: 'main', action: 'add_report', requester: { amzn_id: req_id, amzn_name: req_name }
   %td{:valign => "top"}
     - for attr in ["fair", "fast", "pay", "comm"]
       .smlabel attr:
@@ -21,7 +21,7 @@
         = Requester.attr_vis(report[attr])
       %br/
     - if report["tos_viol"] == 1
-      .tosviol violates mturk terms of service &nbsp;&nbsp;&nbsp; <a href="/help#tos">[?]</a>
+      .tosviol violates mturk terms of service &nbsp;&nbsp;&nbsp; #{link_to '[?]', controller: 'main', action: 'help', anchor: 'tos'}
   %td{:valign => "top"}
     - if !report["text"].nil?
       = h(report["text"].censor).gsub("\r\n","<br />").html_safe

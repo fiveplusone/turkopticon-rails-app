@@ -1,5 +1,5 @@
 .lightbox{:id => @report.id}
-  = form_tag("/mod/flag/#{@report.id}", class: 'partial-replacer-remote', data: { partial_replacer_invalid: "#report-#{@report.id} .placeholder", partial_replacer_success: "#report-#{@report.id}" }) do
+  = form_tag({ controller: 'mod', action: 'flag', id: @report.id }, class: 'partial-replacer-remote', data: { partial_replacer_invalid: "#report-#{@report.id} .placeholder", partial_replacer_success: "#report-#{@report.id}" }) do
     = error_messages_for :flag
     = radio_button :flag, :comment, "profanity"
     profanity

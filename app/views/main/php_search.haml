@@ -20,7 +20,7 @@
       %table#reports{ :cellpadding => "5", :cellspacing => "0" }
         %tr.th
           %th AMT Requester
-          %th.rating Rating <span style="font-weight: normal;">[<a href="/main/help#attr">info</a>]</span>
+          %th.rating Rating <span style="font-weight: normal;">[#{link_to 'info', controller: 'main', action: 'help', anchor: 'attr'}]</span>
           %th Description
         - require 'time'
         = render :partial => 'main/php_report', :collection => @reports

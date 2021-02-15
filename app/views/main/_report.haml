@@ -30,7 +30,7 @@
       - if report.requester.nil?
         [The requester object does not exist]
       - else
-        = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, "/report?requester[amzn_id]=#{report.requester.amzn_requester_id}&requester[amzn_name]=#{report.requester.amzn_requester_name}"
+        = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, controller: 'main', action: 'add_report', requester: { amzn_id: report.requester.amzn_requester_id, amzn_name: report.requester.amzn_requester_name }
     %td{:valign => "top", :class => "attrs"}
       - for a in Report.requester_attrs
         .smlabel #{a}:
@@ -62,7 +62,7 @@
         .tosviol
           violates mturk terms of service
           &nbsp;&nbsp;&nbsp;&nbsp;
-          %a{:href => "/help#tos"} [?]
+          = link_to '[?]', controller: 'main', action: 'help', anchor: 'tos'
     %td{:valign => "top"}
       %div{:class => "report_body"}
         - if !report.hit_names.blank?

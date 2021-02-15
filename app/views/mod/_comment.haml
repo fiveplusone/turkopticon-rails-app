@@ -1,5 +1,5 @@
 .lightbox{:id => @report.id}
-  = form_tag("/mod/comment/#{@report.id}", class: 'partial-replacer-remote', data: { partial_replacer_invalid: "#report-#{@report.id} .placeholder", partial_replacer_success: "#report-#{@report.id}" }) do
+  = form_tag({ controller: 'mod', action: 'comment', id: @report.id }, class: 'partial-replacer-remote', data: { partial_replacer_invalid: "#report-#{@report.id} .placeholder", partial_replacer_success: "#report-#{@report.id}" }) do
     = error_messages_for :comment
     = text_area :comment, :body
     %br/

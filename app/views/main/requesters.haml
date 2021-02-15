@@ -8,17 +8,17 @@
       %tr.th
         %th{:width => "25%"}
           AMT Req Name &amp; ID
-          %a{:href => "/requesters"}&&#9650;
-          %a{:href => "/requesters?order=amzn_requester_name DESC"}&&#9660;
+          = link_to '&#9650;'.html_safe, controller: 'main', action: 'requesters'
+          = link_to '&#9660;'.html_safe, controller: 'main', action: 'requesters', order: 'amzn_requester_name DESC'
         %th{:width => "30%"}
-          Ratings <span style="font-weight: normal;">[<a href="/main/help#attr" style="color: #fff; text-decoration: underline;">?</a>]</span> (averaged)
-          %a{:href => "/requesters?order=ava ASC"}&&#9650;
-          %a{:href => "/requesters?order=ava DESC"}&&#9660;
+          Ratings <span style="font-weight: normal;">[#{link_to '?', { controller: 'main', action: 'help', anchor: 'attr' }, style: 'color: #fff; text-decoration: underline;'}]</span> (averaged)
+          = link_to '&#9650;'.html_safe, controller: 'main', action: 'requesters', order: 'ava ASC'
+          = link_to '&#9660;'.html_safe, controller: 'main', action: 'requesters', order: 'ava DESC'
         %th{:width => "28%"} &nbsp;
         %th{:width => "18%"}
           \# Reports
-          %a{:href => "/requesters?order=nrs ASC"}&&#9650;
-          %a{:href => "/requesters?order=nrs DESC"}&&#9660;
+          = link_to '&#9650;'.html_safe, controller: 'main', action: 'requesters', order: 'nrs ASC'
+          = link_to '&#9660;'.html_safe, controller: 'main', action: 'requesters', order: 'nrs DESC'
         %th
       = render :partial => 'main/requester', :collection => @requesters
   .pagination= will_paginate @requesters

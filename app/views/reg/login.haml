@@ -1,4 +1,4 @@
-To report a requester, we need you to be logged in. If you've never signed into Turkopticon before, <a href="/register">you can create a login.</a>
+To report a requester, we need you to be logged in. If you've never signed into Turkopticon before, #{link_to 'you can create a login.', controller: 'reg', action: 'register'}
 
 .box{:style => "margin-top:15px; width: 50%; float: left;"}
   = form_tag do
@@ -15,7 +15,7 @@ To report a requester, we need you to be logged in. If you've never signed into 
       = link_to "Forgot your password?", :action => "reset_password"
 
     %p
-      Don't have a Turkopticon password? <a href="/register">Create a login</a>
+      Don't have a Turkopticon password? #{link_to 'Create a login', controller: 'reg', action: 'register'}
 
     %p
       .button= submit_tag 'Login'

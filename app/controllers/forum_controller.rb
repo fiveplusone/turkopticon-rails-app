@@ -17,7 +17,7 @@ class ForumController < ApplicationController
     @post_version = ForumPostVersion.new(params[:forum_post_version])
     if request.post?
       unless @person.email_verified
-        flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you must verify your email address before you can post. You may <a href='/reg/send_verification_email'>send the verification email again</a>."
+        flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you must verify your email address before you can post. You may #{helpers.link_to 'send the verification email again', controller: 'reg', action: 'send_verification_email'}."
         render :action => "new_post" and return
       end
       if params[:forum_post_version][:body].blank?
@@ -48,7 +48,7 @@ class ForumController < ApplicationController
 
         flash[:notice] = "Post saved."
         rid = @post.parent_id.nil? ? @post.id : @post.thread_head
-        redirect_to "/forum/show_post/#{rid}\#post-#{@post.id}"
+        redirect_to controller: 'forum', action: 'show_post', id: rid, anchor: "post-#{@post.id}"
       end
     end
   end
@@ -62,7 +62,7 @@ class ForumController < ApplicationController
     else
       # user is requesting a post in the middle of a thread
       # redirect to thread head with anchor
-      redirect_to "/forum/show_post/#{post.thread_head}\#post-#{params[:id]}"
+      redirect_to controller: 'forum', action: 'show_post', id: post.thread_head, anchor: "post-#{post.id}"
     end
   end
 
