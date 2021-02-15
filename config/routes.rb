@@ -89,6 +89,7 @@ Rails.application.routes.draw do
   match 'mod/flag/:id', :controller => "mod", :action => "flag", :via => %i[get post]
   match 'mod/agree_with_flagger/:id', :controller => "mod", :action => "agree_with_flagger", :via => :get
   match 'mod/ignore/:id', :controller => "mod", :action => "ignore", :via => :get
+  match 'mod/comment/:id', :controller => "mod", :action => "comment", :via => %i[get post]
   match 'mod/disable_commenting/:id', :controller => "mod", :action => "disable_commenting", :via => :get
   match 'mod/enable_commenting/:id', :controller => "mod", :action => "enable_commenting", :via => :get
   match 'mod/convert_other_persons_flag/:id', :controller => "mod", :action => "convert_other_persons_flag", :via => :get
