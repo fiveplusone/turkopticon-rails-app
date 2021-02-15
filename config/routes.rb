@@ -11,7 +11,6 @@ Rails.application.routes.draw do
   match 'report', :controller => "main", :action => "add_report", :via => :all
   match 'edit/:id', :controller => "main", :action => "edit_report", :via => :all
   match 'reports', :controller => "main", :action => "index", :via => :all
-  match 'edit/:id', :controller => "main", :action => "edit_report", :via => :all
   match 'info', :controller => "main", :action => "info", :via => :all
   match 'blog', :controller => "main", :action => "blog", :via => :all
   match 'help', :controller => "main", :action => "help", :via => :all
@@ -90,8 +89,6 @@ Rails.application.routes.draw do
   match 'mod/agree_with_flagger/:id', :controller => "mod", :action => "agree_with_flagger", :via => :get
   match 'mod/ignore/:id', :controller => "mod", :action => "ignore", :via => :get
   match 'mod/comment/:id', :controller => "mod", :action => "comment", :via => %i[get post]
-  match 'mod/disable_commenting/:id', :controller => "mod", :action => "disable_commenting", :via => :get
-  match 'mod/enable_commenting/:id', :controller => "mod", :action => "enable_commenting", :via => :get
   match 'mod/convert_other_persons_flag/:id', :controller => "mod", :action => "convert_other_persons_flag", :via => :get
 
   match 'reg/close', :controller => "reg", :action => "close", via: :get
