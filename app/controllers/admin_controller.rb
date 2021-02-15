@@ -3,15 +3,6 @@ class AdminController < ApplicationController
   before_action :authorize, :authorize_as_admin, :except => [:review_commenting_requests]
   layout nil
 
-  def authorize_as_admin
-    pid = session[:person_id]
-    unless !pid.nil? and Person.find(pid) and Person.find(pid).is_admin
-      session[:original_uri] = request.url
-      flash[:notice] = "Please log in as an administrator."
-      redirect_to :controller => "reg", :action => "login"
-    end
-  end
-
   def index
   end
 
@@ -200,6 +191,15 @@ class AdminController < ApplicationController
   end
 
   private
+
+  def authorize_as_admin
+    pid = session[:person_id]
+    unless !pid.nil? and Person.find(pid) and Person.find(pid).is_admin
+      session[:original_uri] = request.url
+      flash[:notice] = "Please log in as an administrator."
+      redirect_to :controller => "reg", :action => "login"
+    end
+  end
 
   def condition_date(params)
     year = params[:"filter(1i)"] != "" ? params[:"filter(1i)"].to_f : 2008
