@@ -8,5 +8,5 @@
       #login_nav= render :partial => 'login_nav'
       #title= link_to "turkopticon-discuss", :controller => "forum", :action => "index"
     - if flash[:notice]
-      #notice= flash[:notice]
+      #notice= flash[:notice].html_safe
     #main= yield

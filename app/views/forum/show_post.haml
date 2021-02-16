@@ -1,7 +1,7 @@
 %p
-  = link_to "&laquo; Back to thread list".html_safe, :action => "index"
+  = link_to '&laquo; Back to thread list'.html_safe, controller: 'forum', :action => "index"
   &nbsp;&nbsp;&nbsp;&nbsp;
-  = link_to "About this	forum (rules, etc.)", :action => "about"
+  = link_to 'About this	forum (rules, etc.)', controller: 'forum', action: 'about'
 
 - for post in @posts
   %a{:name => "post-#{post.id}"}

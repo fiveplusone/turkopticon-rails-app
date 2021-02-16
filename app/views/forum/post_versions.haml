@@ -1,4 +1,4 @@
-%p= link_to "&laquo; Back to thread", :action => "show_post", :id => @post.id
+%p= link_to '&laquo; Back to thread'.html_safe, controller: 'forum', action: 'show_post', id: @post.id
 
 - for version in @versions
   #post{:class => cycle('odd', '')}
