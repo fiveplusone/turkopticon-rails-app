@@ -210,6 +210,7 @@ class ModController < ApplicationController
     end
   end
 
+  # TODO: make this work from the UI
   def disable_commenting
     # remember @person is the logged in person
     p = Person.find(params[:id])
@@ -217,6 +218,7 @@ class ModController < ApplicationController
     render :text => "Disabled commenting for user #{params[:id]} / #{p.public_email}."
   end
 
+  # TODO: make this work from the UI
   def enable_commenting
     # remember @person is the logged in person
     p = Person.find(params[:id])
