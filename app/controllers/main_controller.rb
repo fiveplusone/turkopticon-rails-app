@@ -279,7 +279,7 @@ class MainController < ApplicationController
 
   def add_flag
     @report = Report.find(params[:id])
-    @flag = Flag.new(report: @report, person_id: session[:person_id], comment: params[:flag][:comment])
+    @flag = Flag.new(report: @report, person_id: session[:person_id], comment: params.dig(:flag, :comment))
     if request.post?
       if params[:flag][:comment].blank?
         @flag.errors[:base] << 'Please add a comment'
