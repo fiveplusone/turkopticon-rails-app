@@ -11,21 +11,6 @@
 
 ActiveRecord::Schema.define(:version => 20201220191728) do
 
-  create_table "Dolores_A2IR8TEVONNLZO", :id => false, :force => true do |t|
-    t.integer  "id",            :default => 0, :null => false
-    t.integer  "person_id"
-    t.integer  "requester_id"
-    t.string   "hit_id"
-    t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "how_many_hits"
-    t.integer  "fair"
-    t.integer  "fast"
-    t.integer  "pay"
-    t.integer  "comm"
-  end
-
   create_table "aliases", :force => true do |t|
     t.integer  "requester_id"
     t.integer  "formerly"
@@ -43,15 +28,6 @@ ActiveRecord::Schema.define(:version => 20201220191728) do
     t.text     "displayed_notes"
   end
 
-  create_table "comments_purgatory", :id => false, :force => true do |t|
-    t.integer  "id",         :default => 0, :null => false
-    t.integer  "report_id"
-    t.integer  "person_id"
-    t.text     "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "flags", :force => true do |t|
     t.integer  "report_id"
     t.integer  "person_id"
@@ -59,15 +35,6 @@ ActiveRecord::Schema.define(:version => 20201220191728) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "displayed_notes"
-  end
-
-  create_table "flags_purgatory", :id => false, :force => true do |t|
-    t.integer  "id",         :default => 0, :null => false
-    t.integer  "report_id"
-    t.integer  "person_id"
-    t.text     "comment"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "follows", :force => true do |t|
@@ -160,9 +127,12 @@ ActiveRecord::Schema.define(:version => 20201220191728) do
     t.string   "country"
     t.string   "state"
     t.string   "phone"
-    t.boolean  "optin"
+    t.boolean  "optin",                           :default => false
     t.datetime "latest_review_at"
     t.datetime "latest_login_at"
+    t.boolean  "muted"
+    t.datetime "muted_until"
+    t.integer  "muted_by_person_id"
     t.string   "confirmation_token"
   end
 
@@ -175,18 +145,6 @@ ActiveRecord::Schema.define(:version => 20201220191728) do
     t.datetime "updated_at"
     t.string   "slug"
     t.boolean  "is_sticky"
-  end
-
-  create_table "report_outliers", :id => false, :force => true do |t|
-    t.integer "person_id"
-    t.integer "requester_id"
-    t.integer "fair"
-  end
-
-  create_table "report_statistics", :id => false, :force => true do |t|
-    t.integer "person_id"
-    t.decimal "mu",                      :precision => 14, :scale => 4
-    t.float   "sigma",     :limit => 26
   end
 
   create_table "reports", :force => true do |t|
@@ -221,21 +179,7 @@ ActiveRecord::Schema.define(:version => 20201220191728) do
   end
 
   add_index "reports", ["amzn_requester_name"], :name => "reports_requester_name_index"
-
-  create_table "reports_purgatory", :id => false, :force => true do |t|
-    t.integer  "id",            :default => 0, :null => false
-    t.integer  "person_id"
-    t.integer  "requester_id"
-    t.string   "hit_id"
-    t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "how_many_hits"
-    t.integer  "fair"
-    t.integer  "fast"
-    t.integer  "pay"
-    t.integer  "comm"
-  end
+  add_index "reports", ["requester_id"], :name => "requester_id_index"
 
   create_table "reputation_statements", :force => true do |t|
     t.integer  "person_id"
@@ -245,18 +189,6 @@ ActiveRecord::Schema.define(:version => 20201220191728) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "ip"
-  end
-
-  create_table "requester_outliers", :id => false, :force => true do |t|
-    t.integer "person_id"
-    t.integer "requester_id"
-    t.integer "fair"
-  end
-
-  create_table "requester_statistics", :id => false, :force => true do |t|
-    t.integer "requester_id"
-    t.decimal "mu",                         :precision => 14, :scale => 4
-    t.float   "sigma",        :limit => 26
   end
 
   create_table "requesters", :force => true do |t|
@@ -278,6 +210,8 @@ ActiveRecord::Schema.define(:version => 20201220191728) do
     t.integer  "all_pending_or_didnt_do_hits"
     t.string   "av_pay_bucket"
   end
+
+  add_index "requesters", ["amzn_requester_id"], :name => "amzn_requester_id_index"
 
   create_table "rules_versions", :force => true do |t|
     t.integer  "parent_id"
