@@ -12,6 +12,7 @@
    Last updated 28 Aug 2020 10:06 PDT
    Last updated 28 Aug 2020 11:58 PDT
    Last updated 11 Sep 2020 11:08 PDT
+   Last updated 07 Feb 2021 12:17 PST
    ===============
    This file requires the package php5-mysqlnd!
    Before using this API, run:
@@ -21,17 +22,17 @@
    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
   if ($recent = apc_fetch($_SERVER['REMOTE_ADDR'])) {
-  $denylog = '../../php_api/log/multi-attrs.php.denied.log';
+    $denylog = '../../php_api/log/multi-attrs.php.denied.log';
     $time = date('Y-m-d H:i:s');
     $ip = $_SERVER['REMOTE_ADDR'];
-    file_put_contents($denylog, "[API v2020.09.11.1108] ", FILE_APPEND);
-    file_put_contents($denylog, "[" . $time . "] ", FILE_APPEND);
-    file_put_contents($denylog, "[" . $ip . "] ", FILE_APPEND);
-    file_put_contents($denylog, "REJECTED (LAST REQUEST LESS THAN 60 SEC AGO) \n", FILE_APPEND);
+    $out = "[API v2021.02.07.1271] " . "[" . $time . "] [" . $ip . "] ";
+    $out = $out . "REJECTED (LAST REQUEST LESS THAN 1 SEC AGO) \n";
+    file_put_contents($denylog, $out, FILE_APPEND);
     /* file_put_contents($denylog, $_GET["ids"] . "\n", FILE_APPEND); */
-    die("Please don't call the API more than once per 60 seconds.");
+    http_response_code(403);
+    die("Please don't call the API more than once per 1 second.");
   } else {
-    apc_add($_SERVER['REMOTE_ADDR'], "1", 60);
+    apc_add($_SERVER['REMOTE_ADDR'], "1", 1);
   }
 
   header("Access-Control-Allow-Origin: *");
