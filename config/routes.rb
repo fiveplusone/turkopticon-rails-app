@@ -37,8 +37,10 @@ Rails.application.routes.draw do
   match 'attrs/:id', :controller => "main", :action => "requester_attrs", :via => :all
   match 'attrsv2/:id', :controller => "main", :action => "requester_attrs_v2", :via => :all
   match 'confirm/:hash', :controller => "reg", :action => "confirm", :via => :all
-  match 'enable_commenting/:id', :controller => "mod", :action => "enable_commenting", :via => :all
-  match 'disable_commenting/:id', :controller => "mod", :action => "disable_commenting", :via => :all
+  match 'enable_commenting_form', :controller => "mod", :action => "enable_commenting_form", :via => :get
+  match 'disable_commenting_form', :controller => "mod", :action => "disable_commenting", :via => :get
+  match 'do_enable_commenting', :controller => "mod", :action => "do_enable_commenting", :via => :post
+  match 'do_disable_commenting', :controller => "mod", :action => "do_disable_commenting", :via => :post
 
   match 'admin/dashboard', :controller => "admin", :action => "dashboard", :via => :get
   match 'admin/decline_commenting_request/:id', :controller => "admin", :action => "decline_commenting_request", :via => :get

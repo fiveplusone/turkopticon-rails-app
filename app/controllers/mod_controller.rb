@@ -210,22 +210,6 @@ class ModController < ApplicationController
     end
   end
 
-  # TODO: make this work from the UI
-  def disable_commenting
-    # remember @person is the logged in person
-    p = Person.find(params[:id])
-    p.update_attributes(:can_comment => false, :commenting_request_ignored => true, :commenting_disabled_by => @person.id, :commenting_disabled_at => Time.now)
-    render :text => "Disabled commenting for user #{params[:id]} / #{p.public_email}."
-  end
-
-  # TODO: make this work from the UI
-  def enable_commenting
-    # remember @person is the logged in person
-    p = Person.find(params[:id])
-    p.update_attributes(:can_comment => true, :commenting_enabled_by => @person.id, :commenting_enabled_at => Time.now)
-    render :text => "Enabled commenting for user #{params[:id]} / #{p.public_email}."
-  end
-
   def enable_commenting_form
   end
 
