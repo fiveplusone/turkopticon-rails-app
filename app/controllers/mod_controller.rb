@@ -229,6 +229,28 @@ class ModController < ApplicationController
     render :text => "Enabled commenting for user #{params[:id]} / #{p.public_email}."
   end
 
+  def enable_commenting_form
+  end
+
+  def disable_commenting_form
+  end
+
+  def do_enable_commenting
+    # remember @person is the logged in person
+    p = Person.find(params[:id])
+    p.update_attributes(:can_comment => true, :commenting_enabled_by => @person.id, :commenting_enabled_at => Time.now)
+    flash[:notice] = "Enabled commenting for user #{params[:id]} / #{p.public_email}."
+    redirect_to :controller => "mod", :action => "enable_commenting_form"
+  end
+
+  def do_disable_commenting
+    # remember @person is the logged in person
+    p = Person.find(params[:id])
+    p.update_attributes(:can_comment => false, :commenting_request_ignored => true, :commenting_disabled_by => @person.id, :commenting_disabled_at => Time.now)
+    flash[:notice] = "Disabled commenting for user #{params[:id]} / #{p.public_email}."
+    redirect_to :controller => "mod", :action => "disable_commenting_form"
+  end
+
   def convert_other_persons_flag
     @flag = Flag.find(params[:id])
     @requester = @flag.report.requester
