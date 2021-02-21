@@ -1,4 +1,4 @@
-B%strong Disable commenting for user ID
+%strong Disable commenting for user ID
 
 %p
   Note: The Turkopticon "person ID" or "user ID" is the number at the end of the URL when you click on their username; for example:
@@ -10,7 +10,7 @@ B%strong Disable commenting for user ID
 
 - form_tag(:action => "do_disable_commenting") do
   .label Turkopticon person/user ID
-  = text_field :id, :value => ""
+  = text_field :person, :id, :value => ""
   %p
     Please double check that the ID is correct before clicking the button below.
   = submit_tag "Disable commenting for this user now"

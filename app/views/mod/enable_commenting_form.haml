@@ -10,7 +10,7 @@
 
 - form_tag(:action => "do_enable_commenting") do
   .label Turkopticon person/user ID
-  = text_field :id, :value => ""
+  = text_field :person, :id, :value => ""
   %p
     Please double check that the ID is correct before clicking the button below.
   = submit_tag "Enable commenting for this user now"
