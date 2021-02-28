@@ -216,6 +216,9 @@ class ModController < ApplicationController
   def disable_commenting_form
   end
 
+  def change_requester_name_form
+  end
+
   def do_enable_commenting
     # remember @person is the logged in person
     p = Person.find(params[:person][:id])
@@ -230,6 +233,22 @@ class ModController < ApplicationController
     p.update_attributes(:can_comment => false, :commenting_request_ignored => true, :commenting_disabled_by => @person.id, :commenting_disabled_at => Time.now)
     flash[:notice] = "Disabled commenting for user #{params[:person][:id]} / #{p.public_email}."
     redirect_to :controller => "mod", :action => "disable_commenting_form"
+  end
+
+  def do_change_requester_name
+    requesters = Requester.where(amzn_requester_id: params[:requester][:amzn_requester_id])
+    if requesters.size > 0
+      requesters.each do |requester| 
+        requester.update(amzn_requester_name: params[:requester][:new_name])
+        requester.reports.each do |report|
+          report.update(amzn_requester_name: params[:requester][:new_name])
+        end
+      end
+      flash[:notice] = "Changed the name of #{params[:requester][:amzn_requester_id]} to #{params[:requester][:new_name]}."
+    else
+      flash[:error] = "Couldn't find any Requester with ID #{params[:requester][:amzn_requester_id]}"
+    end
+    redirect_to :controller => "mod", :action => "change_requester_name_form"
   end
 
   def convert_other_persons_flag

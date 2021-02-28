@@ -8,7 +8,7 @@
 %p
   In the URL above, 1234567 is the "Turkopticon person ID" or "user ID". It is completely separate and independent from the MTurk worker or requester ID.
 
-- form_tag(:action => "do_enable_commenting") do
+= form_tag(:action => "do_enable_commenting") do
   .label Turkopticon person/user ID
   = text_field :person, :id, :value => ""
   %p

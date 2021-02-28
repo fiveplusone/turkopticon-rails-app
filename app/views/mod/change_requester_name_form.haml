@@ -1,0 +1,19 @@
+%strong Change name of a requester
+
+%p
+  Enter the MTurk Requester ID of the requester whose name you want to change. It will look like: 
+%blockquote
+  A12Y34X567890Z
+
+= form_tag(:action => "do_change_requester_name") do
+  %p
+    .label MTurk Requester ID
+    = text_field :requester, :amzn_requester_id, :value => ""
+  %p
+    .label New Name
+    = text_field :requester, :new_name, :value => ""
+
+  %p
+    Please double check that the ID is correct before clicking the button below.
+  = submit_tag "Change Name of Requester Now"
+

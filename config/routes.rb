@@ -32,15 +32,17 @@ Rails.application.routes.draw do
   match 'all_by/:id', :controller => "main", :action => "all_by", :via => :all
   match 'reviews_by_one_page/:id', :controller => "main", :action => "reports_by_one_page", :via => :all
   match 'admin', :controller => "admin", :action => "index", :via => :all
-  match ':id', :controller => "main", :action => "index", :via => :all
   match 'get_report/:id', :controller => "main", :action => "report", :via => :all
   match 'attrs/:id', :controller => "main", :action => "requester_attrs", :via => :all
   match 'attrsv2/:id', :controller => "main", :action => "requester_attrs_v2", :via => :all
   match 'confirm/:hash', :controller => "reg", :action => "confirm", :via => :all
   match 'enable_commenting_form', :controller => "mod", :action => "enable_commenting_form", :via => :get
-  match 'disable_commenting_form', :controller => "mod", :action => "disable_commenting", :via => :get
   match 'do_enable_commenting', :controller => "mod", :action => "do_enable_commenting", :via => :post
+  match 'disable_commenting_form', :controller => "mod", :action => "disable_commenting_form", :via => :get
   match 'do_disable_commenting', :controller => "mod", :action => "do_disable_commenting", :via => :post
+  match 'change_requester_name_form', :controller => "mod", :action => "change_requester_name_form", :via => :get
+  match 'do_change_requester_name', :controller => "mod", :action => "do_change_requester_name", :via => :post
+  match ':id', :controller => "main", :action => "index", :via => :all
 
   match 'admin/dashboard', :controller => "admin", :action => "dashboard", :via => :get
   match 'admin/decline_commenting_request/:id', :controller => "admin", :action => "decline_commenting_request", :via => :get
