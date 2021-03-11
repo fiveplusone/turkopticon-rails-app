@@ -97,7 +97,7 @@
     %p
       %strong Please briefly describe your experience with this requester:
       %br/
-      = text_area :report, :description
+      = text_area :report, :description, :style => "width: 100%; height: 10em"
     = hidden_field :report, :person_id, :value => session[:person_id]
     = hidden_field :report, :ip, :value => request.remote_ip
     - if params[:url] and params[:url][:url]
