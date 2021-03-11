@@ -6,10 +6,7 @@ TO2_API_KEY
 backups/
 config/credentials.yml.enc
 config/my.cnf
-config/initializers/app_url.rb
-config/initializers/cookie_verification_secret.rb
-config/initializers/log.rb
-config/initializers/session_store.rb
+config/initializers/*.local.rb
 index/
 php_api/dbconn.php
 php_api/mysqli-dbconn.php
