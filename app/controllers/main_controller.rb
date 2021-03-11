@@ -372,7 +372,7 @@ class MainController < ApplicationController
         @report.update_attributes(:displayed_notes => note + @report.displayed_notes.to_s)
         @requester.cache_columns
         flash[:notice] = "<div class=\"success\">Report updated.</div>"
-        redirect_to :action => "index"
+        redirect_to :action => "index", :id => nil
       end
     else
       flash[:notice] = "<div class=\"error\">You can't edit that review.</div>"
