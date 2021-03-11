@@ -125,6 +125,5 @@
   } else {
     echo "To get data, call this URL with an 'ids' parameter. The 'ids' parameter must be a string made up of requester IDs separated by commas.";
   }
-  mysqli_close($conn);
 ?>
 
