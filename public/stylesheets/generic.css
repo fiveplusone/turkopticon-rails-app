@@ -3,15 +3,25 @@ html {
   font-size: 0.8em;
   margin: 0;
   padding: 0;
-  background: #ffd597;
   color: #523100;
   line-height: 1.1em;
+}
+
+html.development {
+  background: #a497ff;
+}
+
+html.production {
+  background: #ffd597;
 }
 
 body {
   width: 800px;
   margin: 0;
   padding: 10px;
+}
+
+.production body {
   background: url(/images/bg_tile.png) repeat-y;
 }
 
@@ -35,7 +45,13 @@ a:hover {
 
 #header {
   height: 98px;
-  width: 593px;
+}
+
+.development #header {
+  background: url(/images/title-development.png) no-repeat;
+}
+
+.production #header {
   background: url(/images/title.png) no-repeat;
 }
 

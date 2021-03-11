@@ -1,5 +1,5 @@
 !!!
-%html{html_attrs('en-US')}
+%html{html_attrs('en-US'), class: Rails.env}
   %head
     %title= @pagetitle.nil? ? "turkopticon." : "turkopticon : " + @pagetitle
     = stylesheet_link_tag 'generic'
