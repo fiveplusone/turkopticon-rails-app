@@ -15,8 +15,8 @@ class RegMailer < ApplicationMailer
 
   def password_reset(person, new_password)
     @subject      = '[turkopticon] Your password was reset'
-    @new_password = new_password
     @recipients   = person.email
+    @new_password = new_password
     @from         = 'turkopticon@ucsd.edu'
     @bcc          = 'turkopticon.maint@gmail.com' if @@send_bcc
     @sent_on      = Time.now
@@ -24,9 +24,8 @@ class RegMailer < ApplicationMailer
     mail(from: @from, to: @recipients, bcc: @bcc, subject: @subject)
   end
 
-  def password_change(person, new_password)
+  def password_change(person)
     @subject      = '[turkopticon] Your password was changed'
-    @new_password = new_password
     @recipients   = person.email
     @from         = 'turkopticon@ucsd.edu'
     @bcc          = 'turkopticon.maint@gmail.com' if @@send_bcc

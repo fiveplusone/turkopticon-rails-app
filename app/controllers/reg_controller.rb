@@ -191,7 +191,7 @@ class RegController < ApplicationController
         @new_password = params[:person][:password]
         @person.password=(@new_password)
         if @person.save
-          RegMailer.password_change(@person, @new_password).deliver_now
+          RegMailer.password_change(@person).deliver_now
           flash[:notice] = "Your password has been changed. A confirmation email has been sent to #{@person.email}."
           redirect_to :controller => "main", :action => "index", :id => nil
         end
