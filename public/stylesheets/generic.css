@@ -3,16 +3,26 @@ html {
   font-size: 0.8em;
   margin: 0;
   padding: 0;
-  background: #ffd597;
   color: #523100;
   line-height: 1.1em;
+}
+
+html.development {
+  background: #a497ff;
+}
+
+html.production {
+  background: #ffd597;
 }
 
 body {
   width: 800px;
   margin: 0;
   padding: 10px;
-  background: url(https://turkopticon.ucsd.edu/images/bg_tile.png) repeat-y;
+}
+
+.production body {
+  background: url(/images/bg_tile.png) repeat-y;
 }
 
 a {
@@ -35,8 +45,14 @@ a:hover {
 
 #header {
   height: 98px;
-  width: 593px;
-  background: url(https://turkopticon.ucsd.edu/images/title.png) no-repeat;
+}
+
+.development #header {
+  background: url(/images/title-development.png) no-repeat;
+}
+
+.production #header {
+  background: url(/images/title.png) no-repeat;
 }
 
 #header:hover {
@@ -106,7 +122,7 @@ a:hover {
   padding: 0;
 }
 
-.success, .error {
+.success, .error, .notice, .warning {
   font-size: 1.2em;
 }
 
@@ -128,6 +144,18 @@ a:hover {
 .error {
   padding: 5px;
   margin: 10px 0;
+  color: #f00;
+  font-weight: bold;
+}
+
+.notice {
+  padding: 5px;
+  color: #000;
+  font-weight: bold;
+}
+
+.warning {
+  padding: 5px;
   color: #f00;
   font-weight: bold;
 }
@@ -187,13 +215,13 @@ td {
   border-bottom: 1px solid #C59957;
 }
 
-.fieldWithErrors {
+.field_with_errors {
   border: 1px solid #f00;
   width: 17.5em;
   margin: -1.5em 0 0 10.5em;
 }
 
-.errorExplanation > h2 {
+.error_explanation > h2 {
   display: none;
 }
 
@@ -226,7 +254,7 @@ td {
         margin-bottom: 15px;
 }
 
-#side-b { 
+#side-b {
 	margin-top: -10px;
 	float: left;
 	width: 553px;
@@ -521,12 +549,5 @@ del {
   margin: 10px;
   line-height: 1.5;
   font-size: 1.2em;
-  padding: 8px 30px; 
-}
-
-#installinfo {
-  font-size: 1.4em;
-  border: 5px solid #523100;
-  padding: 10px;
-  margin-bottom: 40px;
+  padding: 8px 30px;
 }

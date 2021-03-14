@@ -1,29 +1,25 @@
 class RegController < ApplicationController
-
-  @@email_log = '/home/ssilberman/src/turkopticon/log/email_changes.txt'
-  before_filter :authorize, :only => :settings
-  before_filter :check_ip, :only => :register
+  before_action :authorize, :only => :settings
+  before_action :check_ip, :only => :register
 
   def close
     Person.find(session[:person_id]).close
     session[:person_id] = nil
     flash[:notice] = "Your account was closed."
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def change_email
     @person = Person.find(session[:person_id])
     if request.post?
       @new_email = params[:person][:email]
-      log_line = '%i) from "%s" to "%s" at %s' % [ @person.id, @person.email, @new_email, Time.now.strftime("%b %d %Y %H:%M") ]
-      File.open( @@email_log, 'a' ) { |ff| ff.write(log_line+"\n") }
 
       @person.email = @new_email
       @person.email_verified = false
       if @person.save
-        RegMailer::deliver_confirm( @person, confirmation_hash(@person.email) )
+        RegMailer.confirm(@person, confirmation_hash(@person.email)).deliver_now
         flash[:notice] = "An email has been sent to #{@person.email}. Please click the link in the email to verify your email address."
-        redirect_to :controller => "main", :action => "index"
+        redirect_to :controller => "main", :action => "index", :id => nil
       end
     end
   end
@@ -35,17 +31,12 @@ class RegController < ApplicationController
       if params[:robot_check][:check] == "1"
         if @person.save
           @person.update_attributes(:display_name => @person.public_email, :show_fancy_links => true, :confirmation_token => confirmation_hash(@person.email))
-          RegMailer::deliver_confirm(@person, @person.confirmation_token)
+          RegMailer.confirm(@person, @person.confirmation_token).deliver_now
           session[:person_id] = @person.id
           flash[:notice] = "Thanks for signing up. We've sent an email to #{@person.email}. Please click the link in the email to verify your address."
 
-          # create account on turkopticon.info
-          apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
-          user = "{" + @person.to_json.split("{")[2].split("}")[0] + "}".gsub("'","\'")
-          result = `echo '#{user}' | curl -d @- 'https://api.turkopticon.info/accounts?key=#{apikey}' --header 'Content-Type: application/json'`
-          File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT CREATION API WITH: #{user}\nRESULT: #{result}\n\n") }
-          redirect_to :controller => "main", :action => "index"
-        end 
+          redirect_to :controller => "main", :action => "index", :id => nil
+        end
       else
         redirect_to :action => "robot"
       end
@@ -63,10 +54,9 @@ class RegController < ApplicationController
         # session[:person_id] = cookies[:person_id].to_i
         # person = Person.find(session[:person_id])
         #if person
-          #IPLogger.info "[#{Time.now}] #{person.email} logged in with cookie from #{request.remote_ip}"
           #uri = session[:original_uri]
           #session[:original_uri] = nil
-          #redirect_to uri || {:controller => "main", :action => "index"}
+          #redirect_to uri || {:controller => "main", :action => "index", :id => nil}
         #else
           #render :text => "invalid cookie"
         #end
@@ -79,24 +69,21 @@ class RegController < ApplicationController
         person.update_attributes(:latest_login_at => DateTime.now)
         if person.id == 1
           cookies['person_id'] = "1" # {:value => person.id.to_s, :expires => Time.now + 3600 * 24 * 30}
-          IPLogger.info "    cookies['person_id']: #{cookies['person_id']}"
         end
 
         t = Time.now.strftime("%H:%M %a %b %d %Y")
         ip = request.remote_ip
-        IPLogger.info "[#{t}] #{person.email} logged in from #{ip}"
-        # IPLogger.info "    cookies: #{cookies.inspect}"
         logger.info "[#{t}] #{person.email} logged in from #{ip}"
 
         # Check if email is verified
         if person.email_verified.nil? or person.email_verified == false
           flash[:notice] = "Please verify your current email address, or update your email address, to continue using Turkopticon."
-          RegMailer::deliver_confirm( person, confirmation_hash(person.email) )
+          RegMailer.confirm(person, confirmation_hash(person.email)).deliver_now
           redirect_to :action => "change_email"
-        else      
+        else
           uri = session[:original_uri]
           session[:original_uri] = nil
-          redirect_to (uri || {:controller => "main", :action => "index"})
+          redirect_to (uri || {:controller => "main", :action => "index", :id => nil})
         end
       else
         flash[:notice] = "Sorry, invalid username/password combination."
@@ -110,9 +97,9 @@ class RegController < ApplicationController
     session[:person_id] = nil
     #cookies.delete :person_id
     flash[:notice] = "Logged out."
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
-  
+
   def settings
     @person = Person.find(session[:person_id])
   end
@@ -204,9 +191,9 @@ class RegController < ApplicationController
         @new_password = params[:person][:password]
         @person.password=(@new_password)
         if @person.save
-          RegMailer::deliver_password_change(@person, @new_password)
+          RegMailer.password_change(@person).deliver_now
           flash[:notice] = "Your password has been changed. A confirmation email has been sent to #{@person.email}."
-          redirect_to :controller => "main", :action => "index"
+          redirect_to :controller => "main", :action => "index", :id => nil
         end
       end
     end
@@ -219,12 +206,12 @@ class RegController < ApplicationController
         flash[:notice] = "Sorry, that email isn't in the database."
       else
         @new_password = @person.object_id.to_s.gsub(/0/, 'j').gsub(/4/, 'x_')
-      	@person.password=(@new_password)
+        @person.password=(@new_password)
         if @person.save
-      	  RegMailer::deliver_password_reset(@person, @new_password)
-      	  flash[:notice] = "Your password has been reset. An email containing the new password has been sent to to #{@person.email}."
-      	  redirect_to :controller => "reg", :action => "login"
-      	end
+          RegMailer.password_reset(@person, @new_password).deliver_now
+          flash[:notice] = "Your password has been reset. An email containing the new password has been sent to to #{@person.email}."
+          redirect_to :controller => "reg", :action => "login"
+        end
       end
     end
   end
@@ -232,17 +219,17 @@ class RegController < ApplicationController
   def send_verification_email
     @person = Person.find(session[:person_id])
     @person.update_attributes(:confirmation_token => confirmation_hash(@person.email))
-    RegMailer::deliver_confirm(@person, @person.confirmation_token)
+    RegMailer.confirm(@person, @person.confirmation_token).deliver_now
     flash[:notice] = "An email has been sent to #{@person.email}. Please click the link in the email to verify your email address."
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def confirm
-    person = Person.find_by_confirmation_token(params[:hash])
+    person = Person.find_by(confirmation_token: params[:hash])
 
     if person.nil? 
       flash[:notice] = "Sorry, we don't recognize that confirmation link. Please re-send confirmation email."
-      redirect_to :controller => "main", :action => "index" and return
+      redirect_to :controller => "main", :action => "index", :id => nil and return
     end
 
     person.update_attributes(:email_verified => true, :confirmation_token => nil)
@@ -251,13 +238,7 @@ class RegController < ApplicationController
     end
     flash[:notice] = "Thank you for confirming your email address."
 
-    # activate on turkopticon.info
-    email = person.email
-    apikey = File.read("/home/ssilberman/src/turkopticon/TO2_API_KEY")
-    result = `curl 'https://api.turkopticon.info/accounts/activate?email=#{email}&key=#{apikey}'`
-    File.open("/home/ssilberman/src/turkopticon/log/to2_reg.log", 'a') { |f| f.write(Time.now.strftime("%a %b %d %Y %H:%M:%S") + "\nCALLING TO2 ACCT ACTIVATION API ENDPOINT WITH: #{email}\nRESULT: #{result}\n\n") }
-
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def toggle_my_reviews_order_flag
@@ -267,7 +248,7 @@ class RegController < ApplicationController
 
   def toggle_order_by_flag
     Person.find(session[:person_id]).toggle_order_by_flag
-    redirect_to :controller => "main", :action => "index"
+    redirect_to :controller => "main", :action => "index", :id => nil
   end
 
   def fancy_links_off

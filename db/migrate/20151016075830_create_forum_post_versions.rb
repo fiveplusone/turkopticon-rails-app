@@ -1,4 +1,4 @@
-class CreateForumPostVersions < ActiveRecord::Migration
+class CreateForumPostVersions < ActiveRecord::Migration[4.2]
   def self.up
     create_table :forum_post_versions do |t|
       t.integer :post_id

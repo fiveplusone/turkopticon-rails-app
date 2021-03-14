@@ -1,4 +1,26 @@
-class ForumPost < ActiveRecord::Base
+# == Schema Information
+#
+# Table name: forum_posts
+#
+#  id                      :integer          not null, primary key
+#  person_id               :integer
+#  parent_id               :integer
+#  slug                    :string(255)
+#  sticky                  :boolean
+#  score                   :decimal(5, 2)
+#  replies                 :integer
+#  views                   :integer
+#  last_reply_display_name :string(255)
+#  last_reply_person_id    :string(255)
+#  last_reply_id           :integer
+#  last_reply_at           :datetime
+#  created_at              :datetime
+#  updated_at              :datetime
+#  thread_head             :integer
+#  deleted                 :boolean
+#  initial_score           :decimal(5, 2)
+#
+class ForumPost < ApplicationRecord
 
   def current_version
     ForumPostVersion.find_by_post_id_and_next(self.id, nil)
@@ -38,7 +60,7 @@ class ForumPost < ActiveRecord::Base
   end
 
   def versions
-    ForumPostVersion.find_all_by_post_id(self.id)
+    ForumPostVersion.where(:post_id => self.id)
   end
 
   def version_count
@@ -46,7 +68,7 @@ class ForumPost < ActiveRecord::Base
   end
 
   def reply_posts
-    ForumPost.find_all_by_thread_head(self.id)
+    ForumPost.where(:thread_head => self.id)
   end
 
   def undelete
@@ -57,11 +79,11 @@ class ForumPost < ActiveRecord::Base
   end
 
   def thanks
-    ReputationStatement.find_all_by_post_id_and_statement(self.id, "thanks")
+    ReputationStatement.where(:post_id=> self.id, :statement => "thanks")
   end
 
   def inappropriate
-    ReputationStatement.find_all_by_post_id_and_statement(self.id, "inappropriate")
+    ReputationStatement.where(:post_id => self.id, :statement => "inappropriate")
   end
 
   def has_inappro

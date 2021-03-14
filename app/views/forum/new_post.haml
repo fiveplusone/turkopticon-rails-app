@@ -1,4 +1,4 @@
-- form_tag(:action => 'new_post') do
+= form_tag(:action => 'new_post') do
   - if params[:forum_post].nil? or params[:forum_post][:parent_id].nil?
     %p
       %strong Title
@@ -10,7 +10,7 @@
       = link_to ForumPost.find(params[:forum_post][:thread_head]).title, :action => "show_post", :id => params[:forum_post][:thread_head]
     %p.reply
       - parent = ForumPost.find(params[:forum_post][:parent_id])
-      = parent.body.gsub(/\n/,"<br/>")
+      = parent.body.gsub(/\n/,"<br/>").html_safe
       %div.reply_meta
         From
         = link_to parent.author_name, :action => "posts_by", :id => parent.person_id

@@ -3,11 +3,13 @@
 
 class ApplicationController < ActionController::Base
 
-  layout "generic", :except => [:blogfeed]
+  layout "generic"
 
   helper :all # include all helpers, all the time
 
-  before_filter :title, :check_ip
+  before_action :title, :check_ip
+
+  after_action :set_flash_for_partial_replacer, :set_partial_replacer_response_header
 
   def title
   end
@@ -23,7 +25,7 @@ class ApplicationController < ActionController::Base
 
   def authorize
     unless !session[:person_id].nil? and Person.find(session[:person_id]) and !Person.find(session[:person_id]).is_closed
-      session[:original_uri] = request.request_uri
+      session[:original_uri] = request.url
       flash[:notice] = "Please log in."
       redirect_to :controller => "reg", :action => "login"
     end
@@ -31,25 +33,44 @@ class ApplicationController < ActionController::Base
 
   def verify
     unless Person.find(session[:person_id]).email_verified
-      session[:original_url] = request.request_uri
+      session[:original_url] = request.url
       flash[:notice] = "You must verify your email address before you can post."
-      redirect_to :controller => "main", :action => "index"
+      redirect_to :controller => "main", :action => "index", :id => nil
     end
   end
 
   def authorize_as_commenter
     unless Person.find(session[:person_id]).can_comment
       flash[:notice] = "Sorry, your account doesn't seem to have commenting and flagging enabled."
-      redirect_to :controller => "main", :action => "index"
+      redirect_to :controller => "main", :action => "index", :id => nil
     end
   end
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => 'e7c170de675a44f45aebb8b8108212a5'
-  
-  # See ActionController::Base for details 
+
+  # See ActionController::Base for details
   # Uncomment this to filter the contents of submitted sensitive data parameters
-  # from your application log (in this case, all fields with names like "password"). 
+  # from your application log (in this case, all fields with names like "password").
   # filter_parameter_logging :password
+
+  def set_flash_for_partial_replacer
+    return unless partial_replacer_remote?
+
+    response.headers['X-Partial-Replacer-Flash-Success'] = flash[:success] if flash[:success]
+    response.headers['X-Partial-Replacer-Flash-Notice'] = flash[:notice] if flash[:notice]
+    response.headers['X-Partial-Replacer-Flash-Warning'] = flash[:warning] if flash[:warning]
+    response.headers['X-Partial-Replacer-Flash-Error'] = flash[:error] if flash[:error]
+  end
+
+  def set_partial_replacer_response_header
+    return unless partial_replacer_remote?
+
+    response.headers['X-Partial-Replacer-Remote'] = true
+  end
+
+  def partial_replacer_remote?
+    request.headers['X-Partial-Replacer-Remote'].present?
+  end
 end

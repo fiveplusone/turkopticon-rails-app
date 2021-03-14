@@ -14,7 +14,7 @@
   }
 
 %h1 Turkopticon Administration
-%a{ :href => '/', :title => "return home"} Return to Turkopticon>>
+= link_to '&laquo;Return to Turkopticon'.html_safe, { controller: 'main', action: 'info' }, title: 'return home'
 
 %h2 Read
 
@@ -24,7 +24,7 @@
 
 %h2 Get Contacts List
 
-- form_tag(:action => 'fetch_contacts_csv') do
+= form_tag(:action => 'fetch_contacts_csv') do
 
   %p Leave blank, and it will not be used to filter.
 

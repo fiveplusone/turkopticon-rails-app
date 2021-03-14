@@ -1,4 +1,4 @@
-= javascript_include_tag :defaults
+= javascript_include_tag :partial_replacer
 
 :javascript
   function addText(id, text) {
@@ -7,20 +7,20 @@
 
 - if @result_count == 0
   %p
-    = "No search results for <span style='color: #f00; font-weight: bold;'>" + h(params[:query]) + "</span> :("
+    No search results for #{content_tag :span, h(params[:query]), style: 'color: #f00; font-weight: bold;'} :(
 - else
   - if @requester_count > 1
     %p#advisory.red.bigger
-      = "Your search returned reviews of " + @requester_count.to_s + " different requesters. If you are leaving a review, please be sure to review the right one! Thank you!"
+      Your search returned reviews of #{@requester_count} different requesters. If you are leaving a review, please be sure to review the right one! Thank you!
   %p
-    = "Search results for <span style='color: #f00; font-weight: bold;'>" + h(params[:query]) + "</span>:"
+    Search results for #{content_tag :span, h(params[:query]), style: 'color: #f00; font-weight: bold;'}:
 
   .box
     %p
       %table#reports{ :cellpadding => "5", :cellspacing => "0" }
         %tr.th
           %th AMT Requester
-          %th.rating Rating <span style="font-weight: normal;">[<a href="/main/help#attr">info</a>]</span>
+          %th.rating Rating <span style="font-weight: normal;">[#{link_to 'info', controller: 'main', action: 'help', anchor: 'attr'}]</span>
           %th Description
         - require 'time'
         = render :partial => 'main/php_report', :collection => @reports
@@ -28,9 +28,7 @@
       = @result_count
       results
     %p
-      = "Query time: " + "%2.5f" % @query_time
-    %p
-      = "Render time: " + "%2.5f" % @render_time
+      Query time: #{'%2.5f' % @query_time}
     - if @no_flags
       %p You haven't flagged any reviews.
     - if @no_reviews

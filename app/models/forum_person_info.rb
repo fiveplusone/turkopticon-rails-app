@@ -1,5 +1,16 @@
-class ForumPersonInfo < ActiveRecord::Base
-  self.set_table_name "forum_person_info"
+# == Schema Information
+#
+# Table name: forum_person_info
+#
+#  id                       :integer          not null, primary key
+#  person_id                :integer
+#  karma                    :decimal(5, 2)
+#  mail_forum_notifications :string(255)
+#  created_at               :datetime
+#  updated_at               :datetime
+#
+class ForumPersonInfo < ApplicationRecord
+  self.table_name = 'forum_person_info'
 
   def up_effect
     self.initialize_karma

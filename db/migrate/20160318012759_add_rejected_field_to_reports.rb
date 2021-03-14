@@ -1,4 +1,4 @@
-class AddRejectedFieldToReports < ActiveRecord::Migration
+class AddRejectedFieldToReports < ActiveRecord::Migration[4.2]
   def self.up
     add_column :reports, :rejected, :string
   end

@@ -1,4 +1,4 @@
-class AddCommentingRequestIgnoredToPeople < ActiveRecord::Migration
+class AddCommentingRequestIgnoredToPeople < ActiveRecord::Migration[4.2]
   def self.up
     add_column :people, :commenting_request_ignored, :boolean
   end

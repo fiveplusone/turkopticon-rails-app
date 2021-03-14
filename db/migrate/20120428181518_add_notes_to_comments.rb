@@ -1,4 +1,4 @@
-class AddNotesToComments < ActiveRecord::Migration
+class AddNotesToComments < ActiveRecord::Migration[4.2]
   def self.up
     add_column :comments, :notes, :text
   end

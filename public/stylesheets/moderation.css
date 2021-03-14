@@ -16,7 +16,7 @@ a:hover {
 
 body {
   max-width: 1000px;
-  margin: 10px auto;
+  margin: 30px;
 }
 
 #header {
@@ -131,14 +131,14 @@ th {
   padding-top: 0;
 }
 
-#notice {
+#notice, .notice {
   background-color: #03af00;
   font-weight: bold;
   color: #fff;
   padding: 8px;
 }
 
-#error {
+#error, .error {
   background-color: #a00;
   font-weight: bold;
   color: #fff;

@@ -1,4 +1,4 @@
-class AddIpToReports < ActiveRecord::Migration
+class AddIpToReports < ActiveRecord::Migration[4.2]
   def self.up
     add_column :reports, :ip, :string
   end

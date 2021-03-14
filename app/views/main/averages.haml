@@ -6,13 +6,9 @@
         %th{:width => "25%"}
           AMT Req Name &amp; ID&nbsp;
         %th{:width => "30%"}
-          Ratings <span style="font-weight: normal;">[<a href="/main/help#attr" style="color: #fff; text-decoration: underline;">?</a>]</span> (averaged)
-          %a{:href => "/requesters?order=ava ASC"}&&#9650;
-          %a{:href => "/requesters?order=ava DESC"}&&#9660;
+          Ratings <span style="font-weight: normal;">[#{link_to '?', { controller: 'main', action: 'help', anchor: 'attr' }, style: 'color: #fff; text-decoration: underline;'}]</span> (averaged)
         %th{:width => "28%"} &nbsp;
         %th{:width => "18%"}
           \# Reports
-          %a{:href => "/requesters?order=nrs ASC"}&&#9650;
-          %a{:href => "/requesters?order=nrs DESC"}&&#9660;
         %th
       = render :partial => 'main/requester', :collection => @requesters

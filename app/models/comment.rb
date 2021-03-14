@@ -1,19 +1,18 @@
 # == Schema Information
-# Schema version: 20140610175616
 #
 # Table name: comments
 #
-#  id              :integer(4)      not null, primary key
-#  report_id       :integer(4)
-#  person_id       :integer(4)
-#  body            :text
+#  id              :integer          not null, primary key
+#  report_id       :integer
+#  person_id       :integer
+#  body            :text(65535)
 #  created_at      :datetime
 #  updated_at      :datetime
-#  notes           :text
-#  displayed_notes :text
+#  notes           :text(65535)
+#  displayed_notes :text(65535)
 #
 
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
 
   belongs_to :person
   belongs_to :report

@@ -1,18 +1,13 @@
 class ForumController < ApplicationController
 
-  before_filter :authorize, :load_person
-  before_filter :authorize_as_admin, :only => [:karma]
-  before_filter :authorize_as_commenter, :only => [:new_post, :edit_post, :delete_post, :thank, :inappropriate, :unthank, :uninappropriate]
+  before_action :authorize, :load_person
+  before_action :authorize_as_commenter, :only => [:new_post, :edit_post, :delete_post, :thank, :inappropriate, :unthank, :uninappropriate]
 
   layout "forum"
 
-  def load_person
-    @person = Person.find(session[:person_id])
-  end
-
   def index
     # get all posts with null parent ID
-    @posts = ForumPost.find_all_by_parent_id_and_deleted(nil, nil).delete_if{|p| p.score <= -5.0 and p.has_inappro}.sort_by{|p| p.last_reply_at || p.updated_at}.reverse
+    @posts = ForumPost.where(:parent_id => nil, :deleted => nil).reject{|p| p.score <= -5.0 and p.has_inappro}.sort_by{|p| p.last_reply_at || p.updated_at}.reverse
   end
 
   def new_post
@@ -22,7 +17,7 @@ class ForumController < ApplicationController
     @post_version = ForumPostVersion.new(params[:forum_post_version])
     if request.post?
       unless @person.email_verified
-        flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you must verify your email address before you can post. You may <a href='/reg/send_verification_email'>send the verification email again</a>."
+        flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you must verify your email address before you can post. You may #{helpers.link_to 'send the verification email again', controller: 'reg', action: 'send_verification_email'}."
         render :action => "new_post" and return
       end
       if params[:forum_post_version][:body].blank?
@@ -53,7 +48,7 @@ class ForumController < ApplicationController
 
         flash[:notice] = "Post saved."
         rid = @post.parent_id.nil? ? @post.id : @post.thread_head
-        redirect_to "/forum/show_post/#{rid}\#post-#{@post.id}"
+        redirect_to controller: 'forum', action: 'show_post', id: rid, anchor: "post-#{@post.id}"
       end
     end
   end
@@ -67,7 +62,7 @@ class ForumController < ApplicationController
     else
       # user is requesting a post in the middle of a thread
       # redirect to thread head with anchor
-      redirect_to "/forum/show_post/#{post.thread_head}\#post-#{params[:id]}"
+      redirect_to controller: 'forum', action: 'show_post', id: post.thread_head, anchor: "post-#{post.id}"
     end
   end
 
@@ -124,7 +119,7 @@ class ForumController < ApplicationController
 
     # if this person has already thanked three times in the last 24 hours,
     # tell them they have to wait and send them back
-    if ReputationStatement.all(:conditions => ["person_id = ? and statement = 'thanks' and created_at > ?", person_id, Time.now - 1.day]).count >= 3
+    if ReputationStatement.where("person_id = ? and statement = 'thanks' and created_at > ?", person_id, Time.now - 1.day).count >= 3
       flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you can only leave 3 \"thanks\" per day, and you have already left 3 in the last 24 hours. You can delete one or wait."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
@@ -175,7 +170,7 @@ class ForumController < ApplicationController
 
     # if this person has already left 1 'inappropriate' flag in the last 24 hours
     # tell them they have to wait and send them back
-    if ReputationStatement.all(:conditions => ["person_id = ? and statement = 'inappropriate' and created_at > ?", person_id, Time.now - 1.day]).count >= 1
+    if ReputationStatement.where("person_id = ? and statement = 'inappropriate' and created_at > ?", person_id, Time.now - 1.day).count >= 1
       flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you can only leave 1 \"inappropriate\" flag per day, and you have already left one in the last 24 hours. You can delete it or wait."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
@@ -228,20 +223,17 @@ class ForumController < ApplicationController
   end
 
   def posts_by
-    @posts = ForumPost.find_all_by_person_id(params[:id])
+    @posts = ForumPost.where(:person_id => params[:id])
     render :action => "show_post"  # this is currently a confusing view; should be improved before making public
   end
 
-  def settings
+  def about
   end
 
-  def authorize_as_admin
-    pid = session[:person_id]
-    unless !pid.nil? and Person.find(pid) and Person.find(pid).is_admin
-      session[:original_uri] = request.request_uri
-      flash[:notice] = "Please log in as an administrator."
-      redirect_to :controller => "reg", :action => "login"
-    end
+  private
+
+  def load_person
+    @person = Person.find(session[:person_id])
   end
 
   def authorize_as_commenter
@@ -251,11 +243,4 @@ class ForumController < ApplicationController
       redirect_to :action => "index"
     end
   end
-
-  def about
-  end
-
-  def karma
-  end
-
 end

@@ -1,47 +1,41 @@
 %div{:class => "lightbox", :id => @report.id}
   %strong Flag this report
-  - if Person.find(session[:person_id]).is_moderator
-    %span{:style => "font-size: 0.8em; margin-left: 0.8em;"}
-      %a{:href => "javascript:void(0)", :onclick => "javascript:addText(#{@report.id}, 'profanity');"} profanity
-      |
-      %a{:href => "javascript:void(0);", :onclick => "javascript:addText(#{@report.id}, 'agree with flagger');"} agree with flagger
   /= render :partial => 'main/how_to_flag'
-  - form_tag("/add_flag/#{@report.id}") do
-    = hidden_field :flag, :report_id, :value => @report.id
-    = hidden_field :flag, :person_id, :value => session[:person_id]
+  = form_for(@flag, url: { controller: 'main', action: 'add_flag', id: @report.id }, html: { class: 'partial-replacer-remote' }, data: { partial_replacer_invalid: "#report-#{@report.id} .placeholder", partial_replacer_success: "#report-#{@report.id}" }) do |f|
+    = error_messages_for :flag
     /%p
     /  = text_area :flag, :comment, :rows => 5, :cols => 47, :id => "box_#{@report.id}"
     %p
-      = radio_button :flag, :comment, "profanity"
+      = f.radio_button :comment, "profanity"
       profanity
       %br/
-      = radio_button :flag, :comment, "directly insults worker or requester"
+      = f. radio_button :comment, "directly insults worker or requester"
       directly insults worker or requester
       %br/
-      = radio_button :flag, :comment, "racism"
+      = f.radio_button :comment, "racism"
       racism
       %br/
-      = radio_button :flag, :comment, "threat/incitement to violence"
+      = f.radio_button :comment, "threat/incitement to violence"
       threat/incitement to violence
       %br/
-      = radio_button :flag, :comment, "review incorrectly claims TOS violation"
+      = f.radio_button :comment, "review incorrectly claims TOS violation"
       review incorrectly claims TOS violation
       %br/
-      = radio_button :flag, :comment, "possible requester self-review"
+      = f.radio_button :comment, "possible requester self-review"
       possible requester self-review
       %br/
-      = radio_button :flag, :comment, "otherwise suspicious review; see reviewer's other reviews"
+      = f.radio_button :comment, "otherwise suspicious review; see reviewer's other reviews"
       otherwise suspicious review; see reviewer's other reviews
       %br/
-      = radio_button :flag, :comment, "not a review for this requester/irrelevant"
+      = f.radio_button :comment, "not a review for this requester/irrelevant"
       not a review for this requester/irrelevant
       %br/
-      = radio_button :flag, :comment, "discloses screener"
+      = f.radio_button :comment, "discloses screener"
       discloses screener
       %br/
-      = radio_button :flag, :comment, "other"
+      = f.radio_button :comment, "other"
       other
       &nbsp;
-      = text_field_tag :other_explanation, "explanation for 'other', min. 20 chars, max. 500", {:size => 40, :onfocus => "if(this.value == \"explanation for 'other', min. 20 chars, max. 500\") { this.value = ''; }"}
+      = f.text_field :other_explanation, value: @other_explanation, placeholder: "explanation for 'other', min. 20 chars, max. 500", size: 40
     = submit_tag "Flag Report"
-    = link_to_remote "Cancel", :url => {:action => "cancel_flag", :id => @report.id}
+    = link_to 'Cancel', '#', class: 'partial-replacer-clear', data: { partial_replacer_clear: "#report-#{@report.id} .placeholder" }

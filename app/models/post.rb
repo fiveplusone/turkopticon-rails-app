@@ -1,22 +1,22 @@
 # == Schema Information
-# Schema version: 20140610175616
 #
 # Table name: posts
 #
-#  id         :integer(4)      not null, primary key
-#  person_id  :integer(4)
-#  parent_id  :integer(4)
-#  title      :text
-#  body       :text
+#  id         :integer          not null, primary key
+#  person_id  :integer
+#  parent_id  :integer
+#  title      :text(65535)
+#  body       :text(65535)
 #  created_at :datetime
 #  updated_at :datetime
 #  slug       :string(255)
+#  is_sticky  :boolean
 #
 
-class Post < ActiveRecord::Base
+class Post < ApplicationRecord
 
   def children
-    Post.find_all_by_parent_id(id)
+    Post.where(:parent_id => id)
   end
 
   def parent

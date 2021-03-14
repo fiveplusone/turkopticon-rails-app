@@ -5,27 +5,27 @@
     = h(requester.amzn_requester_id)
     - unless requester.amzn_requester_id.nil?
       %br/
-      = link_to "HIT Group &raquo;", "https://www.mturk.com/mturk/searchbar?requesterId=#{requester.amzn_requester_id}&selectedSearchType=hitgroups"
+      = link_to "HIT Group &raquo;".html_safe, "https://www.mturk.com/mturk/searchbar?requesterId=#{requester.amzn_requester_id}&selectedSearchType=hitgroups"
   %td{:valign => "top"}
     - for a,v in requester.avg_attrs
-      .smlabel= a + ": "
-      = Requester.attr_vis(v) + "&nbsp;"
+      .smlabel #{a}:
+      #{Requester.attr_vis(v)}&nbsp;
       - if v == 0
         no&nbsp;data
       - else
-        = sprintf("%0.02f", v) + "&nbsp;/&nbsp;5"
+        #{'%0.02f' % v}&nbsp;/&nbsp;5
       %br/
     %br/
   %td{:valign => "top"}
     %b
-      .smlabel= "Pay/hr:"
+      .smlabel Pay/hr:
     - if requester.bucket_counts.empty?
       .smlabel no&nbsp;data
-    - else 
+    - else
       %br/
       - requester.bucket_counts.each do |a,v|
-        .smlabel= a + ": "
-        = Requester.pay_vis(a,requester.bucket_counts) + "&nbsp;"
+        .smlabel #{a}:
+        #{Requester.pay_vis(a, requester.bucket_counts)}&nbsp;
         %span.smlabel= v
         %br/
   %td{:align => "center", :valign => "top"}= requester.reports.length

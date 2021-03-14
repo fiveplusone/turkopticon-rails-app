@@ -1,4 +1,4 @@
-class AddOptinToPeople < ActiveRecord::Migration
+class AddOptinToPeople < ActiveRecord::Migration[4.2]
   def self.up
     add_column :people, :optin, :boolean, :default => false
   end

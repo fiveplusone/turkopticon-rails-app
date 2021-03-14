@@ -4,11 +4,11 @@
 
 - if @searched
   - if @result.nil?
-    #error= "No user in database with email " + @email + "."
+    #error No user in database with email #{@email}.
   - else
-    #notice= "User with email address " + @email + " has account ID " + @result.id.to_s + "."
+    #notice User with email address #{@email} has account ID #{@result.id}.
 
-- form_tag(:action => "search_by_email") do
+= form_tag(:action => "search_by_email") do
   %table
     %tr
       %td

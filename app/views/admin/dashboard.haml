@@ -1,39 +1,39 @@
 %h2 Dashboard
 
 %strong Users:
-= @user_count.to_s
+= @user_count
 %br/
 
 %strong New users (last month):
-= @new_user_count.to_s
+= @new_user_count
 %br/
 
 %strong Active users (last month):
-= @active_user_count.to_s
+= @active_user_count
 %br/
 
 %strong Reviews:
-= @report_count.to_s + " of " + @requester_count.to_s + " requesters"
+#{@report_count} of #{@requester_count} requesters
 %br/
 
 %strong Recent reviews (last month):
-= @recent_report_count.to_s + " by " + @author_count.to_s + " reviewers"
+#{@recent_report_count} by #{@author_count} reviewers
 %br/
 
 %p
   %strong Reviewers (last month):
   %br/
   - @authors_with_counts.each do |author|
-    = "<a href='/by/#{author[0][0]}'>#{author[0][1]}</a> (#{author[1].to_s}), "
+    #{link_to author[0][1], controller: 'main', action: 'reports_by', id: author[0][0]} (#{author[1]}),
 
 %p
   %strong Recent flags (last month):
   %br/
   - @recently_flagged_reports.each do |rid|
-    = "<a href='/get_report/#{rid}'>" + rid.to_s + "</a>, "
+    #{link_to rid, controller: 'main', action: 'report', id: rid},
 
 %p
   %strong Flaggers (last month):
   %br/
   - @ordered_flaggers.each do |pid, fc|
-    = "<a href='/flagged_by/#{pid}'>" + pid.to_s + "</a>&nbsp;(" + fc.to_s + "), "
+    #{link_to pid, controller: 'main', action: 'flagged_by', id: pid}&nbsp;(#{fc}),

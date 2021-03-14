@@ -1,18 +1,17 @@
 # == Schema Information
-# Schema version: 20140610175616
 #
 # Table name: flags
 #
-#  id              :integer(4)      not null, primary key
-#  report_id       :integer(4)
-#  person_id       :integer(4)
-#  comment         :text
+#  id              :integer          not null, primary key
+#  report_id       :integer
+#  person_id       :integer
+#  comment         :text(65535)
 #  created_at      :datetime
 #  updated_at      :datetime
-#  displayed_notes :text
+#  displayed_notes :text(65535)
 #
 
-class Flag < ActiveRecord::Base
+class Flag < ApplicationRecord
 
   belongs_to :person
   belongs_to :report
@@ -36,13 +35,14 @@ class Flag < ActiveRecord::Base
   end
 
   def convert_to_comment
-    note = "\n\n<span class='edit_note'>This comment used to be a flag. "
+    note = "\n\nThis comment used to be a flag. "
     note += "It was converted by the author at "
-    note += Time.now.strftime("%l:%M %p %b %d %Y %Z") + ".</span>"
+    note += Time.now.strftime("%l:%M %p %b %d %Y %Z") + "."
     rid = self.report_id
     Comment.new(:report_id => self.report_id,
                 :person_id => self.person_id,
-                :body => self.comment + note,
+                :body => self.comment,
+                :displayed_notes => note,
                 :created_at => self.created_at).save
     self.destroy
     Report.find(rid).update_flag_data

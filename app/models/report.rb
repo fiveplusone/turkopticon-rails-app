@@ -1,34 +1,42 @@
 # == Schema Information
-# Schema version: 20140610175616
 #
 # Table name: reports
 #
-#  id                  :integer(4)      not null, primary key
-#  person_id           :integer(4)
-#  requester_id        :integer(4)
-#  hit_id              :string(255)
-#  description         :text
+#  id                  :integer          not null, primary key
+#  amzn_requester_name :string(255)
+#  comm                :integer
+#  comment_count       :integer
+#  description         :text(65535)
+#  displayed_notes     :text(65535)
+#  dont_censor         :boolean
+#  fair                :integer
+#  fast                :integer
+#  flag_count          :integer
+#  hit_names           :text(65535)
+#  how_many_hits       :string(255)
+#  ignore_count        :integer          default(0)
+#  ip                  :string(255)
+#  is_flagged          :boolean
+#  is_hidden           :boolean
+#  locked              :boolean
+#  locked_until        :datetime
+#  pay                 :integer
+#  pay_bucket          :string(255)
+#  rejected            :string(255)
+#  tos_viol            :boolean
 #  created_at          :datetime
 #  updated_at          :datetime
-#  how_many_hits       :string(255)
-#  fair                :integer(4)
-#  fast                :integer(4)
-#  pay                 :integer(4)
-#  comm                :integer(4)
-#  is_flagged          :boolean(1)
-#  is_hidden           :boolean(1)
-#  tos_viol            :boolean(1)
 #  amzn_requester_id   :string(255)
-#  displayed_notes     :text
-#  amzn_requester_name :string(255)
-#  flag_count          :integer(4)
-#  comment_count       :integer(4)
+#  hit_id              :string(255)
+#  locked_by_person_id :integer
+#  person_id           :integer
+#  requester_id        :integer
 #
 
-class Report < ActiveRecord::Base
+class Report < ApplicationRecord
 
   belongs_to :person
-  belongs_to :requester
+  belongs_to :requester, :optional => true
   has_many :flags
   has_many :comments
   has_many :ignores

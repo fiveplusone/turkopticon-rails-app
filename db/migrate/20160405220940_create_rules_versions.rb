@@ -1,4 +1,4 @@
-class CreateRulesVersions < ActiveRecord::Migration
+class CreateRulesVersions < ActiveRecord::Migration[4.2]
   def self.up
     create_table :rules_versions do |t|
       t.integer :parent_id

@@ -1,5 +1,5 @@
 = error_messages_for :post
-- form_tag(:action => 'add_post') do
+= form_tag(:action => 'add_post') do
   = hidden_field :post, :title, :value => "Re: " + @post.title
   = text_area :post, :body, :value => ""
   = hidden_field :post, :person_id, :value => session[:person_id]

@@ -68,8 +68,8 @@
     echo "{";
 
     // $logfile = '../../php_api/log/multi-attrs.php.log';
-    $time = date('Y-m-d H:i:s');
-    $ip = $_SERVER['REMOTE_ADDR'];
+    // $time = date('Y-m-d H:i:s');
+    // $ip = $_SERVER['REMOTE_ADDR'];
     // file_put_contents($logfile, "[API v2020.09.11.1108] ", FILE_APPEND);
     // file_put_contents($logfile, "[" . $time . "] ", FILE_APPEND);
     // file_put_contents($logfile, "[" . $ip . "] ", FILE_APPEND);
@@ -79,7 +79,7 @@
       if ($id !== "") {
         echo "\"". $id . "\":";
         if ( $from_cache = apc_fetch( $id ) ) {
-          file_put_contents($logfile, "    " . $id . ": from the APC\n", FILE_APPEND);
+          // file_put_contents($logfile, "    " . $id . ": from the APC\n", FILE_APPEND);
           echo $from_cache;
         } else {
           include_once '../../php_api/mysqli-dbconn.php';
@@ -125,6 +125,5 @@
   } else {
     echo "To get data, call this URL with an 'ids' parameter. The 'ids' parameter must be a string made up of requester IDs separated by commas.";
   }
-  mysqli_close($conn);
 ?>
 

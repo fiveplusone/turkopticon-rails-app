@@ -1,4 +1,4 @@
-class AddIsStickyToPosts < ActiveRecord::Migration
+class AddIsStickyToPosts < ActiveRecord::Migration[4.2]
   def self.up
     add_column :posts, :is_sticky, :boolean
   end

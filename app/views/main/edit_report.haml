@@ -1,7 +1,7 @@
 %br/
 = error_messages_for :report
 = error_messages_for :requester
-- form_tag(:action => 'edit_report') do
+= form_tag(:action => 'edit_report') do
   - if @report.person_id == session[:person_id] or Person.find(session[:person_id]).is_admin
     %p
       .label HIT ID

@@ -1,4 +1,4 @@
-class AddDeletedFlagToForumPosts < ActiveRecord::Migration
+class AddDeletedFlagToForumPosts < ActiveRecord::Migration[4.2]
   def self.up
     add_column :forum_posts, :deleted, :boolean
   end

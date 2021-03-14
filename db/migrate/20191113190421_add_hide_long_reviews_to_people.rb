@@ -1,4 +1,4 @@
-class AddHideLongReviewsToPeople < ActiveRecord::Migration
+class AddHideLongReviewsToPeople < ActiveRecord::Migration[4.2]
   def self.up
     add_column :people, :hide_long_reviews, :boolean
   end

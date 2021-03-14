@@ -1,4 +1,4 @@
-class AddApproveRejectInfoFieldsToRequestersTableForApi < ActiveRecord::Migration
+class AddApproveRejectInfoFieldsToRequestersTableForApi < ActiveRecord::Migration[4.2]
   def self.up
     add_column :requesters, :all_rejected, :integer
     add_column :requesters, :some_rejected, :integer

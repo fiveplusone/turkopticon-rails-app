@@ -1,4 +1,4 @@
-class RenameIgnoresToIgnoreCountInReports < ActiveRecord::Migration
+class RenameIgnoresToIgnoreCountInReports < ActiveRecord::Migration[4.2]
   def self.up
     rename_column :reports, :ignores, :ignore_count
   end

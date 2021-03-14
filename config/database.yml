@@ -1,0 +1,35 @@
+# MySQL. Versions 5.5.8 and up are supported.
+#
+# Install the MySQL driver
+#   gem install mysql2
+#
+# Ensure the MySQL gem is defined in your Gemfile
+#   gem 'mysql2'
+#
+# And be sure to use new-style password hashing:
+#   https://dev.mysql.com/doc/refman/5.7/en/password-hashing.html
+#
+
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  <% if File.file? 'config/my.cnf' %>
+  default_file: config/my.cnf
+  <% elsif !Rails.env.production? %>
+  username: root
+  password:
+  socket: /tmp/mysql.sock
+  <% end %>
+
+development:
+  <<: *default
+  database: turkopticon_development
+
+test:
+  <<: *default
+  database: turkopticon_test
+
+production:
+  <<: *default
+  database: turkopticon_production

@@ -1,29 +1,13 @@
 class ModController < ApplicationController
 
-  before_filter :authorize, :authorize_as_moderator, :load_person
+  before_action :authorize, :authorize_as_moderator, :load_person
   layout "moderator"
-
-  def authorize_as_moderator
-    pid = session[:person_id]
-    if pid.nil?
-      session[:original_uri] = request.request_uri
-      flash[:notice] = "Please log in as a moderator."
-      redirect_to :controller => "reg", :action => "login"
-    else
-      @person = Person.find(pid)
-      unless !@person.nil? and @person.is_moderator
-        session[:original_uri] = request.request_uri
-        flash[:notice] = "Please log in as a moderator."
-        redirect_to :controller => "reg", :action => "login"
-      end
-    end
-  end
 
   def utils
   end
 
   def close_account
-    
+
   end
 
   def do_close_account
@@ -92,23 +76,6 @@ class ModController < ApplicationController
     redirect_to :action => "reassign_report_to_different_requester"
   end
 
-  def xxx_do_reassign_report_to_different_requester
-    @report = Report.find(params[:report_id])
-    newreqid = params[:new_req_id]
-    oldreq = @report.requester
-    newreq = Requester.find(newreqid)
-    if true
-    end
-    if params[:new_req_id] and params[:new_req_name]
-      # see if requester object with that amzn id and name exists; if yes, get TO req id; if not, create, then get TO req id
-      # update report attributes (requester_id, amzn req id, amzn req name)
-      # update old requester object cache columns
-      # update new requester object cache columns
-    else
-      # error (display in flash notice)
-    end
-  end
-
   def lock_thread
     @report = Report.find(params[:id])
     locktime = Time.now + 48.hours
@@ -130,57 +97,78 @@ class ModController < ApplicationController
     end
   end
 
-  def load_person
-    @person = Person.find(session[:person_id])
-  end
-
   def index
     @title = "Reviews with no flags"
-    @reports = Report.paginate(:page => params[:page],
-                               :order => "id DESC",
-                               :conditions => "requester_id is not null and ignore_count = 0 and is_flagged is null")
+    @reports = Report
+      .where("requester_id is not null and ignore_count = 0 and is_flagged is null")
+      .paginate(:page => params[:page])
+      .order("id DESC")
   end
 
   def flagged
     @title = "Reviews with new flags"
-    @reports = Report.paginate(:page => params[:page],
-                               :order => "id DESC",
-                               :conditions => "is_flagged = 1 and ignore_count = 0 and is_hidden is null")
+    @reports = Report
+      .where("is_flagged = 1 and ignore_count = 0 and is_hidden is null")
+      .paginate(:page => params[:page])
+      .order("id DESC")
     render :action => "index"
   end
 
   def ignored
     @title = "Reviews with ignored flags"
-    @reports = Report.paginate(:page => params[:page],
-#                               :order => "id DESC",
-                               :order => "updated_at DESC",
-                               :conditions => "is_flagged = 1 and ignore_count > 0")
+    @reports = Report
+      .where("is_flagged = 1 and ignore_count > 0")
+      .paginate(:page => params[:page])
+      .order("updated_at DESC")
     render :action => "index"
   end
 
   def multi_ignored
     @title = "Reviews with ignored flags"
-    @reports = Report.paginate(:page => params[:page],
-                               :order => "id DESC",
-                               :conditions => "is_flagged = 1 and ignore_count > 1")
+    @reports = Report
+      .where("is_flagged = 1 and ignore_count > 1")
+      .paginate(:page => params[:page])
+      .order("id DESC")
     render :action => "index"
   end
 
   def hidden
     @title = "Hidden reviews"
-    @reports = Report.paginate(:page => params[:page],
-                               :order => "id DESC",
-                               :conditions => "is_flagged = 1 and is_hidden = 1")
+    @reports = Report
+      .where("is_flagged = 1 and is_hidden = 1")
+      .paginate(:page => params[:page])
+      .order("id DESC")
     render :action => "index"
   end
 
   def flag
     @report = Report.find(params[:id])
-    @flag = Flag.new(params[:flag])
-    if request.post? and @flag.save and @report.update_flag_data
-      @report.update_attributes(:flag_count => @report.flags.count)
-      flash[:notice] = "Flagged report #{params[:id]}."
-      redirect_to :action => "index"
+    if request.post?
+      @flag = Flag.new(report: @report, person_id: session[:person_id], comment: params[:flag][:comment])
+      if params[:flag][:comment].blank?
+        @flag.errors[:base] << 'Please add a comment'
+        render partial: 'flag', status: :unprocessable_entity
+        return
+      end
+      pfc = params[:flag][:comment]
+      @other_explanation = params[:flag][:other_explanation].to_s
+      if pfc == "other"
+        if @other_explanation.length < 20 || @other_explanation.length > 500
+          @flag.errors[:base] << 'Explanation must be between 20 and 500 characters'
+          render partial: 'flag', status: :unprocessable_entity
+          return
+        else
+          @flag.comment = pfc + ": " + @other_explanation
+        end
+      end
+      if @flag.save and @report.update_flag_data
+        @report.update_attributes(:flag_count => @report.flags.count)
+        flash.now[:success] = 'Report was flagged.'
+        render partial: 'report', locals: { report: @report }
+      end
+    else
+      @flag = Flag.new
+      render partial: 'flag'
     end
   end
 
@@ -203,36 +191,32 @@ class ModController < ApplicationController
 
   def comment
     @report = Report.find(params[:id])
-    @comment = Comment.new(params[:comment])
-    if request.post? and @comment.save
-      @report.update_attributes(:comment_count => @report.comments.count)
-      flash[:notice] = "Comment added to report #{params[:id]}."
-      redirect_to :action => "flagged"
+    if request.post?
+      @comment = Comment.new(report: @report, person_id: session[:person_id], body: params[:comment][:body])
+
+      if @comment.valid?
+        ActiveRecord::Base.transaction do
+          @comment.save!
+          @report.update!(comment_count: @report.comments.count)
+        end
+
+        flash.now[:success] = "Comment added to report #{params[:id]}."
+        render partial: 'report', locals: { report: @report }
+      else
+        render partial: 'comment', status: :unprocessable_entity
+      end
+    else
+      render partial: 'comment'
     end
-  end
-
-  def cancel_lightbox
-    @id = params[:id]
-  end
-
-  def disable_commenting
-    # remember @person is the logged in person
-    p = Person.find(params[:id])
-    p.update_attributes(:can_comment => false, :commenting_request_ignored => true, :commenting_disabled_by => @person.id, :commenting_disabled_at => Time.now)
-    render :text => "Disabled commenting for user #{params[:id]} / #{p.public_email}."
-  end
-
-  def enable_commenting
-    # remember @person is the logged in person
-    p = Person.find(params[:id])
-    p.update_attributes(:can_comment => true, :commenting_enabled_by => @person.id, :commenting_enabled_at => Time.now)
-    render :text => "Enabled commenting for user #{params[:id]} / #{p.public_email}."
   end
 
   def enable_commenting_form
   end
 
   def disable_commenting_form
+  end
+
+  def change_requester_name_form
   end
 
   def do_enable_commenting
@@ -251,6 +235,22 @@ class ModController < ApplicationController
     redirect_to :controller => "mod", :action => "disable_commenting_form"
   end
 
+  def do_change_requester_name
+    requesters = Requester.where(amzn_requester_id: params[:requester][:amzn_requester_id])
+    if requesters.size > 0
+      requesters.each do |requester| 
+        requester.update(amzn_requester_name: params[:requester][:new_name])
+        requester.reports.each do |report|
+          report.update(amzn_requester_name: params[:requester][:new_name])
+        end
+      end
+      flash[:notice] = "Changed the name of #{params[:requester][:amzn_requester_id]} to #{params[:requester][:new_name]}."
+    else
+      flash[:error] = "Couldn't find any Requester with ID #{params[:requester][:amzn_requester_id]}"
+    end
+    redirect_to :controller => "mod", :action => "change_requester_name_form"
+  end
+
   def convert_other_persons_flag
     @flag = Flag.find(params[:id])
     @requester = @flag.report.requester
@@ -260,13 +260,25 @@ class ModController < ApplicationController
     redirect_to :controller => "main", :action => "report", :id => @report.id
   end
 
-  def convert_other_mods_flag
-    @flag = Flag.find(params[:id])
-    @requester = @flag.report.requester
-    @report = @flag.report
-    @flag.convert_to_comment_by(@person)
-    @report.update_attributes(:flag_count => @report.flags.count, :comment_count => @report.comments.count)
-    redirect_to :controller => "main", :action => "report", :id => @report.id
+  private
+
+  def authorize_as_moderator
+    pid = session[:person_id]
+    if pid.nil?
+      session[:original_uri] = request.url
+      flash[:notice] = "Please log in as a moderator."
+      redirect_to :controller => "reg", :action => "login"
+    else
+      @person = Person.find(pid)
+      unless !@person.nil? and @person.is_moderator
+        session[:original_uri] = request.url
+        flash[:notice] = "Please log in as a moderator."
+        redirect_to :controller => "reg", :action => "login"
+      end
+    end
   end
 
+  def load_person
+    @person = Person.find(session[:person_id])
+  end
 end

@@ -1,25 +1,29 @@
 # == Schema Information
-# Schema version: 20140610175616
 #
 # Table name: requesters
 #
-#  id                  :integer(4)      not null, primary key
-#  amzn_requester_id   :string(255)
-#  amzn_requester_name :string(255)
-#  created_at          :datetime
-#  updated_at          :datetime
-#  ava                 :decimal(3, 2)
-#  nrs                 :integer(4)
-#  av_comm             :decimal(3, 2)
-#  av_pay              :decimal(3, 2)
-#  av_fair             :decimal(3, 2)
-#  av_fast             :decimal(3, 2)
-#  tos_flags           :integer(4)
-#  old_name            :string(255)
+#  id                           :integer          not null, primary key
+#  all_approved_or_pending      :integer
+#  all_pending_or_didnt_do_hits :integer
+#  all_rejected                 :integer
+#  amzn_requester_name          :string(255)
+#  av_comm                      :decimal(3, 2)
+#  av_fair                      :decimal(3, 2)
+#  av_fast                      :decimal(3, 2)
+#  av_pay                       :decimal(3, 2)
+#  av_pay_bucket                :string(255)
+#  ava                          :decimal(3, 2)
+#  nrs                          :integer
+#  old_name                     :string(255)
+#  some_rejected                :integer
+#  tos_flags                    :integer
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#  amzn_requester_id            :string(255)
 #
 
 # require 'ruport'
-class Requester < ActiveRecord::Base
+class Requester < ApplicationRecord
 
 #  validates_presence_of :amzn_requester_id
 #  validates_uniqueness_of :amzn_requester_id
@@ -44,23 +48,23 @@ class Requester < ActiveRecord::Base
   end
 
   def comm
-    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.comm}.compact.delete_if{|i| i == 0}.mean
+    Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.comm}.compact.delete_if{|i| i == 0}.mean
   end
 
   def pay
-    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay}.compact.delete_if{|i| i == 0}.mean
+    Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.pay}.compact.delete_if{|i| i == 0}.mean
   end
 
   def fair
-    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.fair}.compact.delete_if{|i| i == 0}.mean
+    Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.fair}.compact.delete_if{|i| i == 0}.mean
   end
 
   def fast
-    Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.fast}.compact.delete_if{|i| i == 0}.mean
+    Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.fast}.compact.delete_if{|i| i == 0}.mean
   end
 
   def pay_bucket
-    reports = Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
+    reports = Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
     value = nil
     if !reports.empty?
       value = reports.to_buckets_json
@@ -69,7 +73,7 @@ class Requester < ActiveRecord::Base
   end
 
   def bucket_counts
-    values = Report.find(:all, :conditions => {:requester_id => id, :is_hidden => nil}).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
+    values = Report.where(:requester_id => id, :is_hidden => nil).collect{|r| r.pay_bucket}.compact.delete_if{|i| i == nil || i == 'n/a'}.reduce({}){|b, a| b.merge({a => (b[a] || 0) + 1})}
     if values.empty?
       values = []
     else
@@ -81,52 +85,15 @@ class Requester < ActiveRecord::Base
   def avg_attrs
     attrs = {}
     Report.requester_attrs.each{|a|
-      attrs[a] = Report.find(:all, :conditions => {:requester_id => id}).delete_if{|r| r.is_hidden}.collect{|r| eval("r." + a)}.compact.delete_if{|i| i == 0}.mean
+      attrs[a] = Report.where(:requester_id => id).to_a.delete_if{|r| r.is_hidden}.collect { |r| r.public_send(a) }.compact.delete_if{|i| i == 0}.mean
       # pre-hiding version below
-      # attrs[a] = Report.find(:all, :conditions => {:requester_id => id}).collect{|r| eval("r." + a)}.compact.delete_if{|i| i == 0}.mean
+      # attrs[a] = Report.where(:requester_id => id).collect { |r| r.public_send(a) }.compact.delete_if{|i| i == 0}.mean
     }
     attrs
   end
 
   def avg_attrs_avg
     avg_attrs.values.delete_if{|i| i == 0}.mean
-  end
-
-  def attrs_text
-    retstr = ""
-    for a,v in avg_attrs
-      retstr += attr_word(a) + ": " + Requester.attr_vis(v) + " " + sprintf("%0.02f", v) + " / 5<br/>"
-    end
-    retstr += "<br><FONT FACE='Verdana, Arial' size=2><u>THIS VERSION OF TURKOPTICON IS NOW OUTDATED</u><br> - Please click <a href='#' onclick='InstallTrigger.install({\"Turkopticon\":\"https://www.stanford.edu/group/experiment/cgi-bin/turkopticon/firefox/turkopticon.xpi\"});'>here</a> to install the new version<br>(you will need to press 'allow' and accept the changes).<br>Click <a href='http://turkopticon.differenceengines.com/main/install_v2'>here</a> for information about the new version.</font><br>"	 
-    retstr += "numReports:" + report_count.to_s
-  end
-
-  def attrs_text_2
-    retstr = ""
-    retstr += "avg:" + avg_attrs_avg.round(2).to_s + "<br/>#"
-    for a,v in avg_attrs
-      retstr += attr_word(a) + ": " + Requester.attr_vis(v) + " " + sprintf("%0\
-.02f", v) + " / 5<br/>"
-    end
-    retstr += "numReports:" + report_count.to_s
-  end
-  
-  def attrs_text_v2
-      retstr = ""
-    for a,v in avg_attrs
-      retstr += attr_word(a) + ": " + Requester.attr_vis(v) + " " + sprintf("%0.02f", v) + " / 5<br/>"
-    end 
-    retstr += "numReports:" + report_count.to_s
-  end
-
-
-  def attr_word(a)
-    case a
-      when "pay" then  "generosity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-      when "fair" then "fairness&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-      when "fast" then "promptness&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-      when "comm" then "communicativity"
-    end
   end
 
   def self.pay_vis(bucket, counts)
@@ -152,7 +119,7 @@ class Requester < ActiveRecord::Base
       retstr.concat("&nbsp;")
     end
     retstr.concat("</span></span>")
-    retstr
+    retstr.html_safe
   end
 
   def self.attr_vis(v)  # value "v" should be a decimal in [1.0,vmax]
@@ -175,7 +142,7 @@ class Requester < ActiveRecord::Base
       retstr.concat("&nbsp;")
     end
     retstr.concat("</span></span>")
-    retstr
+    retstr.html_safe
   end
 
   def cache_columns

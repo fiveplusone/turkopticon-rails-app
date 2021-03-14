@@ -2,7 +2,7 @@
   - if @location == "reports"
     %li.here All Reviews
   - else
-    %li= link_to "All Reviews", :controller => "main", :action => "index"
+    %li= link_to "All Reviews", :controller => "main", :action => "index", :id => nil
 
   - if @location == "my_flagged"
     %li.here Flagged by You

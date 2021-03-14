@@ -1,4 +1,4 @@
-class AddCommentingRequestedToPeople < ActiveRecord::Migration
+class AddCommentingRequestedToPeople < ActiveRecord::Migration[4.2]
   def self.up
     add_column :people, :commenting_requested, :boolean
   end

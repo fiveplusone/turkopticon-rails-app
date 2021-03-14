@@ -33,7 +33,7 @@
 
 = error_messages_for :person
 
-- form_for :person do |f|
+= form_for :person do |f|
   %p
     .label Email Address
     = f.text_field 'email', :size => 20
@@ -55,7 +55,7 @@
     %p{:style => "display:contents"} (optional)
 
   %p
-    .label{:id => 'state_label' } State 
+    .label{:id => 'state_label' } State
     = f.select 'state', Person.us_states_list, :include_blank => 'Select a State'
 
   %hr.constrain_width
@@ -65,7 +65,7 @@
     .label Phone
     = f.text_field 'phone', :size => 20
     %p{:style => "display:contents"} (optional)
-  
+
   %hr.constrain_width
   .constrain_width Stay up to date with with whats going on at TO and subcribe to our monthly newsletter.
 

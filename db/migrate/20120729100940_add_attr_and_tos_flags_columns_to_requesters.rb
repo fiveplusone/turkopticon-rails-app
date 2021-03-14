@@ -1,4 +1,4 @@
-class AddAttrAndTosFlagsColumnsToRequesters < ActiveRecord::Migration
+class AddAttrAndTosFlagsColumnsToRequesters < ActiveRecord::Migration[4.2]
   def self.up
     add_column :requesters, :av_comm, :decimal, :precision => 3, :scale => 2
     add_column :requesters, :av_pay, :decimal, :precision => 3, :scale => 2

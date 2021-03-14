@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+
+<!--[if lt IE 7]>  <html class="ie ie6 lte9 lte8 lte7" lang="en"> <![endif]-->
+<!--[if IE 7]>     <html class="ie ie7 lte9 lte8 lte7" lang="en"> <![endif]-->
+<!--[if IE 8]>     <html class="ie ie8 lte9 lte8" lang="en"> <![endif]-->
+<!--[if IE 9]>     <html class="ie ie9 lte9" lang="en"> <![endif]-->
+<!--[if gt IE 9]>  <html class="ie10" lang="en"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en" class="surveygizmo">       <!--<![endif]-->
+	
+	<head>
+	<!-- Force IE to not use compatability mode. Note, this *must* be the first tag in the head -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+			<meta name="robots" content="noindex,nofollow">
+		
+	<title>SurveyGizmo | Online Tool for Building Surveys, Forms, Quizzes and Polls</title>
+	
+	<!-- bootstrap!-->
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" media="all" rel="stylesheet" type="text/css"/>
+<!-- google fonts -->
+<link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic|Bitter' rel='stylesheet' type='text/css'>
+
+<!--App CSS!-->
+		<link href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/dist/app/css/app.css" media="all" rel="stylesheet" type="text/css"/>
+		
+
+
+<!--Font Awesome!-->
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" media="all" rel="stylesheet" type="text/css"/>
+<!--[if IE 7]>
+	<link href="/public/phoenix/css/plugins/font-awesome-ie7.min.css" media="all" rel="stylesheet" type="text/css"/>
+<![endif]-->
+
+<!-- Favicons for all sorts of devices. Generated here: http://realfavicongenerator.net/ -->
+<!-- Show a blank icon in std reports if show_branding is turned off -->
+<link rel="apple-touch-icon" sizes="57x57" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/apple-touch-icon-57x57.png?v=dLl8ogBeNR">
+<link rel="apple-touch-icon" sizes="60x60" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/apple-touch-icon-60x60.png?v=dLl8ogBeNR">
+<link rel="apple-touch-icon" sizes="72x72" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/apple-touch-icon-72x72.png?v=dLl8ogBeNR">
+<link rel="apple-touch-icon" sizes="76x76" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/apple-touch-icon-76x76.png?v=dLl8ogBeNR">
+<link rel="apple-touch-icon" sizes="114x114" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/apple-touch-icon-114x114.png?v=dLl8ogBeNR">
+<link rel="apple-touch-icon" sizes="120x120" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/apple-touch-icon-120x120.png?v=dLl8ogBeNR">
+<link rel="apple-touch-icon" sizes="144x144" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/apple-touch-icon-144x144.png?v=dLl8ogBeNR">
+<link rel="apple-touch-icon" sizes="152x152" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/apple-touch-icon-152x152.png?v=dLl8ogBeNR">
+<link rel="apple-touch-icon" sizes="180x180" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/apple-touch-icon-180x180.png?v=dLl8ogBeNR">
+<link rel="icon" type="image/png" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/favicon-32x32.png?v=dLl8ogBeNR" sizes="32x32">
+<link rel="icon" type="image/png" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/android-chrome-192x192.png?v=dLl8ogBeNR" sizes="192x192">
+<link rel="icon" type="image/png" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/favicon-96x96.png?v=dLl8ogBeNR" sizes="96x96">
+<link rel="icon" type="image/png" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/favicon-16x16.png?v=dLl8ogBeNR" sizes="16x16">
+<link rel="manifest" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/manifest.json?v=dLl8ogBeNR">
+<link rel="shortcut icon" href="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/favicon.ico?v=dLl8ogBeNR">
+<meta name="msapplication-TileColor" content="#f5a417">
+<meta name="msapplication-TileImage" content="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/phoenix/gui/favicon/SurveyGizmo/mstile-144x144.png?v=dLl8ogBeNR">
+<meta name="theme-color" content="#f5a417">
+<script>
+var AccountInfo = {"sessionMnMax":120,"sessionMnWarn":115,"userID":0,"customerID":0,"sessToken":"d41d8cd98f00b204e9800998ecf8427e","currentApp":"SurveyGizmo","tooltipsHide":0};
+</script><!-- Type Kit fonts 
+<script async type="text/javascript" src="//use.typekit.net/hdm2fxe.js"></script>
+-->
+<!-- JS Libs !-->
+<script src="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/dist/app/js/app.js" type="text/javascript"></script>
+<script>
+require.config({
+			host : 'd1tm5j8a64fe10.cloudfront.net/2016.06.16.00',
+		baseJSPath : '/public/phoenix/js/',
+	baseCSSPath : '/public/phoenix/css/',
+	cdnVersion : '2016.06.16.00',
+	cacheBust : false,
+	modules : {"jquery-fileupload":{"js":["base\/jquery.fileupload.js","base\/jquery.iframe-transport.js"]},"tagsinput":{"js":["\/public\/dist\/app\/js\/tagsinput.js"],"css":["\/public\/phoenix\/js\/plugins\/tagsinput\/dist\/bootstrap-tagsinput.css"]},"highcharts":"\/public\/dist\/app\/js\/highcharts.js","ckeditor":"plugins\/ckeditor\/ckeditor.js","codemirror":"plugins\/codemirror\/lib\/codemirror.js","color-picker":"plugins\/colorpicker\/js\/colorpicker.js","powertour":"plugins\/powertour_v2.8.0\/js\/powertour.2.8.0.min.js"}
+});
+var CKEDITOR_BASEPATH = location.protocol + require.toUrl('plugins/ckeditor/ckeditor.js').replace('ckeditor.js', '');
+</script>	
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/dist/app/js/ie.js"></script>
+<![endif]-->
+
+
+
+<!-- Load the Content Experiment JavaScript API client for the experiment -->
+<script src="//www.google-analytics.com/cx/api.js?experiment=pDMowm48Txa4QnFedU6O3g"></script>
+
+<script>
+// Ask Google Analytics which variation to show the user.
+$(function(){
+	if(typeof cxApi != 'undefined')
+	{
+		var ExperimentVariation = cxApi.chooseVariation();
+	}
+});
+</script>	
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body class="app-body fixed-primary login-v1 layout- gecko">
+		<!-- Message bars !-->
+<!-- Main Nav !-->
+
+<nav class="app-nav navbar navbar-default">
+	<div class="container-fluid">
+		
+		<div class="navbar-header">
+			
+			<a class="navbar-brand navbar-brand-left" href="/">
+									<span class="nav-logo nav-logo-large"></span>
+								</a>
+
+					</div>
+
+		<div class="collapse navbar-collapse appnav-navbar-collapse">
+	
+	<ul class="nav navbar-nav navbar-right">
+				</ul>
+</div>
+
+	</div>
+</nav>
+
+
+			
+		<div class="content-wrapper">
+			
+			<div class="layout-1column"><div class="container ">
+	
+<div class="vertical-center-band" >
+		<div class="main-wrapper">		
+			<div class="login-form-wrapper">
+				<div class="content-block" id="login-form">
+					
+											<h1 class="hidden-xs">Log in to start exploring!</h1>
+						<h1 class="visible-xs">Log in!</h1>
+											<div class="row" style="margin:-10px 0 20px 0">
+						<div class="col-xs-10">
+							No account? No Worries!<a href="http://www.surveygizmo.com/plans-pricing"> Try it out for free for 7 days!</a>
+						</div>
+					</div>
+					
+					
+<form role="form" action="/login/v1" class="form-horizontal" method="post" >
+	<input type="hidden" name="openid" value=""/>
+	<div class="form-group">
+		<label for="username" class="col-sm-3 col-xs-12">
+			<h4>Email</h4>
+		</label>
+		<div class="col-sm-9 col-xs-12">
+			<input type="email" class="form-control" id="username" name="USERNAME" placeholder="Email Address" autofocus="" tabindex="1" />
+		</div>
+					<div class="form-row text-right social-logins">
+				<ul class="list-inline">
+					<li class="hidden-xs"><small>Or log in with:</small></li>
+					<li>
+						<a href="https://data.surveygizmo.com/login/auth-login?provider=Twitter">
+							<i class="icon-twitter-sign icon-2x" style="color:#77CCF0"></i>
+						</a>
+					</li>
+					<li>
+						<a href="https://data.surveygizmo.com/login/auth-login?provider=Facebook">
+							<i class="icon-facebook-sign icon-2x" style="color:#547CBF"></i>
+						</a>
+					</li>
+					<li>
+						<a href="https://data.surveygizmo.com/login/auth-login?provider=LinkedIn">
+							<i class="icon-linkedin-sign icon-2x" style="color:#007bb6"></i>
+						</a>
+					</li>
+					<li>
+						<a href="https://data.surveygizmo.com/login/auth-login?provider=Google">
+							<i class=" icon-google-plus-sign icon-2x" style="color:#dd4b39"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+				</div>
+	<div class="form-group">
+		<label for="password" class="col-sm-3 col-xs-12">
+			<h4>Password</h4>
+		</label>
+		<div class="col-sm-9 col-xs-12">
+			<input type="password" class="form-control" id="password" name="PASS" placeholder="Password" tabindex="2" />
+		</div>
+	</div>
+	<div class="row" style="margin-top: -15px;">
+		<div class="col-md-4 col-md-offset-3 hidden-sm hidden-xs">
+			<div class="checkbox checkbox-inline">
+				<label>
+					<input name="remember" value="true" type="checkbox" /> 
+					Remember me				</label>
+			</div>
+		</div>
+		<div class="col-md-5 text-right">
+			<button type="button" class="btn btn-link js-tg-fp">Forgot your password?</button>
+		</div>
+	</div>
+	<br/>
+	<div class="row">
+		<div class="col-sm-12 col-xs-12 text-right">
+			<input name="r" value="//tagsinput?__reqBust8882" type="hidden" >
+			<input name="c_r" value="" type="hidden" >
+			<button type="submit" class="btn btn-primary btn-main btn-lg">Log In</button>
+		</div>
+	</div>
+</form>
+
+				</div>
+			</div>
+		
+			<div class="pardot-wrapper">
+									<script type="text/javascript" src="//go.pardot.com/dcjs/145601/87/dc.js"></script>
+							</div> 
+	</div>
+	
+</div>
+
+<!--forgot pwd!-->
+<div class="row hide" id="forgot-form">
+	<div class="col-md-6 col-md-offset-3 col-sm-12">
+		<div class="content-block">
+							<h2>Need help with your password?</h2>
+						
+			<form role="form" action="/login/v1/" method="post">
+				<div class="form-group">
+					<h4>Enter the email address you signed up with</h4>
+				</div>
+				<div class="form-group">
+					<input type="text" id="email" name="email" value="" placeholder="Email Address" size="35" maxlength="60" class="form-control" />
+				</div>
+				<p class="text-right">
+					<input type="hidden" name="forgotPassSubmit" value="Reset"/>
+
+					<a href="javascript:void(0);" class="btn btn-default js-tg-fp">Never Mind</a>
+					<input type="submit" class="btn btn-primary" value="Reset Password" />
+				</p>
+			</form>
+		</div>
+	</div>
+</div><style>
+/*
+html{
+	background-image: url(/public/phoenix/gui/landscape_bg.jpg);
+	background-position: 0 90px;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+*/
+.training-special {
+	width: 450px;
+}
+.training-special *, 
+.training-special *:hover {
+	color: #fff;
+}
+.training-special h2 {
+	font-family: Bitter,Georgia,serif;
+}
+.training-special h2,
+.training-special p.lead{
+	margin-bottom: 0;
+	margin-top: 0;
+}
+.training-special .btn{
+	margin: 15px;
+}
+.training-special img{
+	margin-top: -20px;
+}
+.training-special-box{
+	background-color: #348EA7;
+	padding: 7px 15px;
+	margin-bottom: 10px;
+	border-radius: 7px; 
+	box-shadow: 0 2px 3px rgba(0,0,0,.2);
+}
+.training-special-box p{
+	margin: 0;
+}
+.training-special-box p:first-child{
+	font-size: 18px;
+}
+.training-special p.lead {
+	margin-top: 5px!important;
+}    
+.training-special-box a{
+	text-decoration: underline;
+}
+
+.main-wrapper{
+	text-align: center;
+}
+.login-form-wrapper{
+	text-align: left;
+	display: inline-block;
+    vertical-align: top;
+    margin-bottom: 3em;
+}
+.pardot-wrapper{
+	text-align: left;
+	display: inline-block;
+    margin: 0 0 0 5em;
+}
+#login-form{
+	width:500px;
+	margin:0 auto;
+}
+
+@media (max-width: 1210px) {
+	.training-special{
+		margin-top: 20px;
+		width:100%;
+	}
+	.training-wrapper{
+		width: 400px;
+		margin: 0 auto;
+	}
+}
+
+
+@media (max-width: 987px){
+	.pardot-wrapper{
+		margin: 0 auto;
+		display: block;
+	}
+}
+@media (min-width:768px){
+	.training-special p.lead {
+		margin-top: 5px;
+	}    
+}
+@media (max-width: 767px) {
+	html{
+		background-image: none;
+	}
+	.vertical-center-band{
+		top:5%;
+	}
+	#login-form{
+		width:auto;
+	}
+	.login-form-wrapper{
+	    width: 100%;
+	}
+	.pardot-wrapper{
+		margin: 0 40px;
+	}
+	.training-wrapper {
+		width: auto !important; 
+		margin: 40px auto!important;
+	}
+	.training-special p.lead {
+		margin-top: 5px;
+	}  
+}
+@media (max-width:460px){
+	.training-special img {
+		width: 100%;
+	}
+}
+</style>
+<script>
+if (document.location.pathname != '/login/v1' && document.location.pathname != '/login/v1/') {
+    document.location = '/login/v1';
+}
+$(function(){
+	if(/MSIE[ ]+[6-9]/.test(navigator.userAgent)){
+		if(getCookie("sg-ie-warning") != "off"){
+			$('#ie-login-warning').modal('show');
+			setCookie("sg-ie-warning","off",30);
+		}
+	}
+	
+	function setCookie(cname, cvalue, exdays) {
+	    var d = new Date();
+	    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	    var expires = "expires="+d.toUTCString();
+	    document.cookie = cname + "=" + cvalue + "; " + expires;
+	}
+	function getCookie(cname) {
+	    var name = cname + "=";
+	    var ca = document.cookie.split(';');
+	    for(var i=0; i<ca.length; i++) {
+	        var c = ca[i];
+	        while (c.charAt(0)==' ') c = c.substring(1);
+	        if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
+	    }
+	    return "";
+	}
+})
+</script>
+</div></div>	    
+		</div>
+		
+		<footer class="text-center">
+	<div id="small-print">
+		&copy; 2016 SurveyGizmo | All rights reserved.
+		<br/>
+			<small class="version">
+				2016.06.16.00, Last release 06/16/2016											</small>
+		</div>
+</footer>
+
+<div id="js-alert-wrapper" class="alert alert-block  ">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<i class="icon icon-remove"></i>
+		</button>
+		<span>
+				<i id="alert-icon" class="icon-rocket"></i>
+		<span class="alert-message "></span>
+	</span>
+</div>
+<!-- Verify modal -->
+<div class="modal" id="js-confirm-modal" style="display:none">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"><h4 class="modal-title"></h4></div>
+			<div class="modal-body"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default cancel-verify" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary confirm-verify" data-dismiss="modal">Confirm</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- / Verify modal -->
+
+ 
+
+	
+
+<!-- App Spinner -->
+<div id="js-app-spinner" class="global-loader">
+	<i class="icon-gear icon-spin icon-2x"></i>
+	<span class="alert-message">Working...</span>
+</div>
+<!-- / App Spinner -->
+
+
+<!-- Pardot -->
+			<!-- 	US TRACKING -->
+		<script type="text/javascript">
+		piAId = '146601';
+		piCId = '1075';
+		piPoints = '0';
+		
+		(function() {
+			function async_load(){
+				var s = document.createElement('script'); s.type = 'text/javascript';
+				s.src = ('https:' == document.location.protocol ? 'https://pi' : 'http://cdn') + '.pardot.com/pd.js';
+				var c = document.getElementsByTagName('script')[0]; c.parentNode.insertBefore(s, c);
+			}
+			if(window.attachEvent) { window.attachEvent('onload', async_load); }
+			else { window.addEventListener('load', async_load, false); }
+		})();
+		</script>
+		<!-- Pardot -->
+<!--GA!-->
+	<script type="text/javascript">
+				 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+					  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+					  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+					  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+					
+					  ga('create', 'UA-272504-32', 'surveygizmo.com');
+					  
+					  ga('require', 'displayfeatures');
+					  ga('send', 'pageview');
+				</script><!--GA!-->
+
+	<!-- Type Kit fonts -->
+	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+				<script src="//d1tm5j8a64fe10.cloudfront.net/2016.06.16.00/public/dist/app/js/login.js" type="text/javascript"></script>
+			
+<!-- begin olark code -->
+<script data-cfasync="false" type='text/javascript'>/*<![CDATA[*/window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){
+f[z]=function(){
+(a.s=a.s||[]).push(arguments)};var a=f[z]._={
+},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){
+f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={
+0:+new Date};a.P=function(u){
+a.p[u]=new Date-a.p[0]};function s(){
+a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){
+hd="head";return["<",hd,"></",hd,"><",i,' onl' + 'oad="var d=',g,";d.getElementsByTagName('head')[0].",j,"(d.",h,"('script')).",k,"='",l,"//",a.l,"'",'"',"></",i,">"].join("")}var i="body",m=d[i];if(!m){
+return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){
+b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{
+b.contentWindow[g].open()}catch(w){
+c[e]=d[e];o="javascript:var d="+g+".open();d.domain='"+d.domain+"';";b[k]=o+"void(0);"}try{
+var t=b.contentWindow[g];t.write(p());t.close()}catch(x){
+b[k]=o+'d.write("'+p().replace(/"/g,String.fromCharCode(92)+'"')+'");d.close();'}a.P(2)};ld()};nt()})({
+loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});
+/* custom configuration goes here (www.olark.com/documentation) */
+ olark.configure('box.start_hidden', true);
+ olark('api.visitor.getDetails', function(details){
+ 	 if (details.isConversing){
+ 	 	olark.configure('box.start_expanded', false);
+ 	 	olark('api.box.show');
+ 	 }		
+ });
+
+olark('api.chat.onOperatorsAway', function() {
+	olark('api.box.hide');
+});
+
+olark('api.chat.onCommandFromOperator', function(event) {
+    if (event.command.name == 'end') {
+        //terminate chat session
+        document.cookie = "_okbk" + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = "wcsid" + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+});
+
+olark('api.visitor.updateCustomFields', {
+	cid: '',
+    uid: ''
+});
+
+olark('api.chat.updateVisitorStatus', {
+	  snippet: ['CID: ','UserID: ', 'Last Search:' + $("#help-q").val()]
+	   });
+	   
+olark.identify('5511-612-10-7417');/*]]>*/</script><noscript><a href="https://www.olark.com/site/5511-612-10-7417/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript>
+<!-- end olark code -->
+<script> olark.configure('system.group', '9b0b4f2acb3ef3073db50226c6360b26'); /*Routes to Support*/ </script><span id="show_tips_check" class="visible-lg visible-md hidden-sm hidden-xs"></span>
+<script>
+if($('#show_tips_check').is(':visible')){
+	var show_tips = '';
+}
+	
+</script><div class="modal fade" id="ie-login-warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-body">
+	    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+	        <img src="/public/phoenix/gui/OldIELogo.png" alt="Microsoft Edge" class="img-rounded" style="padding-bottom: 5px;padding-right: 20px;">
+	        <span class="ie-header">Don't let your browser slow you down!</span>
+	    </h4>
+	    <div class="form-row">
+	        <div class="">Using a modern browser will speed up your experience with advanced sites like SurveyGizmo.</div>
+	        <div class="">You are using Internet Explorer 9 or below.</div>
+	    </div>
+        <div class="text-center">Try one of these instead</div>
+        <div class="form-row text-center">
+        	<div class="col-md-4">
+	        	<a href="http://windows.microsoft.com/en-us/internet-explorer/ie-11-worldwide-languages" target="_blank">
+	        		<img src="/public/phoenix/gui/IE11Logo.png" alt="Microsoft Edge" class="img-rounded">
+	        	</a>
+	        	<div>Internet Explorer 11</div>
+        	</div>
+        	<div class="col-md-4">
+	        	<a href="https://www.google.com/chrome" target="_blank">
+	        		<img src="/public/phoenix/gui/ChromeLogo.png" alt="Google Chrome" class="img-rounded">
+	        	</a>
+	        	<div>Google Chrome</div>
+        	</div>
+        	<div class="col-md-4">
+	        	<a href="https://www.mozilla.org/en-US/firefox/new" target="_blank">
+	        		<img src="/public/phoenix/gui/FirefoxLogo.png" alt="Mozilla Firefox" class="img-rounded">
+	        	</a>
+	        	<div>Mozilla Firefox</div>
+        	</div>
+        </div>
+        <div class="form-row">
+	        <div class="text-center">Required to have an old version of Internet Explorer?</div>
+	        <div class="text-center">
+		        <a href="https://msdn.microsoft.com/en-us/library/dn640687.aspx" target="_blank">Tell your IT Department about Enterprise Mode</a>
+		    </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>	</body>
+</html>

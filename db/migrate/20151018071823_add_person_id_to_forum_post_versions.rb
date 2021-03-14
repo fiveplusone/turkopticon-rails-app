@@ -1,4 +1,4 @@
-class AddPersonIdToForumPostVersions < ActiveRecord::Migration
+class AddPersonIdToForumPostVersions < ActiveRecord::Migration[4.2]
   def self.up
     add_column :forum_post_versions, :person_id, :integer
   end

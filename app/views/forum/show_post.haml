@@ -1,10 +1,10 @@
 %p
-  = link_to "&laquo; Back to thread list", :action => "index"
+  = link_to '&laquo; Back to thread list'.html_safe, controller: 'forum', :action => "index"
   &nbsp;&nbsp;&nbsp;&nbsp;
-  = link_to "About this	forum (rules, etc.)", :action => "about"
+  = link_to 'About this	forum (rules, etc.)', controller: 'forum', action: 'about'
 
 - for post in @posts
-  %a{:name => "post-#{post.id.to_s}"}
+  %a{:name => "post-#{post.id}"}
   #post{:class => cycle('odd', '')}
     - if post.parent_id.nil?
       .post_title= post.title
@@ -15,25 +15,25 @@
           %strong= post.author_name
           - if @person.is_admin
             %br/
-            = "Karma: " + ForumPersonInfo.find_by_person_id(post.person_id).karma.to_digits
+            Karma: #{ForumPersonInfo.find_by_person_id(post.person_id).karma.to_digits}
           %br/
-          = post.created_at.strftime("%b %d %Y<br/>%H:%M %p")
+          = post.created_at.strftime("%b %d %Y<br/>%H:%M %p").html_safe
         %td.post_body
           - if post.score <= -5.0 and post.has_inappro
             This post is currently hidden. You may 
             = link_to "look at it anyway", :action => "post_versions", :id => post.id
             if you really want to.
           - else
-            = post.body.gsub(/\n/,"<br/>")
+            = post.body.gsub(/\n/,"<br/>").html_safe
           %p.post_notes
             - if post.version_count > 1
               - version = post.current_version
               - editor = version.person
-              = "This post last edited: " + version.created_at.strftime("%b %d %Y %H:%M %p") + " by"
+              This post last edited: #{version.created_at.strftime("%b %d %Y %H:%M %p")} by
               / = link_to editor.public_email, :action => "posts_by", :id => editor.id
               %strong= editor.public_email
               %br/
-              = link_to "Past versions &raquo;", :action => "post_versions", :id => post.id
+              = link_to "Past versions &raquo;".html_safe, :action => "post_versions", :id => post.id
       - thanks = post.thanks
       - inappro = post.inappropriate
       - unless thanks.empty?
@@ -54,7 +54,7 @@
       - if @person.is_admin and post.score
         %tr
           %td{:class => "post_actions", :colspan => "2"}
-            = "Post score: " + post.score.to_digits
+            Post score: #{post.score.to_digits}
       %tr
         %td{:class => "post_actions", :colspan => "2"}
           - if post.person_id == @person.id

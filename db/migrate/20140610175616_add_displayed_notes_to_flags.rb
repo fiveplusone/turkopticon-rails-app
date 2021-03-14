@@ -1,4 +1,4 @@
-class AddDisplayedNotesToFlags < ActiveRecord::Migration
+class AddDisplayedNotesToFlags < ActiveRecord::Migration[4.2]
   def self.up
     add_column :flags, :displayed_notes, :text
   end
