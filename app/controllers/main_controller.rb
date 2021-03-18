@@ -30,7 +30,7 @@ class MainController < ApplicationController
       else
         cond[:is_hidden] = nil
       end
-    elsif !Requester.find(params[:id]).nil?
+    elsif Requester.where(id: params[:id]).exists?
       cond = {:requester_id => params[:id]}
     end
     default_order = Person.find(session[:person_id]).order_reviews_by_edit_date ? "updated_at DESC" : "id DESC"
