@@ -32,6 +32,9 @@ class MainController < ApplicationController
       end
     elsif Requester.where(id: params[:id]).exists?
       cond = {:requester_id => params[:id]}
+    else
+      redirect_to controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
+      return
     end
     default_order = Person.find(session[:person_id]).order_reviews_by_edit_date ? "updated_at DESC" : "id DESC"
     @reports = Report.where(cond).paginate(:page => params[:page]).order(default_order)
