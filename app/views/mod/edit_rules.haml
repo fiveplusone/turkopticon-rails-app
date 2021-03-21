@@ -1,6 +1,6 @@
 %h3 Edit "How to Review" Instructions
 = form_tag(:action => 'edit_rules') do
-  = text_area :rules_version, :body, :value => RulesVersion.current.body.gsub("<br/>", "\n"), :cols => 80
+  = text_area :rules_version, :body, :value => RulesVersion.current.body.gsub("<br/>", "\n"), :cols => 80, :style => "width: 100%; height: 10em"
   = hidden_field :rules_version, :parent_id, :value  => RulesVersion.current.id.to_s
   %p
     = submit_tag "Update instructions"
