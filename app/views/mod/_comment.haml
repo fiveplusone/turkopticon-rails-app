@@ -1,7 +1,7 @@
 .lightbox{:id => @report.id}
   = form_tag({ controller: 'mod', action: 'comment', id: @report.id }, class: 'partial-replacer-remote', data: { partial_replacer_invalid: "#report-#{@report.id} .placeholder", partial_replacer_success: "#report-#{@report.id}" }) do
     = error_messages_for :comment
-    = text_area :comment, :body
+    = text_area :comment, :body, :style => "width: 100%; height: 10em"
     %br/
     = submit_tag "Post Comment"
     = link_to "Cancel", '#', class: 'partial-replacer-clear', data: { partial_replacer_clear: "#report-#{@report.id} .placeholder" }
