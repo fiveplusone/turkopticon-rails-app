@@ -20,6 +20,6 @@
     = hidden_field :comment, :report_id, :value => @report.id
     = hidden_field :comment, :person_id, :value => session[:person_id]
     %br/
-    = text_area :comment, :body
+    = text_area :comment, :body, :style => "width: 100%; height: 10em"
     %p
       %div{:style => "text-align: right; width: 26em;"}= submit_tag 'Submit Comment'
