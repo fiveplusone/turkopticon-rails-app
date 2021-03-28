@@ -30,7 +30,10 @@
       - if report.requester.nil?
         [The requester object does not exist]
       - else
-        = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, controller: 'main', action: 'add_report', requester: { amzn_id: report.requester.amzn_requester_id, amzn_name: report.requester.amzn_requester_name }
+        - if (Person.find(session[:person_id]).muted and Person.find(session[:person_id]).muted_until > Time.now)
+          &nbsp;
+        - else
+          = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, controller: 'main', action: 'add_report', requester: { amzn_id: report.requester.amzn_requester_id, amzn_name: report.requester.amzn_requester_name }
     %td{:valign => "top", :class => "attrs"}
       - for a in Report.requester_attrs
         .smlabel #{a}:
