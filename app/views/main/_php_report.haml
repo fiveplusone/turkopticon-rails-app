@@ -36,7 +36,9 @@
       = link_to h(report["display_name"]), :controller => "main", :action => "reports_by", :id => report["reviewer_id"]
       &nbsp;|&nbsp;
       = link_to "flag", :controller => "main", :action => "add_flag", :id => report["to_report_id"]
-      &nbsp;|&nbsp;
-      = link_to "comment", :controller => "main", :action => "add_comment", :id => report["to_report_id"]
+      - if Person.find(session[:person_id]).can_comment
+        - unless (Person.find(session[:person_id]).muted and Person.find(session[:person_id]).muted_until > Time.now)
+          &nbsp;|&nbsp;
+          = link_to "comment", :controller => "main", :action => "add_comment", :id => report["to_report_id"]
       &nbsp;|&nbsp;
       = link_to "#{report["flag_count"]} flags, #{report["comment_count"]} comments &raquo;".html_safe, :controller => "main", :action => "report", :id => report["to_report_id"]
