@@ -215,6 +215,10 @@ class MainController < ApplicationController
   end
 
   def add_report
+    if Person.find(session[:person_id]).muted && Person.find(session[:person_id]).muted_until > Time.now
+      flash[:notice] = "<div class=\"error\">Sorry, that action is disabled at the moment. Please try again later.</div>"
+      redirect_to :action => "index" and return
+    end
     @pagetitle = "add report"
     @report = Report.new(params[:report])
     if request.post?
