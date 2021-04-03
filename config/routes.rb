@@ -79,11 +79,11 @@ Rails.application.routes.draw do
   match 'mod/do_close_account', :controller => "mod", :action => "do_close_account", :via => :post
   match 'mod/mute_person', :controller => "mod", :action => "mute_person", :via => :get
   match 'mod/do_mute_person', :controller => "mod", :action => "do_mute_person", :via => :post
-  match 'mod/search_by_email', :controller => "mod", :action => "search_by_email", :via => :get
+  match 'mod/search_by_email', :controller => "mod", :action => "search_by_email", :via => %i[get post]
   match 'mod/reassign_report_to_different_requester', :controller => "mod", :action => "reassign_report_to_different_requester", :via => :get
   match 'mod/do_reassign_report_to_different_requester', :controller => "mod", :action => "do_reassign_report_to_different_requester", :via => :post
   match 'mod/lock_thread/:id', :controller => "mod", :action => "lock_thread", :via => :get
-  match 'mod/edit_rules', :controller => "mod", :action => "edit_rules", :via => :post
+  match 'mod/edit_rules', :controller => "mod", :action => "edit_rules", :via => %i[get post]
   match 'mod/index', :controller => "mod", :action => "index", :via => :get
   match 'mod/flagged', :controller => "mod", :action => "flagged", :via => :get
   match 'mod/ignored', :controller => "mod", :action => "ignored", :via => :get
