@@ -14,7 +14,7 @@
 
 <h1>Turkopticon Frequently Asked Questions</h1>
 
-<h2>Version Apr 10 2020</h2>
+<h2>Version Sep 28 2014</h2>
 
 <p>
   This document contains information for reviewers, requesters, and other users of Turkopticon. It addresses:
@@ -31,7 +31,7 @@
 </ol>
 
 <p>
-  This document is a rewrite of the <a href="./old/2014.09.28.html">2014 FAQ</a>, which it replaces.
+  This document is a rewrite of the <a href="http://turkopticon-devel.differenceengines.com/faq.html">2013 FAQ</a>, which it replaces.
 </p>
 
 <p>This document was last updated September 28, 2014.</p>
@@ -40,19 +40,18 @@
 
 <p>
   <strong>1. Reviews, flags, and comments</strong><br/>
-  <a href="#1.1">1.1. How can I get the Turkopticon Script?</a><br/>
-  <a href="#1.2">1.2. What are the requester "attributes" ("comm", "pay", "fair", and "fast")?</a><br/>
-  <a href="#1.3">1.3. How do I post a review?</a><br/>
-  <a href="#1.4">1.4. I am not getting the verification email.</a><br/>
-  <a href="#1.5">1.5. How can I write a good review?</a><br/>
-  <a href="#1.6">1.6. Can I delete my review?</a><br/>
-  <a href="#1.7">1.7. What is a comment and how can I post one?</a><br/>
-  <a href="#1.8">1.8. I asked for commenting over a week ago, but I still can't comment and I haven't heard back.</a><br/>
-  <a href="#1.9">1.9. Can I delete my comment?</a><br/>
-  <a href="#1.10">1.10. What is a flag and how can I post one?</a><br/>
-  <a href="#1.11">1.11. Can I delete my flag?</a><br/>
-  <a href="#1.12">1.12. What are appropriate uses of flags and comments?</a><br/>
-  <a href="#1.13">1.13. I am a requester. Can you delete or censor a review of me?</a>
+  <a href="#1.1">1.1. What are the requester "attributes" ("comm", "pay", "fair", and "fast")?</a><br/>
+  <a href="#1.2">1.2. How do I post a review?</a><br/>
+  <a href="#1.3">1.3. I am not getting the verification email.</a><br/>
+  <a href="#1.4">1.4. How can I write a good review?</a><br/>
+  <a href="#1.5">1.5. Can I delete my review?</a><br/>
+  <a href="#1.6">1.6. What is a comment and how can I post one?</a><br/>
+  <a href="#1.7">1.7. I asked for commenting over a week ago, but I still can't comment and I haven't heard back.</a><br/>
+  <a href="#1.8">1.8. Can I delete my comment?</a><br/>
+  <a href="#1.9">1.9. What is a flag and how can I post one?</a><br/>
+  <a href="#1.10">1.10. Can I delete my flag?</a><br/>
+  <a href="#1.11">1.11. What are appropriate uses of flags and comments?</a><br/>
+  <a href="#1.12">1.12. I am a requester. Can you delete or censor a review of me?</a>
 </p>
 
 <p>
@@ -67,14 +66,50 @@
   <strong>3. The Turkopticon application programming interface (API)</strong><br/>
   <a href="#3.1">3.1. What is the Turkopticon API?</a><br/>
   <a href="#3.2">3.2. Why does it exist?</a><br/>
-  <a href="#3.3">3.3. How do I use it?</a><br/>
-  <a href="#3.4">3.4. Do I need permission to use it?</a><br/>
+  <a href="#3.3">3.3. What else is it used for?</a><br/>
+  <a href="#3.4">3.4. How do I use it?</a><br/>
   <a href="#3.5">3.5. Do I need permission to use it?</a><br/>
   <a href="#3.6">3.6. Can I see the code?</a>
 </p>
 
 <p>
-  <a href="#4.0"><strong>4. Known issues and future plans</strong><br/></a>
+  <strong>4. Known issues and future plans</strong><br/>
+  <a href="#4.1">4.1. Known issues</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.1.1">4.1.1. I don't get automated emails from Turkopticon (verification, password change, etc.).</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.1.2">4.1.2. Requesters whose names have apostrophes in them are messed up in Turkopticon.</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.1.3">4.1.3. The official browser add-ons point to an old, less reliable server.</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.1.4">4.1.4. There is a 20-minute delay in seeing new ratings included in the averages.</a><br/>
+  <a href="#4.2">4.2. Small or medium changes suggested by users in the past that we would like to make</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.2.1">4.2.1. Can you send me email alerts when someone flags or comments on my review?</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.2.2">4.2.2. I am a requester. Can you send me email alerts when someone reviews me?</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.2.3">4.2.3. Can you make a way to save a "draft" review?</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.2.4">4.2.4. Can you show me my review after I post it, instead of sending me to Mechanical Turk?</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.2.5">4.2.5. Can you make profile pages for requesters, with contact and other useful information?</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.2.6">4.2.6. Can the user script/browser add-on automatically populate the HIT name field?</a><br/>
+  <a href="#4.3">4.3. Other small or medium changes we would like to make</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.3.1">4.3.1. Add "Did you contact the requester?" to review form</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.3.2">4.3.2. Add "If you contacted the requester, did they reply to your satisfaction?" to review form</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.3.3">4.3.3. Speed up the site by using page and fragment caching</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.3.4">4.3.4. Speed up site by optimizing slow database queries or reducing queries per page</a><br/>
+  <a href="#4.4">4.4. Big changes we are considering</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.4.1">4.4.1. Let people review specific HITs, not just requesters</a><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#4.4.2">4.4.2. A new approach to moderation</a>
 </p>
 
 <p>
@@ -104,14 +139,8 @@
 
 <h2>1. Reviews, flags, and comments</h2>
 
-<h3><a name="1.1"></a>1.1. How can I get the Turkopticon Script?</h3>
+<h3><a name="1.1"></a>1.1. What are the requester "attributes" ("comm", "pay", "fair", and "fast")?</h3>
 
-<p>In order to run the script, you will need a userscript manager such as <a href="https://www.tampermonkey.net/" target="_blank">Tampermonkey</a> or <a href="https://www.greasespot.net/" target="_blank">Greasemonkey</a></p>
-<p>Once you have a userscript manager, you can grab the latest version of the <a href="https://greasyfork.org/en/scripts/4391-turkopticon" target="blank">turkopticon userscript here</a><></p>
-
-<h3><a name="1.2"></a>1.2. What are the requester "attributes" ("comm", "pay", "fair", and "fast")?</h3>
-
-<p><b>Note: </b>The <b>generosity </b>attribute is being replaced by <b>pay/hr</b>.</p>
 <p>The "attributes" used to describe requesters answer the following questions:</p>
 
 <ul>
@@ -121,12 +150,11 @@
   <li><strong>promptness</strong> ("fast"): How promptly has this requester approved your work and paid?</li>
 </ul>
 
-<p>We have added a <b>pay/hr </b>attribute in place of the 1-5 scale rating for pay/generosity. The 1-5 rating system doesn't take into account workers being spread across the globe and other various influences that affect judgement of pay. We hope this will help workers better determine hits they want to do, and remove the frustration some workers were experiencing with the pay ratings in the past.</p>
 
 
-<h3><a name="1.3"></a>1.3. How do I post a review?</h3>
+<h3><a name="1.2"></a>1.2. How do I post a review?</h3>
 
-<img src="review_link_2021.png" style="max-width: 100%" alt="Review link in add-on drop-down" />
+<img src="review_link.png" alt="Review link in add-on drop-down" />
 
 <p>The easiest way to post a review is to click the link "Report your experience with this requester" in the add-on drop-down.</p>
 
@@ -134,13 +162,13 @@
 
 
 
-<h3><a name="1.4"></a>1.4. I am not getting the verification email.</h3>
+<h3><a name="1.3"></a>1.3. I am not getting the verification email.</h3>
 
 <p>This is probably because of a problem with our mail sending system. Fixing this is on our list of things to do. In the meantime, email us at <a href="mailto:info@turkopticon.info">info@turkopticon.info</a> from the email address associated with your Turkopticon account and we'll verify it manually.</p>
 
 
 
-<h3><a name="1.5"></a>1.5. How can I write a good review?</h3>
+<h3><a name="1.4"></a>1.4. How can I write a good review?</h3>
 
 <p>Give the ratings you feel best describe your experience.</p>
 
@@ -166,7 +194,7 @@
 
 
 
-<h3><a name="1.6"></a>1.6. Can I delete my review?</h3>
+<h3><a name="1.5"></a>1.5. Can I delete my review?</h3>
 
 <p>For now, no.</p>
 
@@ -182,7 +210,7 @@
 
 
 
-<h3><a name="1.7"></a>1.7. What is a comment and how can I post one?</h3>
+<h3><a name="1.6"></a>1.6. What is a comment and how can I post one?</h3>
 
 <img src="comment.png" alt="Comment" />
 
@@ -196,7 +224,7 @@
 
 
 
-<h3><a name="1.8"></a>1.8. I asked for commenting over a week ago, but I still can't comment and I haven't heard back.</h3>
+<h3><a name="1.7"></a>1.7. I asked for commenting over a week ago, but I still can't comment and I haven't heard back.</h3>
 
 <p>If your comments and/or reviews have been the subject of heated community discussion in the past (for example, you have been involved in flame wars with other people on the site, or have repeatedly posted comments that were hidden for profanity or racism), your commenting request may have been ignored. If you think this may have happened, but you really want to be able to comment and you are willing to make a serious effort to change your ways, please post to <a href="https://groups.google.com/forum/#!forum/turkopticon-discuss">turkopticon-discuss</a>.</p>
 
@@ -204,29 +232,29 @@
 
 
 
-<h3><a name="1.9"></a>1.9. Can I delete my comment?</h3>
+<h3><a name="1.8"></a>1.8. Can I delete my comment?</h3>
 
 <p>For now, no. You can edit it, though.</p>
 
 
 
-<h3><a name="1.10"></a>1.10. What is a flag and how can I post one?</h3>
+<h3><a name="1.9"></a>1.9. What is a flag and how can I post one?</h3>
 
-<p>A flag is a sign for moderators to consider hiding a review that may violate Turkopticon's civility guidelines (see above, <a href="#1.5">Section 1.5, "How can I write a good review?"</a>). If a moderator agrees that the review violates civility guidelines or is otherwise inappropriate, the moderator will also flag the review. If a review has at least two flags, and at least one is from a moderator, the review is hidden. Ratings from hidden reviews are not included in the average ratings shown by the add-on.</p>
+<p>A flag is a sign for moderators to consider hiding a review that may violate Turkopticon's civility guidelines (see above, <a href="#1.4">Section 1.4, "How can I write a good review?"</a>). If a moderator agrees that the review violates civility guidelines or is otherwise inappropriate, the moderator will also flag the review. If a review has at least two flags, and at least one is from a moderator, the review is hidden. Ratings from hidden reviews are not included in the average ratings shown by the add-on.</p>
 
-<p>Only people who can comment can flag reviews. (See above, <a href="#1.7">Section 1.7, "What is a comment and how can I post one?"</a> for information on commenting and getting access to commenting.)</p>
+<p>Only people who can comment can flag reviews. (See above, <a href="#1.6">Section 1.6, "What is a comment and how can I post one?"</a> for information on commenting and getting access to commenting.)</p>
 
 <p>Also, if a <em>comment</em> on a review violates civility guidelines, please don't flag the review. Post to <a href="https://groups.google.com/forum/#!forum/turkopticon-discuss">turkopticon-discuss</a> instead.</p>
 
 
 
-<h3><a name="1.11"></a>1.11. Can I delete my flag?</h3>
+<h3><a name="1.10"></a>1.10. Can I delete my flag?</h3>
 
 <p>For now, no. You can edit it or convert it to a comment, though.</p>
 
 
 
-<h3><a name="1.12"></a>1.12. What are appropriate uses of flags and comments?</h3>
+<h3><a name="1.11"></a>1.11. What are appropriate uses of flags and comments?</h3>
 
 <p>Flag a review if it:</p>
 
@@ -246,7 +274,7 @@
 
 <p>If you're not sure if you should flag or comment, comment.</p>
 
-<p>As in reviewing (see above, <a href="#1.5">Section 1.5, How can I write a good review?</a>), when commenting, please:</p>
+<p>As in reviewing (see above, <a href="#1.4">Section 1.4, How can I write a good review?</a>), when commenting, please:</p>
 
 <ul>
 <li>Don't include or link to profanity, racial slurs, or ethnic slurs.</li>
@@ -259,15 +287,15 @@
 
 
 
-<h3><a name="1.13"></a>1.13. I am a requester. Can you delete or censor a review of me?</h3>
+<h3><a name="1.12"></a>1.12. I am a requester. Can you delete or censor a review of me?</h3>
 
-<p>Delete? No. (See above, <a href="#1.6">Section 1.6, "Can I delete my review?"</a>)</p>
+<p>Delete? No. (See above, <a href="#1.5">Section 1.5, "Can I delete my review?"</a>)</p>
 
 <p>Censor? Probably not.</p>
 
 <p>With the exception of technical errors (e.g., a review posted twice), we do not delete reviews, even at the request of the author.</p>
 
-<p>In general, requesters are encouraged to comment on reviews rather than flag. But if a review clearly falls within the flagging guidelines (see above, <a href="#1.12">Section 1.12, "What are appropriate uses of flags and comments?"</a>), feel free to flag it. If a moderator agrees that the review violates Turkopticon's civility guidelines (see above, <a href="#1.5">Section 1.5, "How can I write a good review?"</a>), they will also flag it, and the review will be hidden. The ratings included in hidden reviews are not included in the averages displayed by the add-on. (For more on flagging, see above, Sections 1.10&ndash;1.12.)</p>
+<p>In general, requesters are encouraged to comment on reviews rather than flag. But if a review clearly falls within the flagging guidelines (see above, <a href="#1.11">Section 1.11, "What are appropriate uses of flags and comments?"</a>), feel free to flag it. If a moderator agrees that the review violates Turkopticon's civility guidelines (see above, <a href="#1.4">Section 1.4, "How can I write a good review?"</a>), they will also flag it, and the review will be hidden. The ratings included in hidden reviews are not included in the averages displayed by the add-on. (For more on flagging, see above, Sections 1.9&ndash;1.11.)</p>
 
 <p>We have had several cases of particularly angry workers posting personal contact information about requesters. In the past it was our policy not to censor this information if it was discoverable via a simple Google search. Following the advice of expert Turkers, however, we have as of August 8, 2014 chosen to discourage reviewers from posting personal requester information in reviews, flags, comments, or posts to turkopticon-discuss, even if the information can be found through Google or is otherwise publicly available. This includes a requester's personal email address (e.g., an address other than that associated with a requester's place of employment), home or cell phone number, or home address, unless it is included in the HIT (e.g., in a consent form workers are expected to read before completing a HIT associated with an academic study). If such information is posted, we reserve the right to censor this information at a requester's request, or at our discretion. However, we do <strong>not</strong> guarantee that such information will be censored, even at a requester's request.</p>
 
@@ -287,7 +315,7 @@
 
 <p>For now, the best we can do is "close" your account.</p>
 
-<p>We realize this can be frustrating. "I own all of my reviews!", you might say, "I have a right to delete them!" In principle, we agree. Unfortunately there are technical issues. The main one is that if we actually <em>deleted</em> your account&mdash;deleted the entry in the Turkopticon database that represents your account&mdash;we would have a bunch of reviews left over associated with a nonexistent account. When the web site tried to display those reviews, it would choke. "So delete them!", you might say. If nobody else had commented on or flagged <em>any</em> of your reviews, we could do that without any technical issues&mdash;although we would still have the accountability issues discussed in Section 1.6, "Can I delete my review?". But this is not usually the case. And if we delete a review that someone else has commented on, we are effectively disappearing their comment, which is not fair to them (see above, Section 2.2, "Can I delete my review?", for more on this topic).</p>
+<p>We realize this can be frustrating. "I own all of my reviews!", you might say, "I have a right to delete them!" In principle, we agree. Unfortunately there are technical issues. The main one is that if we actually <em>deleted</em> your account&mdash;deleted the entry in the Turkopticon database that represents your account&mdash;we would have a bunch of reviews left over associated with a nonexistent account. When the web site tried to display those reviews, it would choke. "So delete them!", you might say. If nobody else had commented on or flagged <em>any</em> of your reviews, we could do that without any technical issues&mdash;although we would still have the accountability issues discussed in Section 1.5, "Can I delete my review?". But this is not usually the case. And if we delete a review that someone else has commented on, we are effectively disappearing their comment, which is not fair to them (see above, Section 2.2, "Can I delete my review?", for more on this topic).</p>
 
 <p>So, for now, the best we can do is "close" your account. A closed account cannot be logged into. In the future it is possible we will hide reviews from closed accounts in the same way we hide reviews that violate civility guidelines, although for the moment we see no real need to do this.</p>
 
@@ -315,9 +343,9 @@
 
 <h3><a name="3.1"></a>3.1. What is the Turkopticon API?</h3>
 
-<p>The Turkopticon API is a PHP file that accepts Mechanical Turk requester IDs and returns the information about those requesters available in the Turkopticon database. Specifically, for each requester ID, it returns the requester's name, average ratings for the four requester attributes ("comm", "pay" (this may be zero for new requesters with reviews in lieu of the pay/hr), "fair", and "fast"; see <a href="#1.2">Section 1.2, "What are the requester 'attributes'?"</a>), pay/hr ("pay_bucket"), the number of reviews for the requester in the Turkopticon database (excluding hidden reviews), and the number of those reviews that reported that the requester violated the Mechanical Turk Terms of Service.</p>
+<p>The Turkopticon API is a PHP file that accepts Mechanical Turk requester IDs and returns the information about those requesters available in the Turkopticon database. Specifically, for each requester ID, it returns the requester's name, average ratings for the four requester attributes ("comm", "pay", "fair", and "fast"; see <a href="#1.1">Section 1.1, "What are the requester 'attributes'?"</a>), the number of reviews for the requester in the Turkopticon database (excluding hidden reviews), and the number of those reviews that reported that the requester violated the Mechanical Turk Terms of Service.</p>
 
-<p>This information is returned as a JSON object [<a href="http://en.wikipedia.org/wiki/JSON">wikipedia entry</a>; <a href="http://tools.ietf.org/html/rfc7159#section-13">example JSON object</a>; <a href="http://turkopticon.ucsd.edu/api/multi-attrs.php?ids=A3VTXG9MRA65HP">example from Turkopticon API</a>].</p>
+<p>This information is returned as a JSON object [<a href="http://en.wikipedia.org/wiki/JSON">wikipedia entry</a>; <a href="http://tools.ietf.org/html/rfc7159#section-13">example JSON object</a>; <a href="http://turkopticon.ucsd.edu/api/multi-attrs.php?ids=A2SUM2D7EOAK1T">example from Turkopticon API</a>].</p>
 
 
 
@@ -327,7 +355,13 @@
 
 
 
-<h3><a name="3.3"></a>3.3. How do I use it?</h3>
+<h3><a name="3.3"></a>3.3. What else is it used for?</h3>
+
+<p>It is used by at least one Turker-managed service, <a href="http://mturklist.com">mTurk List</a>.</p>
+
+
+
+<h3><a name="3.4"></a>3.4. How do I use it?</h3>
 
 <p>Call</p>
 
@@ -335,7 +369,7 @@
 
 <p>where <code>foo</code>, <code>bar</code>, <code>baz</code>, and <code>bat</code> are the Mechanical Turk IDs of the requesters you want information for. For example, calling</p>
 
-<blockquote><code>http://turkopticon.ucsd.edu/api/multi-attrs.php?ids=A35VLPB12A0TTY,A3VTXG9MRA65HP,A3OO8KUVWDSZPV</code></blockquote>
+<blockquote><code>http://turkopticon.ucsd.edu/api/multi-attrs.php?ids=A4QWQ1KBLPSJ5,A3SBGXUYMGMI6B,A2SUM2D7EOAK1T</code></blockquote>
 
 <p>returns information about the requesters <code>IMP AMT</code> and <code>rohzit0d</code>, and <code>CrowdSource</code>.</p>
 
@@ -343,14 +377,10 @@
 
 
 
-<h3><a name="3.4"></a>3.4. Do I need permission to use it?</h3>
+<h3><a name="3.5"></a>3.5. Do I need permission to use it?</h3>
 
-<p>No. However, if you plan to use it on an ongoing basis, please also <a href="mailto:info@turkopticon.info">tell us</a>, so we can warn you if we plan to make any changes that may break your application. Also, if you use it a lot over a short period of time, the server may crash. This will make your application fail and cause problems for other users. Please <a href="mailto:info@turkopticon.info">ask us</a> before doing this so we can keep an eye on server load.</p>
+<p>No. However, if you plan to use it on an ongoing basis, please also <a href="mailto:info@turkopticon.info">tell us</a>, so we can warn you if we plan to make any changes that may break your application. Also, if you use it a lot over a short period of time, the server may crash. This will make your application fail and cause problems for other users. Please <a href="mailto:info@turkopticon.info">ask us</a> before doing this so we can keep an eye on server load.
 
-
-<h3><a name="3.5"></a>3.5. Are there any rate limits to the API?</h3>
-
-<p>Yes. If you call the API more than once a second, you will receive an error message.</p>
 
 
 <h3><a name="3.6"></a>3.6. Can I see the code?</h3>
@@ -359,8 +389,62 @@
 
 
 
-<a name="4.0"><h2>4. Known issues and future plans</h2></a>
-<p>The software team has been recently reinvigorated with fresh volunteers, and the team is working on improving Turkopticon, both with features and under the hood.</p>
+<h2>4. Known issues and future plans</h2>
+
+<h3><a name="4.1"></a>4.1. Known issues</h3>
+
+<p>This section lists known technical problems.</p>
+
+<h4><a name="4.1.1"></a>4.1.1. I don't get automated emails from Turkopticon (verification, password change, etc.).</h4>
+
+<p>This is a problem with the way we send mail. We are aware of it but are not exactly sure how to fix it yet. Email has become a very complex technology because of all the spammers, and email that does not follow very specific rules is often bounced by mail servers. We haven't figured out all the rules yet. Fixing this is on our list of things to do, however. If you do not get the verification email, or any other email that has information you need to use Turkopticon, please feel free to <a href="info@turkopticon.info">email us</a>; we will be happy to verify your account or get you the information you need "manually".</p>
+
+<h4><a name="4.1.2"></a>4.1.2. Requesters whose names have apostrophes in them are messed up in Turkopticon.</h4>
+
+<p>This is an issue with the user script/browser add-ons. We are aware of it but have not yet isolated the cause. We aim to fix it in the next release of the user script and browser add-ons.</p>
+
+<h4><a name="4.1.3"></a>4.1.3. The official browser add-ons point to an old, less reliable server.</h4>
+
+<p>This is fixed in the <a href="http://turkopticon.ucsd.edu/turkopticon.user.js">most recent version of the user script</a>, and will be updated in the next release of the browser add-ons.</p>
+
+<h4><a name="4.1.4"></a>4.1.4. There is a 20-minute delay in seeing new ratings included in the averages.</h4>
+
+<p>This is due to our cache, which makes everything <em>else</em> much faster. It's possible this can be fixed, but is a low priority for now because nobody seems to mind it too much.</p>
+
+
+
+<h3><a name="4.2"></a>4.2. Small or medium changes suggested by users in the past that we would like to make</h3>
+
+<h4><a name="4.2.1"></a>4.2.1. Can you send me email alerts when someone flags or comments on my review?</h4>
+
+<h4><a name="4.2.2"></a>4.2.2. I am a requester. Can you send me email alerts when someone reviews me?</h4>
+
+<h4><a name="4.2.3"></a>4.2.3. Can you make a way to save a "draft" review?</h4>
+
+<h4><a name="4.2.4"></a>4.2.4. Can you show me my review after I post it, instead of sending me to Mechanical Turk?</h4>
+
+<h4><a name="4.2.5"></a>4.2.5. Can you make profile pages for requesters, with contact and other useful information?</h4>
+
+<h4><a name="4.2.6"></a>4.2.6. Can the user script/browser add-on automatically populate the HIT name field?</h4>
+
+
+
+<h3><a name="4.3"></a>4.3. Other small or medium changes we would like to make</h3>
+
+<h4><a name="4.3.1"></a>4.3.1. Add "Did you contact the requester?" to review form</h4>
+
+<h4><a name="4.3.2"></a>4.3.2. Add "If you contacted the requester, did they reply to your satisfaction?" to review form</h4>
+
+<h4><a name="4.3.3"></a>4.3.3. Speed up the site by using page and fragment caching</h4>
+
+<h4><a name="4.3.4"></a>4.3.4. Speed up site by optimizing slow database queries or reducing queries per page</h4>
+
+<h3><a name="4.4"></a>4.4. Big changes we are considering</h3>
+
+<h4><a name="4.4.1"></a>4.4.1. Let people review specific HITs, not just requesters</h4>
+
+<h4><a name="4.4.2"></a>4.4.2. A new approach to moderation</h4>
+
 
 
 <h2>5. Privacy</h2>
@@ -421,9 +505,7 @@
 
 <h3><a name="7.1"></a>7.1. Who manages Turkopticon?</h3>
 
-<p>Turkopticon used to be a volunteer run software project and now it is a worker-run organizing and advocacy project, and software is one of the things we do.</p>
-<p>The committee is made up of Alex Chavez, Ashley Milum, Brook Hansen, Christian Robinson, Krystal Kauffman, Philip Johns, and Sherry Stanley</p>
-<p>Turkopticon is maintained by <a href="http://quote.ucsd.edu/lirani/" target="_blank">Lilly Irani </a>and <a href="http://wtf.tw/" target="_blank">Six Silberman</a>. Lilly is an assistant professor at the University of California, San Diego. Six is an engineer based in London.</p>
+<p>With the help of moderators (in alphabetical order) Anne M, Honuagal (now moderator emeritus), Nurse Rachet, rubyredtan, taintturk, and Tribune, Turkopticon is maintained by <a href="http://quote.ucsd.edu/lirani">Lilly Irani</a> and <a href="http://wtf.tw/">Six Silberman</a>. Lilly is an assistant professor at the University of California, San Diego. Six is a graduate student at the University of California, Irvine.</p>
 
 
 
@@ -459,14 +541,13 @@
 
 <p>No. We do not, and never have.</p>
 
-<p>We do not charge for access to Turkopticon, sell ads or information, or have any other income from Turkopticon. We do not ever plan to charge for access or sell ads, although we do accept donations.</p>
+<p>We do not charge for access to Turkopticon, sell ads or information, or have any other income from Turkopticon. We do not ever plan to charge for access or sell ads, although we may accept donations in the future.</p>
 
 
 
 <h3><a name="7.6"></a>7.6. Can I give a donation?</h3>
 
-<p>Yes! This will ensure that we can continue to provide a worker run review site where we focus on the human part of reviews.  Turkers and requesters understand how to make things better.</p>
-<p>You can donate to the project at <a href="https://blog.turkopticon.info/?page_id=758">this link</a>.</p>
+<p>This could change, but at present, we have no way to accept donations.</p>
 
 
 
