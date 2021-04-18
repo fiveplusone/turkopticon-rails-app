@@ -154,6 +154,7 @@ class MainController < ApplicationController
         reports.fair,
         reports.fast,
         reports.pay,
+        reports.pay_bucket,
         reports.comm,
         reports.description AS text,
         reports.person_id AS reviewer_id,
