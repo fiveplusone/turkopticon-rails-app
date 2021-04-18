@@ -15,14 +15,25 @@
     - else
       = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, controller: 'main', action: 'add_report', requester: { amzn_id: req_id, amzn_name: req_name }
   %td{:valign => "top"}
-    - for attr in ["fair", "fast", "pay", "comm"]
-      .smlabel attr:
+    - for attr in Report.requester_attrs
+      .smlabel #{attr}:
       - if report[attr] == 0
         .smlabel no&nbsp;data
       - else
         .smlabel #{report[attr]}&nbsp;/&nbsp;5
         = Requester.attr_vis(report[attr])
       %br/
+    - if !(report["pay_bucket"].nil? || report["pay_bucket"] == "n/a")
+      .smlabel pay/hr:
+      .smlabel= report["pay_bucket"]
+      = Requester.attr_vis(Report.bucket_bar_val(report["pay_bucket"]))
+    - elsif report["pay"] != 0
+      .smlabel pay:
+      .smlabel #{report["pay"]}&nbsp;/&nbsp;5
+      = Requester.attr_vis(report["pay"])
+    - else
+      .smlabel pay/hr:
+      .smlabel no&nbsp;data
     - if report["tos_viol"] == 1
       .tosviol violates mturk terms of service &nbsp;&nbsp;&nbsp; #{link_to '[?]', controller: 'main', action: 'help', anchor: 'tos'}
   %td{:valign => "top"}
