@@ -10,7 +10,10 @@
     %br/
     = link_to "HIT Group &raquo;".html_safe, "https://www.mturk.com/mturk/searchbar?requesterId=#{req_id}&selectedSearchType=hitgroups"
     %br/
-    = link_to "Review Requester &raquo;".html_safe, controller: 'main', action: 'add_report', requester: { amzn_id: req_id, amzn_name: req_name }
+    - if (Person.find(session[:person_id]).muted and Person.find(session[:person_id]).muted_until > Time.now)
+      &nbsp;
+    - else
+      = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, controller: 'main', action: 'add_report', requester: { amzn_id: req_id, amzn_name: req_name }
   %td{:valign => "top"}
     - for attr in ["fair", "fast", "pay", "comm"]
       .smlabel attr:
@@ -33,7 +36,9 @@
       = link_to h(report["display_name"]), :controller => "main", :action => "reports_by", :id => report["reviewer_id"]
       &nbsp;|&nbsp;
       = link_to "flag", :controller => "main", :action => "add_flag", :id => report["to_report_id"]
-      &nbsp;|&nbsp;
-      = link_to "comment", :controller => "main", :action => "add_comment", :id => report["to_report_id"]
+      - if Person.find(session[:person_id]).can_comment
+        - unless (Person.find(session[:person_id]).muted and Person.find(session[:person_id]).muted_until > Time.now)
+          &nbsp;|&nbsp;
+          = link_to "comment", :controller => "main", :action => "add_comment", :id => report["to_report_id"]
       &nbsp;|&nbsp;
       = link_to "#{report["flag_count"]} flags, #{report["comment_count"]} comments &raquo;".html_safe, :controller => "main", :action => "report", :id => report["to_report_id"]

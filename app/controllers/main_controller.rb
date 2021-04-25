@@ -30,8 +30,11 @@ class MainController < ApplicationController
       else
         cond[:is_hidden] = nil
       end
-    elsif !Requester.find(params[:id]).nil?
+    elsif Requester.where(id: params[:id]).exists?
       cond = {:requester_id => params[:id]}
+    else
+      redirect_to controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
+      return
     end
     default_order = Person.find(session[:person_id]).order_reviews_by_edit_date ? "updated_at DESC" : "id DESC"
     @reports = Report.where(cond).paginate(:page => params[:page]).order(default_order)
@@ -212,6 +215,10 @@ class MainController < ApplicationController
   end
 
   def add_report
+    if Person.find(session[:person_id]).muted && Person.find(session[:person_id]).muted_until > Time.now
+      flash[:notice] = "<div class=\"error\">Sorry, that action is disabled at the moment. Please try again later.</div>"
+      redirect_to :action => "index" and return
+    end
     @pagetitle = "add report"
     @report = Report.new(params[:report])
     if request.post?
