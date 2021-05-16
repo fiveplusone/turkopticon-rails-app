@@ -1,25 +1,21 @@
 class AdminMailer < ApplicationMailer
 
-  @@send_bcc = true
-
   def enabled(person)
     @subject    = '[turkopticon] Commenting enabled'
     @recipients = person.email
     @from       = 'turkopticon@ucsd.edu'
-    @bcc        = 'turkopticon.maint@gmail.com' if @@send_bcc
     @sent_on    = Time.now
     @headers    = {}
-    mail(from: @from, to: @recipients, bcc: @bcc, subject: @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def declined(person)
     @subject    = '[turkopticon] Commenting request declined for now'
     @recipients = person.email
     @from       = 'turkopticon@ucsd.edu'
-    @bcc        = 'turkopticon.maint@gmail.com' if @@send_bcc
     @sent_on    = Time.now
     @headers    = {}
-    mail(from: @from, to: @recipients, bcc: @bcc, subject: @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def report(out)
@@ -27,10 +23,9 @@ class AdminMailer < ApplicationMailer
     @recipients = 'silberman.six@gmail.com'
     @report     = out
     @from       = 'turkopticon@ucsd.edu'
-    @bcc        = 'turkopticon.maint@gmail.com' if @@send_bcc
     @sent_on    = Time.now
     @headers    = {}
-    mail(from: @from, to: @recipients, bcc: @bcc, subject: @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def facilitator(id, recipient_email)
@@ -38,10 +33,9 @@ class AdminMailer < ApplicationMailer
     @recipients = recipient_email
     @id         = id
     @from       = 'turkopticon@ucsd.edu'
-    @bcc        = 'turkopticon.maint@gmail.com' if @@send_bcc
     @sent_on    = Time.now
     @headers    = {}
-    mail(from: @from, to: @recipients, bcc: @bcc, subject: @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def facilitator_followup(recipient_email)
@@ -49,10 +43,9 @@ class AdminMailer < ApplicationMailer
     @recipients = recipient_email
     @email      = recipient_email
     @from       = 'turkopticon@ucsd.edu'
-    @bcc        = 'turkopticon.maint@gmail.com' if @@send_bcc
     @sent_on    = Time.now
     @headers    = {}
-    mail(from: @from, to: @recipients, bcc: @bcc, subject: @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def workshopinfo(recipient_email)
@@ -60,10 +53,9 @@ class AdminMailer < ApplicationMailer
     @recipients = recipient_email
     @email      = recipient_email
     @from       = 'turkopticon@ucsd.edu'
-    @bcc        = 'turkopticon.maint@gmail.com' if @@send_bcc
     @sent_on    = Time.now
     @headers    = {}
-    mail(from: @from, to: @recipients, bcc: @bcc, subject: @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
 

@@ -5,10 +5,9 @@ class NotificationMailer < ApplicationMailer
     @body = n.body
     @recipients = n.person.email
     @from = 'turkopticon@ucsd.edu'
-    @bcc = 'turkopticon.maint@gmail.com'
     @sent_on = Time.now
     @headers = {}
-    mail(from: @from, to: @recipients, bcc: @bcc, subject: @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def digest
@@ -16,10 +15,9 @@ class NotificationMailer < ApplicationMailer
 
     @recipients = n.person.email
     @from = 'turkopticon@ucsd.edu'
-    @bcc = 'turkopticon.maint@gmail.com'
     @sent_on = Time.now
     @headers = {}
-    mail(from: @from, to: @recipients, bcc: @bcc, subject: @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
 end
