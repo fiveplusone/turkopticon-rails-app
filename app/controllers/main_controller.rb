@@ -22,19 +22,43 @@ class MainController < ApplicationController
     @pagetitle = "reports"
     @location = "reports" #if params[:id].nil? # commented this out to get the order option link (see ll. 45-46 below and ./_tabs.haml)
 
-    @reports = Report.all
-    if params[:id].nil?
-      @reports = @reports.where.not(requester: nil).where(is_hidden: nil)
-    elsif Requester.where(amzn_requester_id: params[:id]).exists?
-      @reports = @reports.where(amzn_requester_id: params[:id])
-      @reports = @reports.where(is_hidden: params[:hidden] ? true : nil)
-    elsif Requester.where(id: params[:id]).exists?
-      @reports = @reports.where(requester_id: params[:id])
-    else
-      redirect_to controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
-      return
-    end
-    default_order = current_user.order_reviews_by_edit_date? ? "updated_at DESC" : "id DESC"
+    @reports =
+      case params[:id]
+      when nil
+        Report.where.not(requester: nil).where(is_hidden: nil)
+      when Requester::REQUESTER_AMAZON_ID_PATTERN
+        if Requester.where(amzn_requester_id: params[:id]).exists?
+          Report.where(amzn_requester_id: params[:id], is_hidden: params[:hidden] ? true : nil)
+        else
+          flash[:notice] = view_context.safe_join(
+            [
+              'No reports found for requester id ',
+              params[:id],
+              '. ',
+              view_context.link_to(
+                'Click here to leave a review',
+                controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
+              )
+            ]
+          )
+          self.status = :not_found
+          Report.none
+        end
+      when /\A\d+\z/
+        if Requester.where(id: params[:id]).exists?
+          Report.where(requester_id: params[:id])
+        else
+          flash[:notice] = 'Requester not found'
+          self.status = :not_found
+          Report.none
+        end
+      else
+        flash[:notice] = "Unable to find reports matching #{params[:id]}"
+        self.status = :not_found
+        Report.none
+      end
+
+    default_order = current_user.order_reviews_by_edit_date ? "updated_at DESC" : "id DESC"
     @reports = @reports.paginate(:page => params[:page]).order(default_order)
     @reports = @reports.includes(:requester, :person, flags: :person, comments: :person)
     @reports.load
