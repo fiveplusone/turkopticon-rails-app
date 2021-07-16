@@ -21,23 +21,21 @@ class MainController < ApplicationController
   def index
     @pagetitle = "reports"
     @location = "reports" #if params[:id].nil? # commented this out to get the order option link (see ll. 45-46 below and ./_tabs.haml)
+
+    @reports = Report.all
     if params[:id].nil?
-      cond = "requester_id is not null and is_hidden is not true"
-    elsif !Requester.find_by_amzn_requester_id(params[:id]).nil?
-      cond = {:amzn_requester_id => params[:id]}
-      if params[:hidden]
-        cond[:is_hidden] = true
-      else
-        cond[:is_hidden] = nil
-      end
+      @reports = @reports.where.not(requester: nil).where(is_hidden: nil)
+    elsif Requester.where(amzn_requester_id: params[:id]).exists?
+      @reports = @reports.where(amzn_requester_id: params[:id])
+      @reports = @reports.where(is_hidden: params[:hidden] ? true : nil)
     elsif Requester.where(id: params[:id]).exists?
-      cond = {:requester_id => params[:id]}
+      @reports = @reports.where(requester_id: params[:id])
     else
       redirect_to controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
       return
     end
     default_order = current_user.order_reviews_by_edit_date? ? "updated_at DESC" : "id DESC"
-    @reports = Report.where(cond).paginate(:page => params[:page]).order(default_order)
+    @reports = @reports.paginate(:page => params[:page]).order(default_order)
     @reports = @reports.includes(:requester, :person, flags: :person, comments: :person)
     @reports.load
     @current_user_flags = Flag.where(report: @reports.ids, person: current_user).pluck(:report_id, :id).to_h
