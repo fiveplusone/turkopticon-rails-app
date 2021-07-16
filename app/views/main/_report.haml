@@ -136,20 +136,19 @@
               locked
             - else
               = link_to "lock", :controller => "mod", :action => "lock_thread", :id => report.id
-        - if current_user
-          - flag = Flag.find_by(report: report, person: current_user)
-          &nbsp;|&nbsp;
-          - if flag
-            = link_to "unflag", {:controller => "main", :action => "convert_flag", :id => flag.id}, :confirm => "Are you sure? This will convert your flag to a comment."
-          - else
-            - if current_user.can_comment
-              = link_to "flag", { :controller => "main", :action => "flag", :id => report.id }, class: 'partial-replacer-remote', data: { partial_replacer_target: "#report-#{report.id} .placeholder" }
+        - flag = Flag.find_by(report: report, person: current_user)
+        &nbsp;|&nbsp;
+        - if flag
+          = link_to 'unflag', {:controller => "main", :action => "convert_flag", :id => flag.id}, :confirm => "Are you sure? This will convert your flag to a comment."
+        - else
           - if current_user.can_comment
-            - if (!report.locked_until.nil? and report.locked_until > Time.now) or (current_user.muted and current_user.muted_until > Time.now)
-              &nbsp;
-            - else
-              &nbsp;|&nbsp;
-              = link_to "comment", { :controller => "main", :action => "add_comment", :id => report.id }
+            = link_to "flag", { :controller => "main", :action => "flag", :id => report.id }, class: 'partial-replacer-remote', data: { partial_replacer_target: "#report-#{report.id} .placeholder" }
+        - if current_user.can_comment
+          - if (!report.locked_until.nil? and report.locked_until > Time.now) or (current_user.muted and current_user.muted_until > Time.now)
+            &nbsp;
+          - else
+            &nbsp;|&nbsp;
+            = link_to "comment", { :controller => "main", :action => "add_comment", :id => report.id }
       %br/
       - for f in report.flags
         .flag_comment
