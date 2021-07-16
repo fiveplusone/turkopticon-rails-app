@@ -24,6 +24,7 @@
 
 # require 'ruport'
 class Requester < ApplicationRecord
+  REQUESTER_AMAZON_ID_PATTERN = /\AA[0-9A-Z]{9,}\z/.freeze
 
 #  validates_presence_of :amzn_requester_id
 #  validates_uniqueness_of :amzn_requester_id

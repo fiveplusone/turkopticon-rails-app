@@ -122,7 +122,7 @@ class MainController < ApplicationController
 
   def php_search
     search_term = params[:query]
-    if search_term.match?(/\AA[0-9A-Z]{9,}\z/)
+    if search_term.match?(Requester::REQUESTER_AMAZON_ID_PATTERN)
       search_condition = 'reports.amzn_requester_id = ?'
       search_string = search_term
     else
@@ -226,7 +226,7 @@ class MainController < ApplicationController
         flash[:notice] = "<div class=\"error\">Please fill in the requester ID.</div>"
         render :action => "add_report" and return
       end
-      unless params[:requester][:amzn_id] =~ /\AA[0-9A-Z]{9,}\z/
+      unless params[:requester][:amzn_id] =~ Requester::REQUESTER_AMAZON_ID_PATTERN
         flash[:notice] = "<div class=\"error\">Please enter a Mechanical Turk requester ID in the requester ID field.</div>"
         render :action => "add_report" and return
       end
