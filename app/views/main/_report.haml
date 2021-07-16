@@ -136,10 +136,10 @@
               locked
             - else
               = link_to "lock", :controller => "mod", :action => "lock_thread", :id => report.id
-        - flag = Flag.find_by(report: report, person: current_user)
+        - flag_id = @current_user_flags&.itself[report.id]
         &nbsp;|&nbsp;
-        - if flag
-          = link_to 'unflag', {:controller => "main", :action => "convert_flag", :id => flag.id}, :confirm => "Are you sure? This will convert your flag to a comment."
+        - if flag_id
+          = link_to "unflag", {:controller => "main", :action => "convert_flag", :id => flag_id}, :confirm => "Are you sure? This will convert your flag to a comment."
         - else
           - if current_user.can_comment
             = link_to "flag", { :controller => "main", :action => "flag", :id => report.id }, class: 'partial-replacer-remote', data: { partial_replacer_target: "#report-#{report.id} .placeholder" }

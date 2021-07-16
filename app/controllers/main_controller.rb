@@ -38,6 +38,9 @@ class MainController < ApplicationController
     end
     default_order = current_user.order_reviews_by_edit_date? ? "updated_at DESC" : "id DESC"
     @reports = Report.where(cond).paginate(:page => params[:page]).order(default_order)
+    @reports = @reports.includes(:requester, :person, flags: :person, comments: :person)
+    @reports.load
+    @current_user_flags = Flag.where(report: @reports.ids, person: current_user).pluck(:report_id, :id).to_h
   end
 
   def averages
