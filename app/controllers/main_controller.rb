@@ -49,12 +49,6 @@ class MainController < ApplicationController
     end
   end
 
-  def report
-    @pagetitle = "report"
-    @reports = Report.find(params[:id])
-    render :action => "index"
-  end
-
   def reports_by
     @person = Person.find(params[:id])
     @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
