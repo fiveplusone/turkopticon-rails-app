@@ -29,7 +29,6 @@ Rails.application.routes.draw do
   match 'by/:id', :controller => "main", :action => "reports_by", :via => :all
   match 'flagged_by/:id', :controller => "main", :action => "flagged_by", :via => :all
   match 'comments_by/:id', :controller => "main", :action => "comments_by", :via => :all
-  match 'all_by/:id', :controller => "main", :action => "all_by", :via => :all
   match 'reviews_by_one_page/:id', :controller => "main", :action => "reports_by_one_page", :via => :all
   match 'admin', :controller => "admin", :action => "index", :via => :all
   match 'get_report/:id', :controller => "main", :action => "report", :via => :all
