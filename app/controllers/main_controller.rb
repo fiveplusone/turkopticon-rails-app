@@ -150,54 +150,43 @@ class MainController < ApplicationController
     render :action => "index"
   end
 
-  def php_search
-    search_term = params[:query]
-    if search_term.match?(Requester::REQUESTER_AMAZON_ID_PATTERN)
-      search_condition = 'reports.amzn_requester_id = ?'
-      search_string = search_term
-    else
-      search_condition = 'reports.amzn_requester_name like ?'
-      search_string = "%#{search_term}%"
-    end
+  def search
+    search_term = params[:query].strip
+    reports =
+      case search_term
+      when Requester::REQUESTER_AMAZON_ID_PATTERN
+        @requester = Requester.find_by(amzn_requester_id: search_term)
+        if @requester
+          Report.where(amzn_requester_id: search_term)
+        else
+          flash[:notice] = view_context.safe_join(
+            [
+              'No reports found for requester id ',
+              params[:id],
+              '. ',
+              view_context.link_to(
+                'Click here to leave a review',
+                controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
+              )
+            ]
+          )
+          self.status = :not_found
+          Report.none
+        end
+      else
+        Report.where('reports.amzn_requester_name like ?', "%#{search_term}%")
+      end
 
-    sql = <<~SQL
-      SELECT
-        reports.amzn_requester_id,
-        reports.amzn_requester_name,
-        reports.id AS to_report_id,
-        reports.fair,
-        reports.fast,
-        reports.pay,
-        reports.pay_bucket,
-        reports.comm,
-        reports.description AS text,
-        reports.person_id AS reviewer_id,
-        reports.created_at,
-        reports.tos_viol,
-        reports.displayed_notes,
-        reports.is_flagged,
-        reports.is_hidden,
-        reports.flag_count,
-        reports.comment_count,
-        people.id,
-        people.display_name
-      FROM people, reports
-      WHERE #{search_condition}
-      AND reports.amzn_requester_id IS NOT NULL
-      AND reports.amzn_requester_name IS NOT NULL
-      AND reports.is_hidden IS NULL
-      AND people.id = reports.person_id
-      ORDER BY reports.amzn_requester_name, to_report_id DESC
-    SQL
+    reports = reports.where(is_hidden: nil).where.not(amzn_requester_id: nil).where.not(amzn_requester_name: nil)
 
-    sql = ActiveRecord::Base.sanitize_sql([sql, search_string])
-
-    query_start_time = Time.now
-    @reports = ActiveRecord::Base.connection.select_all(sql)
-    @query_time = Time.now - query_start_time
-
-    @result_count = @reports.count
-    @requester_count = @reports.map { |r| r['amzn_requester_id'] }.uniq.count
+    @reports_view = ReportsView.new(
+      reports,
+      person: @person,
+      order: { amzn_requester_name: :asc, id: :desc },
+      paginate: true,
+      page: params[:page]
+    )
+    render action: :index
   end
 
   def requesters
