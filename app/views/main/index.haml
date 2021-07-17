@@ -82,12 +82,13 @@
           %th.rating Rating <span style="font-weight: normal;">[#{link_to 'info', controller: 'main', action: 'help', anchor: 'attr'}]</span>
           %th Description
       %tbody
-        = render :partial => 'main/report', :collection => @reports, :locals => { :notruncate => nil }
+        = render :partial => 'main/report', :collection => @reports_view.reports, :locals => { :notruncate => nil }
   - if @no_flags
     %p You haven't flagged any reviews.
   - if @no_reviews
     %p You haven't reviewed anybody yet.
-  .pagination= will_paginate @reports
+  - if @reports_view.paginate?
+    .pagination= will_paginate @reports_view.pagination
   - if params[:id] and Requester.find_by_amzn_requester_id(params[:id])
     - unless params[:hidden]
       - if Requester.find_by_amzn_requester_id(params[:id]).has_hidden_reports?

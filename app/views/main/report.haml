@@ -8,6 +8,6 @@
         %th.name AMT Requester Name &amp; ID
         %th Ratings <span style="font-weight: normal;">[#{link_to '?', { controller: 'main', action: 'help', anchor: 'attr' }, style: 'color: #fff; text-decoration: underline;'}]</span>
         %th.desc Description
-      = render :partial => 'main/report', :locals => {:report => @report, :notruncate => true}
+      = render :partial => 'main/report', :locals => {:report => @report_view, :notruncate => true}
 
 

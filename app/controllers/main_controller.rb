@@ -22,12 +22,13 @@ class MainController < ApplicationController
     @pagetitle = "reports"
     @location = "reports" #if params[:id].nil? # commented this out to get the order option link (see ll. 45-46 below and ./_tabs.haml)
 
-    @reports =
+    reports =
       case params[:id]
       when nil
         Report.where.not(requester: nil).where(is_hidden: nil)
       when Requester::REQUESTER_AMAZON_ID_PATTERN
-        if Requester.where(amzn_requester_id: params[:id]).exists?
+        @requester = Requester.find_by(amzn_requester_id: params[:id])
+        if @requester
           Report.where(amzn_requester_id: params[:id], is_hidden: params[:hidden] ? true : nil)
         else
           flash[:notice] = view_context.safe_join(
@@ -45,8 +46,9 @@ class MainController < ApplicationController
           Report.none
         end
       when /\A\d+\z/
-        if Requester.where(id: params[:id]).exists?
-          Report.where(requester_id: params[:id])
+        @requester = Requester.find_by(id: params[:id])
+        if @requester.present?
+          Report.where(requester: @requester)
         else
           flash[:notice] = 'Requester not found'
           self.status = :not_found
@@ -58,11 +60,7 @@ class MainController < ApplicationController
         Report.none
       end
 
-    default_order = current_user.order_reviews_by_edit_date ? "updated_at DESC" : "id DESC"
-    @reports = @reports.paginate(:page => params[:page]).order(default_order)
-    @reports = @reports.includes(:requester, :person, flags: :person, comments: :person)
-    @reports.load
-    @current_user_flags = Flag.where(report: @reports.ids, person: current_user).pluck(:report_id, :id).to_h
+    @reports_view = ReportsView.new(reports, current_user: current_user, paginate: true, page: params[:page])
   end
 
   def averages
@@ -78,69 +76,77 @@ class MainController < ApplicationController
     @person = Person.find(params[:id])
     @display_name = current_user.is_moderator? ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports by " + @display_name
-    default_order = current_user.order_reviews_by_edit_date? ? "updated_at DESC" : "id DESC"
-    @reports = Report.where(person: @person).paginate(:page => params[:page]).order(params[:order] ||= default_order)
+    reports = Report.where(person: @person)
+    @reports_view = ReportsView.new(reports, current_user: current_user, paginate: true, page: params[:page])
     @location = "reports by"
     render :action => "index"
   end
 
   def reports_by_ip
-    @reports = Report.where(:ip => params[:ip])
-    render :action => "flagged_by"
+    reports = Report.where(:ip => params[:ip])
+    @reports_view = ReportsView.new(reports, current_user: current_user, paginate: true, page: params[:page])
+    render action: :index
   end
 
   def reports_by_one_page
     @person = Person.find(params[:id])
     @display_name = current_user.is_moderator? ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports by " + @display_name + " (one page)"
-    @reports = @person.reports.reverse
-    render :action => "flagged_by"
+    reports = @person.reports
+    @reports_view = ReportsView.new(reports, current_user: current_user, order: { id: :asc }, paginate: false)
+    render action: :index
   end
 
   def flagged_by
     @person = Person.find(params[:id])
     @display_name = current_user.is_moderator? ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports flagged by " + @display_name
-    @reports = @person.flags.map{|f| f.report}
+    reports = Report.joins(:flags).where(flags: { person: @person }).distinct
+    @reports_view = ReportsView.new(reports, current_user: current_user, paginate: true, page: params[:page])
+    render action: :index\
   end
 
   def comments_by
     @person = Person.find(params[:id])
     @display_name = current_user.is_moderator? ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports commented on by " + @display_name
-    @reports = @person.comments.map{|f| f.report}
-    render :action => "flagged_by"
+    reports = Report.joins(:comments).where(comments: { person: @person }).distinct
+    @reports_view = ReportsView.new(reports, current_user: current_user, paginate: true, page: params[:page])
+    render action: :index
   end
 
   def my_flagged
     @pagetitle = "reviews flagged by you"
     @location = "my_flagged"
-    @reports = Report.joins(:flags).where(flags: { person: current_user }).distinct.paginate :page => params[:page]
-    @no_flags = true if @reports.empty?
+    reports = Report.joins(:flags).where(flags: { person: current_user }).distinct
+    @reports_view = ReportsView.new(reports, current_user: current_user, paginate: true, page: params[:page])
+    @no_flags = true if reports.empty?
     render :action => "index"
   end
 
   def flagged
     @pagetitle = "flagged reviews"
     @location = "flagged"
-    @reports = Report.where(:is_flagged => true, :is_hidden => nil).paginate(:page => params[:page]).order("id DESC")
-    @no_flags = true if @reports.empty?
+    reports = Report.where(:is_flagged => true, :is_hidden => nil)
+    @reports_view = ReportsView.new(reports, current_user: current_user, paginate: true, page: params[:page])
+    @no_flags = true if reports.empty?
     render :action => "index"
   end
 
   def hidden
     @pagetitle = "hidden reviews"
     @location = "hidden"
-    @reports = Report.where(:is_hidden => true).paginate(:page => params[:page]).order("id DESC")
+    reports = Report.where(:is_hidden => true)
+    @reports_view = ReportsView.new(reports, current_user: current_user, paginate: true, page: params[:page])
     render :action => "index"
   end
 
   def my_reviews
     @pagetitle = "your reviews"
     @location = "my_reviews"
-    @reports = Report.where(person: current_user).paginate(:page => params[:page])
-    @reports = @reports.order(id: :desc) if current_user.most_recent_first_in_my_reviews?
-    @no_reviews = true if @reports.empty?
+    reports = Report.where(person: current_user)
+    @reports_view = ReportsView.new(reports, current_user: current_user, paginate: true, page: params[:page])
+    @no_reviews = true if reports.empty?
     render :action => "index"
   end
 
@@ -308,7 +314,7 @@ class MainController < ApplicationController
   end
 
   def add_flag
-    @report = Report.find(params[:id])
+    report = Report.find(params[:id])
     @flag = Flag.new(report: @report, person: current_user, comment: params.dig(:flag, :comment))
     if request.post?
       if params[:flag][:comment].blank?
@@ -330,10 +336,12 @@ class MainController < ApplicationController
           @flag.comment = pfc + ": " + pfce
         end
       end
-      if @flag.save and @report.update_flag_data
-        @report.update_attributes(:flag_count => @report.flags.count)
+      if @flag.save and report.update_flag_data
+        report.update_attributes(:flag_count => report.flags.count)
         flash.now[:success] = 'Report was flagged.'
-        render partial: 'main/report', locals: { report: @report }
+        current_user_flag_id = Flag.where(report: report, person: current_user).limit(1).pluck(:id).first
+        report_view = ReportView.new(report, current_user_flag_id: current_user_flag_id)
+        render partial: 'main/report', locals: { report: report_view }
       end
     end
   end
@@ -383,7 +391,9 @@ class MainController < ApplicationController
   end
 
   def report
-    @report = Report.find(params[:id])
+    report = Report.find(params[:id])
+    current_user_flag_id = Flag.where(report: report.id, person: current_user).limit(1).pluck(:id).first
+    @report_view = ReportView.new(report, current_user_flag_id: current_user_flag_id)
   end
 
   def edit_report

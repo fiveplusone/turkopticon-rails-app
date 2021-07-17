@@ -136,7 +136,7 @@
               locked
             - else
               = link_to "lock", :controller => "mod", :action => "lock_thread", :id => report.id
-        - flag_id = @current_user_flags&.itself[report.id]
+        - flag_id = report.current_user_flag_id
         &nbsp;|&nbsp;
         - if flag_id
           = link_to "unflag", {:controller => "main", :action => "convert_flag", :id => flag_id}, :confirm => "Are you sure? This will convert your flag to a comment."
