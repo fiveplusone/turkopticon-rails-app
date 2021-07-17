@@ -31,17 +31,7 @@ class MainController < ApplicationController
         if @requester
           Report.where(amzn_requester_id: params[:id], is_hidden: params[:hidden] ? true : nil)
         else
-          flash[:notice] = view_context.safe_join(
-            [
-              'No reports found for requester id ',
-              params[:id],
-              '. ',
-              view_context.link_to(
-                'Click here to leave a review',
-                controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
-              )
-            ]
-          )
+          flash[:notice] = render_to_string partial: 'flash/reports/requester_id_not_found', locals: { id: params[:id] }
           self.status = :not_found
           Report.none
         end
@@ -159,17 +149,7 @@ class MainController < ApplicationController
         if @requester
           Report.where(amzn_requester_id: search_term)
         else
-          flash[:notice] = view_context.safe_join(
-            [
-              'No reports found for requester id ',
-              params[:id],
-              '. ',
-              view_context.link_to(
-                'Click here to leave a review',
-                controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
-              )
-            ]
-          )
+          flash[:notice] = render_to_string partial: 'flash/reports/requester_id_not_found', locals: { id: search_term }
           self.status = :not_found
           Report.none
         end
