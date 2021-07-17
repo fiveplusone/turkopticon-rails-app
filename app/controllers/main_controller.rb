@@ -93,14 +93,6 @@ class MainController < ApplicationController
     render :action => "flagged_by"
   end
 
-  def all_by
-    @person = Person.find(params[:id])
-    @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
-    @pagetitle = "reports flagged or commented on by " + @display_name
-    @reports = @person.flags.map{|f| f.report} + @person.comments.map{|f| f.report}
-    render :action => "flagged_by"
-  end
-
   def my_flagged
     @pagetitle = "reviews flagged by you"
     @location = "my_flagged"
