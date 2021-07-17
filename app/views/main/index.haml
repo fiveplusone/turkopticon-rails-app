@@ -89,10 +89,10 @@
     %p You haven't reviewed anybody yet.
   - if @reports_view.paginate?
     .pagination= will_paginate @reports_view.pagination
-  - if params[:id] and Requester.find_by_amzn_requester_id(params[:id])
+  - if @requester
     - unless params[:hidden]
-      - if Requester.find_by_amzn_requester_id(params[:id]).has_hidden_reports?
+      - if @requester.has_hidden_reports?
         %p
-          This requester has #{Requester.find_by_amzn_requester_id(params[:id]).hidden_report_count} hidden reviews.
-          = link_to "Click here", :controller => "main", :action => "index", :id => params[:id], :hidden => true
+          This requester has #{@requester.hidden_report_count} hidden reviews.
+          = link_to "Click here", :controller => "main", :action => "index", :id => @requester.id, :hidden => true
           to see them.
