@@ -87,7 +87,8 @@
     %p You haven't flagged any reviews.
   - if @no_reviews
     %p You haven't reviewed anybody yet.
-  .pagination= will_paginate @reports
+  - unless @dont_paginate
+    .pagination= will_paginate @reports
   - if params[:id] and Requester.find_by_amzn_requester_id(params[:id])
     - unless params[:hidden]
       - if Requester.find_by_amzn_requester_id(params[:id]).has_hidden_reports?

@@ -60,37 +60,39 @@ class MainController < ApplicationController
   end
 
   def reports_by_ip
-    @reports = Report.where(:ip => params[:ip])
-    render :action => "flagged_by"
+    @reports = Report.where(:ip => params[:ip]).paginate(:page => params[:page])
+    render :action => "index"
   end
 
   def reports_by_one_page
     @person = Person.find(params[:id])
     @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports by " + @display_name + " (one page)"
-    @reports = @person.reports.reverse
-    render :action => "flagged_by"
+    @dont_paginate = true
+    @reports = @person.reports.order(id: :desc)
+    render :action => "index"
   end
 
   def flagged_by
     @person = Person.find(params[:id])
     @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports flagged by " + @display_name
-    @reports = @person.flags.map{|f| f.report}
+    @reports = Report.joins(:flags).where(flags: { person: @person }).order(id: :desc).distinct.paginate(:page => params[:page])
+    render :action => "index"
   end
 
   def comments_by
     @person = Person.find(params[:id])
     @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports commented on by " + @display_name
-    @reports = @person.comments.map{|f| f.report}
-    render :action => "flagged_by"
+    @reports = Report.joins(:comments).where(comments: { person: @person }).order(id: :desc).distinct.paginate(:page => params[:page])
+    render :action => "index"
   end
 
   def my_flagged
     @pagetitle = "reviews flagged by you"
     @location = "my_flagged"
-    @reports = Report.joins(:flags).where(flags: { person_id: session[:person_id] }).distinct.paginate :page => params[:page]
+    @reports = Report.joins(:flags).where(flags: { person_id: session[:person_id] }).order(id: :desc).distinct.paginate(:page => params[:page])
     @no_flags = true if @reports.empty?
     render :action => "index"
   end
