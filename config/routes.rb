@@ -65,7 +65,7 @@ Rails.application.routes.draw do
   match 'main/data_use_policy', :controller => "main", :action => "data_use_policy", :via => :get
   match 'main/request_commenting', :controller => "main", :action => "request_commenting", :via => :get
   match 'main/reports_by_ip', :controller => "main", :action => "reports_by_ip", :via => :get
-  match 'main/php_search', :controller => "main", :action => "php_search", :via => :post
+  match 'main/search', :controller => "main", :action => "search", :via => :get
   match 'main/unflag/:id', :controller => "main", :action => "unflag", :via => :get
   match 'main/convert_flag/:id', :controller => "main", :action => "convert_flag", :via => :get
   match 'main/add_comment/:id', :controller => "main", :action => "add_comment", :via => %i[get post]
