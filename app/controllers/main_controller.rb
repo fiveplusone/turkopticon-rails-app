@@ -125,6 +125,9 @@ class MainController < ApplicationController
   end
 
   def search
+    @pagetitle = 'search'
+    @location = 'search'
+
     search_term = params[:query].strip
     reports =
       case search_term
@@ -151,8 +154,9 @@ class MainController < ApplicationController
         Report.where('reports.amzn_requester_name like ?', "%#{search_term}%")
       end
 
-    @reports = reports.where(is_hidden: nil).where.not(amzn_requester_id: nil).where.not(amzn_requester_name: nil)
-                      .paginate(page: params[:page]).order(amzn_requester_name: :asc, id: :desc)
+    reports = reports.where(is_hidden: nil).where.not(amzn_requester_id: nil).where.not(amzn_requester_name: nil)
+    @requester_count = @requester.present? ? 1 : @requester_count = reports.distinct.count(:requester_id)
+    @reports = reports.paginate(page: params[:page]).order(amzn_requester_name: :asc, id: :desc)
 
     render action: :index
   end
