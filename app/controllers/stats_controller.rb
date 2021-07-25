@@ -15,17 +15,11 @@ class StatsController < ApplicationController
   end
 
   def reviews
-    reports = Report.all
     @scores = {}
-    attrs = %w{comm pay fair fast}
-    attrs.each{|attr| @scores[attr] = {} }
-    [1, 2, 3, 4, 5].each{|i| attrs.each{|attr| @scores[attr][i] = 0}}
-    reports.each{|r|
-      attrs.each{|attr|
-        attr_val = r.public_send(attr)
-        @scores[attr][attr_val] += 1 unless attr_val.nil? or attr_val == 0
-      }
-    }
+    %w[comm pay fair fast].each do |attr|
+      reports = Report.where.not(attr => nil).where("#{attr} > 0")
+      @scores[attr] = Hash.new(0).merge(reports.group(attr).count)
+    end
   end
 
 end
