@@ -29,7 +29,6 @@ Rails.application.routes.draw do
   match 'by/:id', :controller => "main", :action => "reports_by", :via => :all
   match 'flagged_by/:id', :controller => "main", :action => "flagged_by", :via => :all
   match 'comments_by/:id', :controller => "main", :action => "comments_by", :via => :all
-  match 'all_by/:id', :controller => "main", :action => "all_by", :via => :all
   match 'reviews_by_one_page/:id', :controller => "main", :action => "reports_by_one_page", :via => :all
   match 'admin', :controller => "admin", :action => "index", :via => :all
   match 'get_report/:id', :controller => "main", :action => "report", :via => :all
@@ -66,7 +65,7 @@ Rails.application.routes.draw do
   match 'main/data_use_policy', :controller => "main", :action => "data_use_policy", :via => :get
   match 'main/request_commenting', :controller => "main", :action => "request_commenting", :via => :get
   match 'main/reports_by_ip', :controller => "main", :action => "reports_by_ip", :via => :get
-  match 'main/php_search', :controller => "main", :action => "php_search", :via => :post
+  match 'main/search', :controller => "main", :action => "search", :via => :get
   match 'main/unflag/:id', :controller => "main", :action => "unflag", :via => :get
   match 'main/convert_flag/:id', :controller => "main", :action => "convert_flag", :via => :get
   match 'main/add_comment/:id', :controller => "main", :action => "add_comment", :via => %i[get post]

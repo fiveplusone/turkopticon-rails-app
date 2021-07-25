@@ -71,6 +71,13 @@
       %button{:id => "form_for_user_cancel"} Cancel
   %br
 
+- if @location == 'search'
+  - if @requester_count > 1
+    %p#advisory.red.bigger
+      Your search returned reviews of #{@requester_count} different requesters. If you are leaving a review, please be sure to review the right one! Thank you
+  %p
+    Search results for #{content_tag :span, h(params[:query]), style: 'color: #f00; font-weight: bold;'}:
+
 %br/
 .box
   = render :partial => 'main/tabs'
@@ -87,7 +94,8 @@
     %p You haven't flagged any reviews.
   - if @no_reviews
     %p You haven't reviewed anybody yet.
-  .pagination= will_paginate @reports
+  - unless @dont_paginate
+    .pagination= will_paginate @reports
   - if params[:id] and Requester.find_by_amzn_requester_id(params[:id])
     - unless params[:hidden]
       - if Requester.find_by_amzn_requester_id(params[:id]).has_hidden_reports?

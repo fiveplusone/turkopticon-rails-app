@@ -49,12 +49,6 @@ class MainController < ApplicationController
     end
   end
 
-  def report
-    @pagetitle = "report"
-    @reports = Report.find(params[:id])
-    render :action => "index"
-  end
-
   def reports_by
     @person = Person.find(params[:id])
     @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
@@ -66,45 +60,39 @@ class MainController < ApplicationController
   end
 
   def reports_by_ip
-    @reports = Report.where(:ip => params[:ip])
-    render :action => "flagged_by"
+    @reports = Report.where(:ip => params[:ip]).paginate(:page => params[:page])
+    render :action => "index"
   end
 
   def reports_by_one_page
     @person = Person.find(params[:id])
     @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports by " + @display_name + " (one page)"
-    @reports = @person.reports.reverse
-    render :action => "flagged_by"
+    @dont_paginate = true
+    @reports = @person.reports.order(id: :desc)
+    render :action => "index"
   end
 
   def flagged_by
     @person = Person.find(params[:id])
     @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports flagged by " + @display_name
-    @reports = @person.flags.map{|f| f.report}
+    @reports = Report.joins(:flags).where(flags: { person: @person }).order(id: :desc).distinct.paginate(:page => params[:page])
+    render :action => "index"
   end
 
   def comments_by
     @person = Person.find(params[:id])
     @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
     @pagetitle = "reports commented on by " + @display_name
-    @reports = @person.comments.map{|f| f.report}
-    render :action => "flagged_by"
-  end
-
-  def all_by
-    @person = Person.find(params[:id])
-    @display_name = Person.find(session[:person_id]).is_moderator ? @person.mod_display_name : @person.public_email
-    @pagetitle = "reports flagged or commented on by " + @display_name
-    @reports = @person.flags.map{|f| f.report} + @person.comments.map{|f| f.report}
-    render :action => "flagged_by"
+    @reports = Report.joins(:comments).where(comments: { person: @person }).order(id: :desc).distinct.paginate(:page => params[:page])
+    render :action => "index"
   end
 
   def my_flagged
     @pagetitle = "reviews flagged by you"
     @location = "my_flagged"
-    @reports = Report.joins(:flags).where(flags: { person_id: session[:person_id] }).distinct.paginate :page => params[:page]
+    @reports = Report.joins(:flags).where(flags: { person_id: session[:person_id] }).order(id: :desc).distinct.paginate(:page => params[:page])
     @no_flags = true if @reports.empty?
     render :action => "index"
   end
@@ -136,54 +124,41 @@ class MainController < ApplicationController
     render :action => "index"
   end
 
-  def php_search
-    search_term = params[:query]
-    if search_term.match?(/\AA[0-9A-Z]{9,}\z/)
-      search_condition = 'reports.amzn_requester_id = ?'
-      search_string = search_term
-    else
-      search_condition = 'reports.amzn_requester_name like ?'
-      search_string = "%#{search_term}%"
-    end
+  def search
+    @pagetitle = 'search'
+    @location = 'search'
 
-    sql = <<~SQL
-      SELECT
-        reports.amzn_requester_id,
-        reports.amzn_requester_name,
-        reports.id AS to_report_id,
-        reports.fair,
-        reports.fast,
-        reports.pay,
-        reports.pay_bucket,
-        reports.comm,
-        reports.description AS text,
-        reports.person_id AS reviewer_id,
-        reports.created_at,
-        reports.tos_viol,
-        reports.displayed_notes,
-        reports.is_flagged,
-        reports.is_hidden,
-        reports.flag_count,
-        reports.comment_count,
-        people.id,
-        people.display_name
-      FROM people, reports
-      WHERE #{search_condition}
-      AND reports.amzn_requester_id IS NOT NULL
-      AND reports.amzn_requester_name IS NOT NULL
-      AND reports.is_hidden IS NULL
-      AND people.id = reports.person_id
-      ORDER BY reports.amzn_requester_name, to_report_id DESC
-    SQL
+    search_term = params[:query].strip
+    reports =
+      case search_term
+      when /\AA[0-9A-Z]{9,}\z/
+        @requester = Requester.find_by(amzn_requester_id: search_term)
+        if @requester
+          Report.where(amzn_requester_id: search_term)
+        else
+          flash[:notice] = view_context.safe_join(
+            [
+              'No reports found for requester id ',
+              params[:id],
+              '. ',
+              view_context.link_to(
+                'Click here to leave a review',
+                controller: 'main', action: 'add_report', requester: { amzn_id: params[:id] }
+              )
+            ]
+          )
+          self.status = :not_found
+          Report.none
+        end
+      else
+        Report.where('reports.amzn_requester_name like ?', "%#{search_term}%")
+      end
 
-    sql = ActiveRecord::Base.sanitize_sql([sql, search_string])
+    reports = reports.where(is_hidden: nil).where.not(amzn_requester_id: nil).where.not(amzn_requester_name: nil)
+    @requester_count = @requester.present? ? 1 : @requester_count = reports.distinct.count(:requester_id)
+    @reports = reports.paginate(page: params[:page]).order(amzn_requester_name: :asc, id: :desc)
 
-    query_start_time = Time.now
-    @reports = ActiveRecord::Base.connection.select_all(sql)
-    @query_time = Time.now - query_start_time
-
-    @result_count = @reports.count
-    @requester_count = @reports.map { |r| r['amzn_requester_id'] }.uniq.count
+    render action: :index
   end
 
   def requesters
