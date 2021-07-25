@@ -311,7 +311,7 @@ class MainController < ApplicationController
       if @flag.save and @report.update_flag_data
         @report.update_attributes(:flag_count => @report.flags.count)
         flash.now[:success] = 'Report was flagged.'
-        render partial: 'main/report', locals: { report: @report }
+        render partial: 'main/report', locals: { report: @report, notruncate: nil }
       end
     end
   end
