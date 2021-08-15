@@ -49,27 +49,12 @@ class RegController < ApplicationController
   def login
     session[:person_id] = nil
 
-    if request.post? # or cookies[:person_id]
-      # if cookies[:person_id]
-        # session[:person_id] = cookies[:person_id].to_i
-        # person = Person.find(session[:person_id])
-        #if person
-          #uri = session[:original_uri]
-          #session[:original_uri] = nil
-          #redirect_to uri || {:controller => "main", :action => "index", :id => nil}
-        #else
-          #render :text => "invalid cookie"
-        #end
-      #else
-      # NEED TO INDENT TWO SPACES HERE
+    if request.post?
       person = Person.authenticate(params[:email], params[:password])
       if person and !person.is_closed
         # Continue normal login process
         session[:person_id] = person.id
         person.update_attributes(:latest_login_at => DateTime.now)
-        if person.id == 1
-          cookies['person_id'] = "1" # {:value => person.id.to_s, :expires => Time.now + 3600 * 24 * 30}
-        end
 
         t = Time.now.strftime("%H:%M %a %b %d %Y")
         ip = request.remote_ip
@@ -88,14 +73,11 @@ class RegController < ApplicationController
       else
         flash[:notice] = "Sorry, invalid username/password combination."
       end
-      # END NEW INDENT
-      #end
     end
   end
 
   def logout
     session[:person_id] = nil
-    #cookies.delete :person_id
     flash[:notice] = "Logged out."
     redirect_to :controller => "main", :action => "index", :id => nil
   end
