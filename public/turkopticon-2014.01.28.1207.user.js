@@ -8,8 +8,8 @@
 // @include        https://*.mturk.com/*
 // ==/UserScript==
 
-var TURKOPTICON_BASE = "http://turkopticon.ucsd.edu/";
-var API_BASE = "http://turkopticon.ucsd.edu/api/";
+var TURKOPTICON_BASE = "http://turkopticon.net/";
+var API_BASE = "http://turkopticon.net/api/";
 var API_MULTI_ATTRS_URL = API_BASE + "multi-attrs.php?ids=";
 
 function getRequesterAnchorsAndIds(a) {

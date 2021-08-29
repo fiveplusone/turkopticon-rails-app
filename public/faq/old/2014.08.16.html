@@ -158,7 +158,7 @@
 
 <p>The easiest way to post a review is to click the link "Report your experience with this requester" in the add-on drop-down.</p>
 
-<p>However, you can also review any requester by going to <a href="http://turkopticon.ucsd.edu/report">turkopticon.ucsd.edu/report</a> (Turkopticon login required). You'll need to know their Mechanical Turk requester ID, though (e.g., A1BC2DE34FGHJ5). If you don't include a Mechanical Turk requester ID, your ratings won't be included in the average ratings shown by the add-on.</p>
+<p>However, you can also review any requester by going to <a href="https://turkopticon.net/report">turkopticon.net/report</a> (Turkopticon login required). You'll need to know their Mechanical Turk requester ID, though (e.g., A1BC2DE34FGHJ5). If you don't include a Mechanical Turk requester ID, your ratings won't be included in the average ratings shown by the add-on.</p>
 
 
 
@@ -188,7 +188,7 @@
 
 <p>Reviews that are profane or insulting or appear to be requester self-reviews may be hidden.</p>
 
-<p>The most up-to-date version of these guidelines will always be posted on the <a href="http://turkopticon.ucsd.edu/report">review page</a> (Turkopticon login required).</p>
+<p>The most up-to-date version of these guidelines will always be posted on the <a href="https://turkopticon.net/report">review page</a> (Turkopticon login required).</p>
 
 
 
@@ -214,7 +214,7 @@
 
 <p>A comment is a piece of text that responds to a review. (See figure at right.) You post a comment "on" a review.</p>
 
-<p>New Turkopticon accounts cannot post comments. Once you have posted some reviews, you can <a href="http://turkopticon.ucsd.edu/main/request_commenting">request commenting</a> (Turkopticon login required) by clicking on the previous link or on the link that says "request commenting ability" that appears between the "settings" and "logout" links at the top of every Turkopticon page while you are logged in.</p>
+<p>New Turkopticon accounts cannot post comments. Once you have posted some reviews, you can <a href="https://turkopticon.net/main/request_commenting">request commenting</a> (Turkopticon login required) by clicking on the previous link or on the link that says "request commenting ability" that appears between the "settings" and "logout" links at the top of every Turkopticon page while you are logged in.</p>
 
 <p>Commenting requests are reviewed manually, usually within a few days, by our administrators. If you have only posted a few reviews, please expect to be told that you will need to wait to be able to comment.</p>
 
@@ -332,7 +332,7 @@
 
 <p>The Turkopticon API is a PHP file that accepts Mechanical Turk requester IDs and returns the information about those requesters available in the Turkopticon database. Specifically, for each requester ID, it returns the requester's name, average ratings for the four requester attributes ("comm", "pay", "fair", and "fast"; see <a href="#1.1">Section 1.1, "What are the requester 'attributes'?"</a>), the number of reviews for the requester in the Turkopticon database (excluding hidden reviews), and the number of those reviews that reported that the requester violated the Mechanical Turk Terms of Service.</p>
 
-<p>This information is returned as a JSON object [<a href="http://en.wikipedia.org/wiki/JSON">wikipedia entry</a>; <a href="http://tools.ietf.org/html/rfc7159#section-13">example JSON object</a>; <a href="http://turkopticon.ucsd.edu/api/multi-attrs.php?ids=A2SUM2D7EOAK1T">example from Turkopticon API</a>].</p>
+<p>This information is returned as a JSON object [<a href="http://en.wikipedia.org/wiki/JSON">wikipedia entry</a>; <a href="http://tools.ietf.org/html/rfc7159#section-13">example JSON object</a>; <a href="https://turkopticon.net/api/multi-attrs.php?ids=A2SUM2D7EOAK1T">example from Turkopticon API</a>].</p>
 
 
 
@@ -352,11 +352,11 @@
 
 <p>Call</p>
 
-<blockquote><code>http://turkopticon.ucsd.edu/api/multi-attrs.php?ids=foo,bar,baz,bat</code></blockquote>
+<blockquote><code>https://turkopticon.net/api/multi-attrs.php?ids=foo,bar,baz,bat</code></blockquote>
 
 <p>where <code>foo</code>, <code>bar</code>, <code>baz</code>, and <code>bat</code> are the Mechanical Turk IDs of the requesters you want information for. For example, calling</p>
 
-<blockquote><code>http://turkopticon.ucsd.edu/api/multi-attrs.php?ids=A4QWQ1KBLPSJ5,A3SBGXUYMGMI6B,A2SUM2D7EOAK1T</code></blockquote>
+<blockquote><code>https://turkopticon.net/api/multi-attrs.php?ids=A4QWQ1KBLPSJ5,A3SBGXUYMGMI6B,A2SUM2D7EOAK1T</code></blockquote>
 
 <p>returns information about the requesters <code>IMP AMT</code> and <code>rohzit0d</code>, and <code>CrowdSource</code>.</p>
 
@@ -392,7 +392,7 @@
 
 <h4><a name="4.1.3"></a>4.1.3. The official browser add-ons point to an old, less reliable server.</h4>
 
-<p>This is fixed in the <a href="http://turkopticon.ucsd.edu/turkopticon.user.js">most recent version of the user script</a>, and will be updated in the next release of the browser add-ons.</p>
+<p>This is fixed in the <a href="https://turkopticon.net/turkopticon.user.js">most recent version of the user script</a>, and will be updated in the next release of the browser add-ons.</p>
 
 <h4><a name="4.1.4"></a>4.1.4. There is a 20-minute delay in seeing new ratings included in the averages.</h4>
 
