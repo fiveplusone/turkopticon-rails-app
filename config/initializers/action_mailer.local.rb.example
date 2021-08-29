@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+Rails.application.configure do
+  config.action_mailer.default_url_options = { host: 'example.com', protocol: 'https' }
+  # note, this should probably be the same as the username
+  # we need to have permission to send from this email address
+  config.action_mailer.default_options = { from: "admin@example.com" }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.example.com',
+    port:                 587,
+    user_name:            'admin@example.com',
+    password:             'my-awesome-password',
+    authentication:       'plain',
+    enable_starttls_auto: true,
+  }
+end
