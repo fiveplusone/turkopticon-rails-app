@@ -8,4 +8,8 @@ Rails.application.config.after_initialize do |app|
   unless config.default_url_options.present? && config.default_url_options.key?(:host)
     raise 'action_mailer default_url_options should be configured'
   end
+
+  unless config.default_options.present? && config.default_options.key?(:from)
+    raise 'action_mailer default_from should be configured'
+  end
 end
