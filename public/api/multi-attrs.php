@@ -13,6 +13,7 @@
    Last updated 28 Aug 2020 11:58 PDT
    Last updated 11 Sep 2020 11:08 PDT
    Last updated 07 Feb 2021 12:17 PST
+   Last updated 31 Aug 2021 19:06 PST
    ===============
    This file requires the package php5-mysqlnd!
    Before using this API, run:
@@ -20,20 +21,6 @@
    ===============
    Returns information for one or more AMT task requesters
    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-  if ($recent = apc_fetch($_SERVER['REMOTE_ADDR'])) {
-    $denylog = '../../php_api/log/multi-attrs.php.denied.log';
-    $time = date('Y-m-d H:i:s');
-    $ip = $_SERVER['REMOTE_ADDR'];
-    $out = "[API v2021.02.07.1271] " . "[" . $time . "] [" . $ip . "] ";
-    $out = $out . "REJECTED (LAST REQUEST LESS THAN 1 SEC AGO) \n";
-    file_put_contents($denylog, $out, FILE_APPEND);
-    /* file_put_contents($denylog, $_GET["ids"] . "\n", FILE_APPEND); */
-    http_response_code(403);
-    die("Please don't call the API more than once per 1 second.");
-  } else {
-    apc_add($_SERVER['REMOTE_ADDR'], "1", 1);
-  }
 
   header("Access-Control-Allow-Origin: *");
 
