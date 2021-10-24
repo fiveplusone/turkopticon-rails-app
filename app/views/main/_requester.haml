@@ -5,7 +5,7 @@
     = h(requester.amzn_requester_id)
     - unless requester.amzn_requester_id.nil?
       %br/
-      = link_to "HIT Group &raquo;".html_safe, "https://www.mturk.com/mturk/searchbar?requesterId=#{requester.amzn_requester_id}&selectedSearchType=hitgroups"
+      = link_to "HIT Group &raquo;".html_safe, "https://worker.mturk.com/requesters/#{requester.amzn_requester_id}/projects"
   %td{:valign => "top"}
     - for a,v in requester.avg_attrs
       .smlabel #{a}:
