@@ -25,7 +25,7 @@
       - else
         = link_to "Averages &raquo;".html_safe, :controller => "main", :action => "averages", :id => report.requester.amzn_requester_id
       %br/
-      = link_to "HIT Group &raquo;".html_safe, "https://www.mturk.com/mturk/searchbar?requesterId=#{report.requester_amzn_id}&selectedSearchType=hitgroups"
+      = link_to "HIT Group &raquo;".html_safe, "https://worker.mturk.com/requesters/#{report.requester_amzn_id}/projects"
       %br/
       - if report.requester.nil?
         [The requester object does not exist]
