@@ -35,7 +35,7 @@
         - else
           = link_to "Review&nbsp;Requester&nbsp;&raquo;".html_safe, controller: 'main', action: 'add_report', requester: { amzn_id: report.requester.amzn_requester_id, amzn_name: report.requester.amzn_requester_name }
       %br/
-      = link_to "Contact the requester &raquo;".html_safe, "https://worker.mturk.com/contact_requester/hit_type_messages/new?hit_type_message[hit[…]id]=TURKOPTICON&hit_type_message[requester_id]=#{report.requester_amzn_id}"
+      = link_to "Contact the requester &raquo;".html_safe, "https://worker.mturk.com/contact_requester/hit_type_messages/new?hit_type_message[requester_id]=#{report.requester_amzn_id}"
     %td{:valign => "top", :class => "attrs"}
       - for a in Report.requester_attrs
         .smlabel #{a}:
