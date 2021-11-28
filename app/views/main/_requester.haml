@@ -1,7 +1,7 @@
 %tr
   %td{:valign => "top"}
     - rid = requester.amzn_requester_id.nil? ? requester.id : requester.amzn_requester_id
-    .strong= link_to h(requester.amzn_requester_name), :controller => "main", :action => "index", :id => rid
+    .strong= link_to raw(requester.amzn_requester_name), :controller => "main", :action => "index", :id => rid
     = h(requester.amzn_requester_id)
     - unless requester.amzn_requester_id.nil?
       %br/
