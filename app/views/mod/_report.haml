@@ -13,7 +13,7 @@
       %br/
       = report.updated_at.strftime("%H:%M&nbsp;%m/%d/%y").html_safe
   %td{:valign => "top"}
-    = link_to h(report.amzn_requester_name), :controller => "main", :action => "index", :id => report.amzn_requester_id
+    = link_to raw(report.amzn_requester_name), :controller => "main", :action => "index", :id => report.amzn_requester_id
     %br/
     = report.amzn_requester_id
     %br/

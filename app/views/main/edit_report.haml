@@ -19,7 +19,7 @@
         (A HIT violates ToS under <a href="https://www.mturk.com/mturk/help?helpPage=policies#violation_examples" style="text-decoration:underline">specific conditions</a>, not just because you're mad.)
     %p
       .label Requester Name
-      = @requester.amzn_requester_name
+      = raw(@requester.amzn_requester_name)
     %p
       .label.red Requester ID
       = @requester.amzn_requester_id

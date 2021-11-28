@@ -3,7 +3,7 @@
 .report
   %p
     %strong.label AMT Requester Name &amp; ID
-    = @report.requester_amzn_name + " (" + @report.requester_amzn_id + ")"
+    #{raw(@report.requester_amzn_name)} (#{@report.requester_amzn_id}))
   %p
     %strong.label Description
     - if !@report.description.nil?
