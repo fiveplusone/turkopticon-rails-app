@@ -41,6 +41,8 @@ Rails.application.routes.draw do
   match 'do_disable_commenting', :controller => "mod", :action => "do_disable_commenting", :via => :post
   match 'change_requester_name_form', :controller => "mod", :action => "change_requester_name_form", :via => :get
   match 'do_change_requester_name', :controller => "mod", :action => "do_change_requester_name", :via => :post
+  match 'change_reviewer_display_name_form', :controller => "mod", :action => "change_reviewer_display_name_form", :via => :get
+  match 'do_change_reviewer_display_name', :controller => "mod", :action => "do_change_reviewer_display_name", :via => :post
   match ':id', :controller => "main", :action => "index", :via => :all
 
   match 'admin/dashboard', :controller => "admin", :action => "dashboard", :via => :get

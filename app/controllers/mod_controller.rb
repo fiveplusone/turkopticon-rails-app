@@ -219,6 +219,9 @@ class ModController < ApplicationController
   def change_requester_name_form
   end
 
+  def change_reviewer_display_name_form
+  end
+
   def do_enable_commenting
     # remember @person is the logged in person
     p = Person.find(params[:person][:id])
@@ -249,6 +252,18 @@ class ModController < ApplicationController
       flash[:error] = "Couldn't find any Requester with ID #{params[:requester][:amzn_requester_id]}"
     end
     redirect_to :controller => "mod", :action => "change_requester_name_form"
+  end
+
+  def do_change_reviewer_display_name
+    begin
+      reviewer = Person.find(params[:person][:reviewer_id].strip)
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "Couldn't find any reviewer with ID #{params[:person][:reviewer_id]}"
+      redirect_to :controller => "mod", :action => "change_reviewer_display_name_form" and return
+    end
+    reviewer.update!(display_name: params[:person][:new_name])
+    flash[:notice] = "Changed the username of #{params[:person][:reviewer_id]} to #{params[:person][:new_name]}."
+    redirect_to :controller => "mod", :action => "change_reviewer_display_name_form"
   end
 
   def convert_other_persons_flag
