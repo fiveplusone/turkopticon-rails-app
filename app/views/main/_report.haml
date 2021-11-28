@@ -10,7 +10,7 @@
   %tr{id: "report-#{report.id}"}
     %td{:valign => "top"}
       - rid = report.requester_amzn_id.nil? ? report.requester_id.to_s : report.requester_amzn_id
-      .strong= link_to h(report.requester_amzn_name), :controller => "main", :action => "index", :id => rid
+      .strong= link_to h(raw report.requester_amzn_name), :controller => "main", :action => "index", :id => rid
       = h(report.requester_amzn_id)
       %br/
       - if Person.find(session[:person_id]).is_moderator

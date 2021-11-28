@@ -214,10 +214,6 @@ class MainController < ApplicationController
         flash[:notice] = "<div class=\"error\">Please fill in the requester name and update your version of Turkopticon.</div>"
         render :action => "add_report" and return
       end
-      if params[:requester][:amzn_name] != ActionView::Base.full_sanitizer.sanitize(params[:requester][:amzn_name])
-        flash[:notice] = "<div class=\"error\">Please remove the HTML from the requester name and update your version of Turkopticon.</div>"
-        render :action => "add_report" and return
-      end
       if params[:report][:description].blank?
         flash[:notice] = "<div class=\"error\">Please fill in the report description.</div>"
         render :action => "add_report" and return
@@ -234,13 +230,14 @@ class MainController < ApplicationController
       end
       if @report.save
         Person.find(session[:person_id]).update_attributes(:latest_review_at => @report.created_at)
-        @report.update_attributes(:amzn_requester_name => params[:requester][:amzn_name])
+        sanitized_requester_name = ActionView::Base.full_sanitizer.sanitize(params[:requester][:amzn_name])
+        @report.update_attributes(:amzn_requester_name => sanitized_requester_name)
         r = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
         if !r.nil? and r.amzn_requester_name == "null"
-          r.update_attributes(:amzn_requester_name => params[:requester][:amzn_name])
+          r.update_attributes(:amzn_requester_name => sanitized_requester_name)
         end
         if r.nil?
-          Requester.new(:amzn_requester_id => params[:requester][:amzn_id], :amzn_requester_name => params[:requester][:amzn_name]).save
+          Requester.new(:amzn_requester_id => params[:requester][:amzn_id], :amzn_requester_name => sanitized_requester_name).save
           r = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
         end
         if @report.update_attributes(:requester_id => r.id, :amzn_requester_id => r.amzn_requester_id)
