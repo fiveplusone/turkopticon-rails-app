@@ -228,30 +228,33 @@ class MainController < ApplicationController
       if params[:report][:pay_bucket] == "nil"
         params[:report][:pay_bucket] = nil
       end
-      if @report.save
-        Person.find(session[:person_id]).update_attributes(:latest_review_at => @report.created_at)
-        sanitized_requester_name = ActionView::Base.full_sanitizer.sanitize(params[:requester][:amzn_name])
-        @report.update_attributes(:amzn_requester_name => sanitized_requester_name)
-        r = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
-        if !r.nil? and r.amzn_requester_name == "null"
-          r.update_attributes(:amzn_requester_name => sanitized_requester_name)
-        end
-        if r.nil?
-          Requester.new(:amzn_requester_id => params[:requester][:amzn_id], :amzn_requester_name => sanitized_requester_name).save
+      ActiveRecord::Base.transaction do
+        if @report.valid?
+          Person.find(session[:person_id]).update_attributes(:latest_review_at => @report.created_at)
+          sanitized_requester_name = ActionView::Base.full_sanitizer.sanitize(params[:requester][:amzn_name])
+          @report.update(:amzn_requester_name => sanitized_requester_name)
+          @report.save!
           r = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
-        end
-        if @report.update_attributes(:requester_id => r.id, :amzn_requester_id => r.amzn_requester_id)
-
-          t = Time.now.strftime("%H:%M %a %b %d %Y")
-          ip = request.remote_ip
-
-          %w{comm pay fair fast}.each do |a|
-            @report.update(a => 0) if @report.public_send(a).nil?
+          if !r.nil? and r.amzn_requester_name == "null"
+            r.update!(:amzn_requester_name => sanitized_requester_name)
           end
-          r.cache_columns
-          flash[:notice] = "<div class=\"success\">Report successfully saved.</div>"
-          rurl = params[:url][:url].blank? ? "https://www.mturk.com/mturk/findhits?match=false" : params[:url][:url]
-          redirect_to rurl + "&updated=" + params[:requester][:amzn_id]
+          if r.nil?
+            Requester.new(:amzn_requester_id => params[:requester][:amzn_id], :amzn_requester_name => sanitized_requester_name).save!
+            r = Requester.find_by_amzn_requester_id(params[:requester][:amzn_id])
+          end
+          if @report.update!(:requester_id => r.id, :amzn_requester_id => r.amzn_requester_id)
+
+            t = Time.now.strftime("%H:%M %a %b %d %Y")
+            ip = request.remote_ip
+
+            %w{comm pay fair fast}.each do |a|
+              @report.update!(a => 0) if @report.public_send(a).nil?
+            end
+            r.cache_columns
+            flash[:notice] = "<div class=\"success\">Report successfully saved.</div>"
+            rurl = params[:url][:url].blank? ? "https://www.mturk.com/mturk/findhits?match=false" : params[:url][:url]
+            redirect_to rurl + "&updated=" + params[:requester][:amzn_id]
+          end
         end
       end
     end
