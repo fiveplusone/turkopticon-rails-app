@@ -3,12 +3,12 @@
 # Table name: flags
 #
 #  id              :integer          not null, primary key
-#  report_id       :integer
-#  person_id       :integer
-#  comment         :text(65535)
+#  comment         :text(16777215)
+#  displayed_notes :text(16777215)
 #  created_at      :datetime
 #  updated_at      :datetime
-#  displayed_notes :text(65535)
+#  person_id       :integer
+#  report_id       :integer
 #
 
 class Flag < ApplicationRecord

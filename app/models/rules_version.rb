@@ -3,12 +3,12 @@
 # Table name: rules_versions
 #
 #  id                  :integer          not null, primary key
-#  parent_id           :integer
+#  body                :text(16777215)
 #  is_current          :boolean
-#  edited_by_person_id :integer
 #  created_at          :datetime
 #  updated_at          :datetime
-#  body                :text(65535)
+#  edited_by_person_id :integer
+#  parent_id           :integer
 #
 class RulesVersion < ApplicationRecord
   def parent

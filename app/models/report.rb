@@ -6,13 +6,13 @@
 #  amzn_requester_name :string(255)
 #  comm                :integer
 #  comment_count       :integer
-#  description         :text(65535)
-#  displayed_notes     :text(65535)
+#  description         :text(16777215)
+#  displayed_notes     :text(16777215)
 #  dont_censor         :boolean
 #  fair                :integer
 #  fast                :integer
 #  flag_count          :integer
-#  hit_names           :text(65535)
+#  hit_names           :text(16777215)
 #  how_many_hits       :string(255)
 #  ignore_count        :integer          default(0)
 #  ip                  :string(255)

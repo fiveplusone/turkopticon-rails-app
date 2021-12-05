@@ -3,13 +3,13 @@
 # Table name: comments
 #
 #  id              :integer          not null, primary key
-#  report_id       :integer
-#  person_id       :integer
-#  body            :text(65535)
+#  body            :text(16777215)
+#  displayed_notes :text(16777215)
+#  notes           :text(16777215)
 #  created_at      :datetime
 #  updated_at      :datetime
-#  notes           :text(65535)
-#  displayed_notes :text(65535)
+#  person_id       :integer
+#  report_id       :integer
 #
 
 class Comment < ApplicationRecord

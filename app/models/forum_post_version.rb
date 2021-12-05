@@ -3,14 +3,14 @@
 # Table name: forum_post_versions
 #
 #  id         :integer          not null, primary key
-#  post_id    :integer
+#  body       :text(16777215)
 #  ip         :string(255)
-#  title      :text(65535)
-#  body       :text(65535)
 #  next       :integer
+#  title      :text(16777215)
 #  created_at :datetime
 #  updated_at :datetime
 #  person_id  :integer
+#  post_id    :integer
 #
 class ForumPostVersion < ApplicationRecord
 
