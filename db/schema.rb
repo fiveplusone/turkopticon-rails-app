@@ -10,35 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_24_192202) do
+ActiveRecord::Schema.define(version: 2021_12_05_223503) do
 
-  create_table "aliases", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "aliases", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "requester_id"
     t.integer "formerly"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "report_id"
     t.integer "person_id"
-    t.text "body"
+    t.text "body", size: :medium
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text "notes"
-    t.text "displayed_notes"
+    t.text "notes", size: :medium
+    t.text "displayed_notes", size: :medium
   end
 
-  create_table "flags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "flags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "report_id"
     t.integer "person_id"
-    t.text "comment"
+    t.text "comment", size: :medium
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text "displayed_notes"
+    t.text "displayed_notes", size: :medium
   end
 
-  create_table "follows", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "follows", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.string "follow_type"
     t.integer "follow_id"
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 2021_01_24_192202) do
     t.datetime "updated_at"
   end
 
-  create_table "forum_person_info", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "forum_person_info", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.decimal "karma", precision: 5, scale: 2
     t.string "mail_forum_notifications"
@@ -54,18 +54,18 @@ ActiveRecord::Schema.define(version: 2021_01_24_192202) do
     t.datetime "updated_at"
   end
 
-  create_table "forum_post_versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "forum_post_versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "post_id"
     t.string "ip"
-    t.text "title"
-    t.text "body"
+    t.text "title", size: :medium
+    t.text "body", size: :medium
     t.integer "next"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "person_id"
   end
 
-  create_table "forum_posts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "forum_posts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.integer "parent_id"
     t.string "slug"
@@ -84,24 +84,24 @@ ActiveRecord::Schema.define(version: 2021_01_24_192202) do
     t.decimal "initial_score", precision: 5, scale: 2
   end
 
-  create_table "ignores", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "ignores", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.integer "report_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "notifications", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "notifications", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
-    t.text "title"
-    t.text "body"
+    t.text "title", size: :medium
+    t.text "body", size: :medium
     t.boolean "read"
     t.datetime "read_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "people", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "people", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "email"
     t.string "hashed_password"
     t.string "salt"
@@ -137,22 +137,22 @@ ActiveRecord::Schema.define(version: 2021_01_24_192202) do
     t.string "confirmation_token"
   end
 
-  create_table "posts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "posts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.integer "parent_id"
-    t.text "title"
-    t.text "body"
+    t.text "title", size: :medium
+    t.text "body", size: :medium
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "slug"
     t.boolean "is_sticky"
   end
 
-  create_table "reports", id: :integer, options: "ENGINE=MyISAM DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "reports", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.integer "requester_id"
     t.string "hit_id"
-    t.text "description"
+    t.text "description", size: :medium
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "how_many_hits"
@@ -164,13 +164,13 @@ ActiveRecord::Schema.define(version: 2021_01_24_192202) do
     t.boolean "is_hidden"
     t.boolean "tos_viol"
     t.string "amzn_requester_id"
-    t.text "displayed_notes"
+    t.text "displayed_notes", size: :medium
     t.string "amzn_requester_name"
     t.integer "flag_count"
     t.integer "comment_count"
     t.string "ip"
     t.integer "ignore_count", default: 0
-    t.text "hit_names"
+    t.text "hit_names", size: :medium
     t.boolean "dont_censor"
     t.string "rejected"
     t.boolean "locked"
@@ -181,7 +181,7 @@ ActiveRecord::Schema.define(version: 2021_01_24_192202) do
     t.index ["requester_id"], name: "requester_id_index"
   end
 
-  create_table "reputation_statements", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "reputation_statements", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.integer "post_id"
     t.string "statement"
@@ -191,7 +191,7 @@ ActiveRecord::Schema.define(version: 2021_01_24_192202) do
     t.string "ip"
   end
 
-  create_table "requesters", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "requesters", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "amzn_requester_id"
     t.string "amzn_requester_name"
     t.datetime "created_at"
@@ -212,13 +212,13 @@ ActiveRecord::Schema.define(version: 2021_01_24_192202) do
     t.index ["amzn_requester_id"], name: "amzn_requester_id_index"
   end
 
-  create_table "rules_versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "rules_versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "parent_id"
     t.boolean "is_current"
     t.integer "edited_by_person_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text "body"
+    t.text "body", size: :medium
   end
 
 end

@@ -3,14 +3,14 @@
 # Table name: posts
 #
 #  id         :integer          not null, primary key
-#  person_id  :integer
-#  parent_id  :integer
-#  title      :text(65535)
-#  body       :text(65535)
+#  body       :text(16777215)
+#  is_sticky  :boolean
+#  slug       :string(255)
+#  title      :text(16777215)
 #  created_at :datetime
 #  updated_at :datetime
-#  slug       :string(255)
-#  is_sticky  :boolean
+#  parent_id  :integer
+#  person_id  :integer
 #
 
 class Post < ApplicationRecord
