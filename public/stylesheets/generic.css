@@ -382,9 +382,7 @@ td {
 }
 
 #search {
-	position: relative;
-		top: -3px;
-	margin-left: 17em;
+	margin-top: 2em;
 	max-width: 300px;
 }
 
@@ -539,10 +537,6 @@ del {
   display: inline-block;
   float: right;
   margin-top: -18px;
-}
-
-#search > form {
-  max-width: 215px;
 }
 
 .textpage {
