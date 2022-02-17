@@ -17,15 +17,15 @@ class ForumController < ApplicationController
     @post_version = ForumPostVersion.new(params[:forum_post_version])
     if request.post?
       unless @person.email_verified
-        flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you must verify your email address before you can post. You may #{helpers.link_to 'send the verification email again', controller: 'reg', action: 'send_verification_email'}."
+        flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Sorry, you must verify your email address before you can post. You may #{helpers.link_to 'send the verification email again', controller: 'reg', action: 'send_verification_email'}."
         render :action => "new_post" and return
       end
       if params[:forum_post_version][:body].blank?
-        flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Please put something in the post body."
+        flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Please put something in the post body."
         render :action => "new_post" and return
       end
       if params[:forum_post][:parent_id].nil? and params[:forum_post_version][:title].blank?
-        flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Please give the post a title."
+        flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Please give the post a title."
         render :action => "new_post" and return
       end
       if @post.save and @post_version.save and @post_version.update_attributes(:post_id => @post.id)
@@ -77,11 +77,11 @@ class ForumController < ApplicationController
     @post_version = ForumPostVersion.new(params[:forum_post_version])
     if request.post?
       if params[:forum_post_version][:body].blank?
-        flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Please put something in the post body."
+        flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Please put something in the post body."
         render :action => "edit_post" and return
       end
       if @post.nil? and params[:forum_post_version][:title].blank?
-        flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Please give the post a title."
+        flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Please give the post a title."
         render :action => "edit_post" and return
       end
       if @post.save and @post_version.save and @post_version.update_attributes(:post_id => @post.id) and @current_version.update_attributes(:next => @post_version.id)
@@ -113,14 +113,14 @@ class ForumController < ApplicationController
 
     # if this person has already thanked this post, tell them and send them back
     if ReputationStatement.find_by_person_id_and_post_id_and_statement(person_id, params[:id], "thanks")
-      flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you have already given thanks for this post!"
+      flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Sorry, you have already given thanks for this post!"
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
     # if this person has already thanked three times in the last 24 hours,
     # tell them they have to wait and send them back
     if ReputationStatement.where("person_id = ? and statement = 'thanks' and created_at > ?", person_id, Time.now - 1.day).count >= 3
-      flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you can only leave 3 \"thanks\" per day, and you have already left 3 in the last 24 hours. You can delete one or wait."
+      flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Sorry, you can only leave 3 \"thanks\" per day, and you have already left 3 in the last 24 hours. You can delete one or wait."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
@@ -134,7 +134,7 @@ class ForumController < ApplicationController
 
     # block self-thanking
     if pid == person_id
-      flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Please don't try to thank yourself :-/"
+      flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Please don't try to thank yourself :-/"
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
@@ -164,14 +164,14 @@ class ForumController < ApplicationController
 
     # if the user flagging has already flagged this post, say so and send them back
     if ReputationStatement.find_by_person_id_and_post_id_and_statement(person_id, params[:id], "inappropriate")
-      flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>You've already flagged this post as inappropriate."
+      flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>You've already flagged this post as inappropriate."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
     # if this person has already left 1 'inappropriate' flag in the last 24 hours
     # tell them they have to wait and send them back
     if ReputationStatement.where("person_id = ? and statement = 'inappropriate' and created_at > ?", person_id, Time.now - 1.day).count >= 1
-      flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, you can only leave 1 \"inappropriate\" flag per day, and you have already left one in the last 24 hours. You can delete it or wait."
+      flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Sorry, you can only leave 1 \"inappropriate\" flag per day, and you have already left one in the last 24 hours. You can delete it or wait."
       redirect_to :action => "show_post", :id => params[:id] and return
     end
 
@@ -239,7 +239,7 @@ class ForumController < ApplicationController
   def authorize_as_commenter
     pid = session[:person_id]
     unless !pid.nil? and Person.find(pid) and Person.find(pid).can_comment
-      flash[:notice] = "<style type='text/css'>#notice { background-color: #f00; }</style>Sorry, only people with commenting ability can do that.</style>"
+      flash[:notice] = "<style type='text/css'>#notice { background-color: #b20000; }</style>Sorry, only people with commenting ability can do that.</style>"
       redirect_to :action => "index"
     end
   end
