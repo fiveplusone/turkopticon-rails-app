@@ -26,7 +26,7 @@ body {
 }
 
 a {
-  color: #f00;
+  color: #b20000;
   text-decoration: none;
 }
 
@@ -70,7 +70,6 @@ a:hover {
   font-size: 1.2em;
   text-transform: uppercase;
   color: #523100;
-//  background-color: #c4bf98;
   background-color: #ccc;
   padding: 10px 15px 10px 15px;
   font-weight: bold;
@@ -144,7 +143,7 @@ a:hover {
 .error {
   padding: 5px;
   margin: 10px 0;
-  color: #f00;
+  color: #b20000;
   font-weight: bold;
 }
 
@@ -156,7 +155,7 @@ a:hover {
 
 .warning {
   padding: 5px;
-  color: #f00;
+  color: #b20000;
   font-weight: bold;
 }
 
@@ -216,7 +215,7 @@ td {
 }
 
 .field_with_errors {
-  border: 1px solid #f00;
+  border: 1px solid #b20000;
   width: 17.5em;
   margin: -1.5em 0 0 10.5em;
 }
@@ -350,7 +349,7 @@ td {
 }
 
 .progress-meter-done#red {
-	background-color: #f00;
+	background-color: #b20000;
 }
 
 .progress-meter-done#yellow {
@@ -387,7 +386,7 @@ td {
 }
 
 .red {
-  color: #f00;
+  color: #b20000;
 }
 
 .tosviol {
@@ -412,7 +411,7 @@ td {
 }
 
 .rejected {
-  background-color: #f00;
+  background-color: #b20000;
 }
 
 .approved {
@@ -420,7 +419,7 @@ td {
 }
 
 #notice {
-  color: #f00;
+  color: #b20000;
   font-weight: bold;
   padding: 5px;
 }
@@ -502,7 +501,7 @@ del {
 }
 
 #warning {
-  background-color: #f00;
+  background-color: #b20000;
   color: #fff;
   font-size: 2em;
 }

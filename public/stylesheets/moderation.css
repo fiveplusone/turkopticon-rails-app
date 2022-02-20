@@ -80,7 +80,7 @@ th {
 }
 
 .progress-meter-done#red {
-  background-color: #f00;
+  background-color: #b20000;
 }
 
 .progress-meter-done#yellow {
@@ -92,7 +92,7 @@ th {
 }
 
 .tos {
-  background-color: #f00;
+  background-color: #b20000;
   color: #fff;
   font-weight: bold;
   font-size: 0.8em;
