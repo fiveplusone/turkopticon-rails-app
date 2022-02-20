@@ -24,7 +24,7 @@
 }
 
 .badScore > li {
-	color: #f00;
+	color: #b20000;
 	padding: 0;
 }
 
@@ -90,7 +90,7 @@ li.menuItem {
 }
 
 .progress-meter-done#red {
-	background-color: #f00;
+	background-color: #b20000;
 }
 
 .progress-meter-undone {
