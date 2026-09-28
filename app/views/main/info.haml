@@ -1,5 +1,4 @@
 = stylesheet_link_tag 'tinybox'
-%link{:crossorigin => "anonymous", :href => "https://cloudflare.com", :referrerpolicy => "no-referrer", :rel => "stylesheet"}
 = javascript_include_tag 'tinybox'
 /
   :javascript
@@ -43,12 +42,13 @@
       %h1{:style => "font-size: 24px; font-weight: bold; margin-top: 24px; margin-bottom: 8px;"} Stay Connected
       %p.big Follow Turkopticon for worker resources, campaign updates, news, and opportunities to take action.
       
-      %p.big{:style => "display: flex; gap: 20px; align-items: center; margin-top: 15px; font-size: 28px;"}
-        <a href="https://www.linkedin.com/company/turkopticon" target="_blank" title="LinkedIn" style="color: #0077B5; text-decoration: none;"><i class="fa-brands fa-linkedin"></i></a>
-        <a href="https://bsky.app/profile/turkopticon.bsky.social" target="_blank" title="Bluesky" style="color: #0285FF; text-decoration: none;"><i class="fa-brands fa-bluesky"></i></a>
-        <a href="https://www.instagram.com/turkopticon/" target="_blank" title="Instagram" style="color: #E1306C; text-decoration: none;"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://blog.turkopticon.net/?page_id=3969" target="_blank" title="Newsletter" style="color: #444444; text-decoration: none;"><i class="fa-solid fa-envelope-open-text"></i></a>
+      %p.big{:style => "display: flex; gap: 20px; align-items: center; margin-top: 15px; font-size: 18px; font-weight: bold;"}
+        %a{:href => "https://www.linkedin.com/company/turkopticon", :target => "_blank", :title => "LinkedIn", :style => "color: #0077B5; text-decoration: underline;"} [LinkedIn]
+        %a{:href => "https://bsky.app/profile/turkopticon.bsky.social", :target => "_blank", :title => "Bluesky", :style => "color: #0285FF; text-decoration: underline;"} [Bluesky]
+        %a{:href => "https://www.instagram.com/turkopticon/", :target => "_blank", :title => "Instagram", :style => "color: #E1306C; text-decoration: underline;"} [Instagram]
+        %a{:href => "https://blog.turkopticon.net/?page_id=3969", :target => "_blank", :title => "Newsletter", :style => "color: #444444; text-decoration: underline;"} [Newsletter]
 
       %p.big{:style => "margin-top: 20px;"}
         %strong Questions, concerns, or interested in collaborating?
-        <a href="mailto:hello@turkopticon.net" title="Email Us" style="font-size: 24px; color: #D44638; vertical-align: middle; margin-left: 8px; text-decoration: none;"><i class="fa-solid fa-envelope"></i></a>
+        %a{:href => "mailto:hello@turkopticon.net", :title => "Email Us", :style => "font-size: 18px; color: #D44638; font-weight: bold; text-decoration: underline; margin-left: 5px;"} [Email Us]
+
